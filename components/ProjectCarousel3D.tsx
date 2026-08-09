@@ -33,7 +33,7 @@ const PROJECTS: Project[] = [
       'Dual-pipeline CNN on 5,000+ images detecting Coccidiosis in poultry. VGG16 + MobileNetV2 ensemble achieved 98.2% accuracy, published at ICCCNet 2026 (ADROID Conference Series, SRM IST). Integrated Gemini RAG for disease Q&A and Sarvam AI for multilingual voice diagnosis across 5+ languages. Sub-2s inference, 99.9% uptime.',
     demoUrl: 'https://chick-tech-ai-diagnosis.vercel.app/',
     githubUrl: 'https://github.com/patelaman275',
-    accent: '#cc1100',
+    accent: '#1DB954',
     badge: 'Published at ICCCNet 2026 · 98.2% Accuracy',
     icon: '🧬',
   },
@@ -46,7 +46,7 @@ const PROJECTS: Project[] = [
       'SaaS platform generating personalized career roadmaps via GPT-4, cutting manual research time by 70%+. LLM-powered resume analyzer extracting 15+ skill signals with ATS optimization. AI Mentor chatbot for mock interviews with 50+ curated question flows.',
     demoUrl: 'https://ascend-career.vercel.app/',
     githubUrl: 'https://github.com/patelaman275',
-    accent: '#ff6b00',
+    accent: '#1ed760',
     badge: 'Cut Research Time by 70%+',
     icon: '🚀',
   },
@@ -59,7 +59,7 @@ const PROJECTS: Project[] = [
       'Real-time group ride platform with 6-character invite codes, live GPS tracking, synchronized route polylines, and SOS alert system broadcasting distress overlays to all riders in under 500ms via Socket.io.',
     demoUrl: 'https://easytrip-swart.vercel.app/',
     githubUrl: 'https://github.com/patelaman275',
-    accent: '#dd3300',
+    accent: '#10b981',
     badge: '<500ms SOS Broadcast Speed',
     icon: '🗺️',
   },
@@ -72,7 +72,7 @@ const PROJECTS: Project[] = [
       'College-exclusive networking platform with real-time chat, WebRTC video calls, LinkedIn-style profiles. JWT auth, bcrypt hashing, OTP email verification. Gemini API integration for AI resume analysis and ATS scoring.',
     demoUrl: 'https://campusconnect-mu-six.vercel.app/',
     githubUrl: 'https://github.com/patelaman275',
-    accent: '#bb1500',
+    accent: '#059669',
     badge: 'WebRTC Video & Real-time Chat',
     icon: '🎓',
   },
@@ -138,7 +138,7 @@ export default function ProjectCarousel3D() {
   };
 
   return (
-    <section id="projects" className="relative bg-[#080608] text-white">
+    <section id="projects" className="relative bg-[#080b07] text-white">
       {/* Eyebrow Header */}
       <div className="pt-16 pb-6 px-6 md:px-12 max-w-6xl mx-auto text-center relative z-30 pointer-events-auto">
         <motion.div
@@ -147,7 +147,7 @@ export default function ProjectCarousel3D() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#ff4b2b] bg-[#ff4b2b]/10 border border-[#ff4b2b]/30 mb-4">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/30 mb-4">
             <Sparkles className="w-3.5 h-3.5" />
             Curated 4 of 44+ Projects
           </span>
@@ -160,7 +160,7 @@ export default function ProjectCarousel3D() {
               href="https://github.com/patelaman275"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#ff8a00] hover:text-[#ff4b2b] font-medium underline underline-offset-4 transition-colors relative z-40 pointer-events-auto"
+              className="inline-flex items-center gap-1 text-[#1ed760] hover:text-[#1DB954] font-medium underline underline-offset-4 transition-colors relative z-40 pointer-events-auto"
             >
               <span>Explore full repository list on GitHub</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -175,8 +175,8 @@ export default function ProjectCarousel3D() {
           ref={containerRef}
           className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden z-20 pointer-events-auto"
         >
-          {/* Pulsing Central Orange Radial Glow Anchor */}
-          <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(255,75,43,0.18)_0%,_rgba(255,138,0,0.06)_45%,_transparent_70%)] pointer-events-none blur-3xl animate-pulse" />
+          {/* Pulsing Central Green Radial Glow Anchor */}
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(29,185,84,0.18)_0%,_rgba(30,215,96,0.06)_45%,_transparent_70%)] pointer-events-none blur-3xl animate-pulse" />
 
           {/* 3D Scene Viewport */}
           <div
@@ -199,33 +199,33 @@ export default function ProjectCarousel3D() {
                     key={project.id}
                     className={`absolute inset-0 p-7 rounded-2xl glass-card border transition-all duration-500 ${
                       isActive
-                        ? 'border-[#ff4b2b]/60 shadow-[0_0_50px_rgba(255,75,43,0.3)] opacity-100 filter-none pointer-events-auto z-40'
+                        ? 'border-[#1DB954]/60 shadow-[0_0_50px_rgba(29,185,84,0.3)] opacity-100 filter-none pointer-events-auto z-40'
                         : 'border-white/10 opacity-20 filter blur-[4px] pointer-events-none z-0'
                     }`}
                     style={{
                       transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
-                      backfaceVisibility: 'visible',
-                      transformStyle: 'preserve-3d',
+                      backfaceVisibility: 'hidden',
                     }}
                     onMouseMove={isActive ? handleMouseMove : undefined}
                     onMouseLeave={isActive ? handleMouseLeave : undefined}
                   >
                     {/* Active Card Rotating Conic Gradient Border Glow */}
                     {isActive && (
-                      <div className="absolute -inset-[1px] rounded-2xl bg-[conic-gradient(from_0deg_at_50%_50%,#ff4b2b,#ff8a00,#cc1100,#ff4b2b)] opacity-40 blur-xs -z-10 animate-[spin_8s_linear_infinite] pointer-events-none" />
+                      <div className="absolute -inset-[1px] rounded-2xl bg-[conic-gradient(from_0deg_at_50%_50%,#1DB954,#1ed760,#0d9488,#1DB954)] opacity-40 blur-xs -z-10 animate-[spin_8s_linear_infinite] pointer-events-none" />
                     )}
 
                     {/* Active Card Content */}
-                    <div
-                      className="w-full h-full flex flex-col justify-between relative z-50 pointer-events-auto"
-                      style={{
-                        transform: isActive
-                          ? `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
-                          : 'none',
-                        transition: 'transform 0.15s ease-out',
-                      }}
-                    >
-                      <div>
+                    <div className="w-full h-full flex flex-col justify-between relative z-50 pointer-events-auto">
+                      {/* Tilted Upper Details (To ensure tilt doesn't disrupt button clicks) */}
+                      <div
+                        className="flex-1 flex flex-col"
+                        style={{
+                          transform: isActive
+                            ? `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
+                            : 'none',
+                          transition: 'transform 0.15s ease-out',
+                        }}
+                      >
                         {/* Header */}
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex items-center gap-3">
@@ -234,7 +234,7 @@ export default function ProjectCarousel3D() {
                               <h3 className="font-bold text-lg leading-tight text-white">
                                 {project.title}
                               </h3>
-                              <p className="text-xs text-[#ff8a00] font-medium mt-0.5">
+                              <p className="text-xs text-[#1ed760] font-medium mt-0.5">
                                 {project.subtitle}
                               </p>
                             </div>
@@ -243,7 +243,7 @@ export default function ProjectCarousel3D() {
 
                         {/* Badge */}
                         <div className="mb-3">
-                          <span className="inline-block text-[11px] px-2.5 py-0.5 rounded-full bg-[#ff4b2b]/15 text-[#ff8a00] border border-[#ff4b2b]/30">
+                          <span className="inline-block text-[11px] px-2.5 py-0.5 rounded-full bg-[#1DB954]/15 text-[#1ed760] border border-[#1DB954]/30">
                             {project.badge}
                           </span>
                         </div>
@@ -266,14 +266,18 @@ export default function ProjectCarousel3D() {
                         </div>
                       </div>
 
-                      {/* Links */}
+                      {/* Flat Links Section (Outside the tilt container to guarantee clicks never get cancelled) */}
                       <div className="flex items-center gap-3 pt-3 border-t border-white/10 mt-auto relative z-50 pointer-events-auto">
                         <a
                           href={project.demoUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#cc1100] to-[#ff4b2b] hover:from-[#ff4b2b] hover:to-[#ff8a00] transition-all duration-300 shadow-[0_4px_15px_rgba(204,17,0,0.3)] relative z-50 cursor-pointer pointer-events-auto"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.demoUrl, '_blank', 'noopener,noreferrer');
+                          }}
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#0d9488] to-[#1DB954] hover:from-[#1DB954] hover:to-[#1ed760] transition-all duration-300 shadow-[0_4px_15px_rgba(29,185,84,0.3)] relative z-50 cursor-pointer pointer-events-auto"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                           <span>Live Demo</span>
@@ -282,8 +286,12 @@ export default function ProjectCarousel3D() {
                           href={project.githubUrl}
                           target="_blank"
                           rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/70 bg-white/5 border border-white/10 hover:text-white hover:border-[#ff4b2b]/50 transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
+                          }}
+                          className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/70 bg-white/5 border border-white/10 hover:text-white hover:border-[#1DB954]/50 transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
                           title="View GitHub Repository"
                         >
                           <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -306,7 +314,7 @@ export default function ProjectCarousel3D() {
                 onClick={() => setActiveIndex(idx)}
                 className={`transition-all duration-300 rounded-full cursor-pointer ${
                   activeIndex === idx
-                    ? 'w-7 h-2 bg-[#ff4b2b] shadow-[0_0_12px_#ff4b2b]'
+                    ? 'w-7 h-2 bg-[#1DB954] shadow-[0_0_12px_#1DB954]'
                     : 'w-2 h-2 bg-white/20'
                 }`}
                 title={`Go to ${p.title}`}
@@ -383,6 +391,11 @@ export default function ProjectCarousel3D() {
                   href={PROJECTS[activeIndex].demoUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(PROJECTS[activeIndex].demoUrl, '_blank', 'noopener,noreferrer');
+                  }}
                   className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-gradient-to-r from-[#cc1100] to-[#ff4b2b] cursor-pointer pointer-events-auto relative z-50"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
@@ -392,6 +405,11 @@ export default function ProjectCarousel3D() {
                   href={PROJECTS[activeIndex].githubUrl}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.open(PROJECTS[activeIndex].githubUrl, '_blank', 'noopener,noreferrer');
+                  }}
                   className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/70 bg-white/5 border border-white/10 cursor-pointer pointer-events-auto relative z-50"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">

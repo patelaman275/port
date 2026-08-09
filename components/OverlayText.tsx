@@ -34,11 +34,11 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
         >
           <div
             className="h-0.5 w-8"
-            style={{ background: 'linear-gradient(90deg, #cc1100, #ff8a00)' }}
+            style={{ background: 'linear-gradient(90deg, #0d9488, #1ed760)' }}
           />
           <span
             className="text-xs tracking-[0.35em] uppercase font-medium"
-            style={{ color: '#ff8a00' }}
+            style={{ color: '#1DB954' }}
           >
             Portfolio
           </span>
@@ -77,9 +77,9 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
             style={{ letterSpacing: '0.05em' }}
           >
             ML Engineer&nbsp;
-            <span className="text-[#ff4b2b] font-semibold">·</span>
+            <span className="text-[#1DB954] font-semibold">·</span>
             &nbsp;Full-Stack Developer&nbsp;
-            <span className="text-[#ff4b2b] font-semibold">·</span>
+            <span className="text-[#1DB954] font-semibold">·</span>
             &nbsp;Data Science
           </p>
         </motion.div>
@@ -105,9 +105,9 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           <MagneticButton>
             <a
               href="#projects"
-              className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm overflow-hidden transition-all duration-300 shadow-[0_4px_30px_rgba(255,75,43,0.4)] hover:shadow-[0_6px_45px_rgba(255,138,0,0.65)] hover:-translate-y-0.5"
+              className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm overflow-hidden transition-all duration-300 shadow-[0_4px_30px_rgba(29,185,84,0.4)] hover:shadow-[0_6px_45px_rgba(30,215,96,0.65)] hover:-translate-y-0.5"
               style={{
-                background: 'linear-gradient(135deg, #cc1100 0%, #ff4b2b 60%, #ff8a00 100%)',
+                background: 'linear-gradient(135deg, #0d9488 0%, #1DB954 60%, #1ed760 100%)',
                 color: '#fff',
               }}
             >
@@ -123,7 +123,7 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:border-[#ff4b2b]/50 hover:bg-white/10 hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:border-[#1DB954]/50 hover:bg-white/10 hover:-translate-y-0.5"
               style={{
                 background: 'rgba(255,255,255,0.05)',
                 border: '1px solid rgba(255,255,255,0.15)',
@@ -151,11 +151,11 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
             className="w-5 h-8 rounded-full border flex items-start justify-center pt-1.5"
-            style={{ borderColor: 'rgba(255,75,43,0.4)' }}
+            style={{ borderColor: 'rgba(29,185,84,0.4)' }}
           >
             <div
               className="w-1 h-2 rounded-full"
-              style={{ background: 'linear-gradient(#ff4b2b, #ff8a00)' }}
+              style={{ background: 'linear-gradient(#1DB954, #1ed760)' }}
             />
           </motion.div>
           <span

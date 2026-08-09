@@ -76,12 +76,12 @@ export default function PortraitGlitch({ scrollYProgress }: PortraitGlitchProps)
               style={{ mixBlendMode: 'normal' }}
             />
 
-            {/* Warm crimson/orange rim light overlay */}
+            {/* Warm Spotify Green rim light overlay */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(110deg, rgba(255,75,43,0.22) 0%, rgba(204,17,0,0.1) 35%, transparent 60%)',
+                  'linear-gradient(110deg, rgba(29,185,84,0.22) 0%, rgba(30,215,96,0.1) 35%, transparent 60%)',
                 mixBlendMode: 'screen',
               }}
             />
@@ -96,7 +96,7 @@ export default function PortraitGlitch({ scrollYProgress }: PortraitGlitchProps)
                   width: '60%',
                   height: '100%',
                   background:
-                    'linear-gradient(90deg, transparent 0%, rgba(255,138,0,0.18) 30%, rgba(255,255,255,0.28) 50%, rgba(255,75,43,0.18) 70%, transparent 100%)',
+                    'linear-gradient(90deg, transparent 0%, rgba(30,215,96,0.18) 30%, rgba(255,255,255,0.28) 50%, rgba(29,185,84,0.18) 70%, transparent 100%)',
                   animation: 'shimmer-sweep 4s ease-in-out infinite',
                   animationDelay: '1s',
                   mixBlendMode: 'overlay',
@@ -116,8 +116,8 @@ export default function PortraitGlitch({ scrollYProgress }: PortraitGlitchProps)
                   width: '3.5px',
                   height: '3.5px',
                   borderRadius: '50%',
-                  background: i % 2 === 0 ? '#ff8a00' : '#ff4b2b',
-                  boxShadow: `0 0 8px 2px ${i % 2 === 0 ? 'rgba(255,138,0,0.8)' : 'rgba(255,75,43,0.8)'}`,
+                  background: i % 2 === 0 ? '#1ed760' : '#1DB954',
+                  boxShadow: `0 0 8px 2px ${i % 2 === 0 ? 'rgba(30,215,96,0.8)' : 'rgba(29,185,84,0.8)'}`,
                   animation: `sparkle-in ${s.dur}s ease-in-out infinite`,
                   animationDelay: `${s.delay}s`,
                   mixBlendMode: 'screen',

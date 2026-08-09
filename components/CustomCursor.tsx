@@ -69,7 +69,7 @@ export default function CustomCursor() {
     <div className="pointer-events-none fixed inset-0 z-[9999] overflow-hidden">
       {/* Outer Ring */}
       <motion.div
-        className="fixed rounded-full border border-[#ff4b2b]/60"
+        className="fixed rounded-full border border-[#1DB954]/60"
         style={{
           x: cursorX,
           y: cursorY,
@@ -77,20 +77,20 @@ export default function CustomCursor() {
           translateY: '-50%',
           width: isHovered ? 48 : 24,
           height: isHovered ? 48 : 24,
-          backgroundColor: isHovered ? 'rgba(255, 75, 43, 0.12)' : 'transparent',
-          boxShadow: isHovered ? '0 0 20px rgba(255, 75, 43, 0.4)' : 'none',
+          backgroundColor: isHovered ? 'rgba(29, 185, 84, 0.12)' : 'transparent',
+          boxShadow: isHovered ? '0 0 20px rgba(29, 185, 84, 0.4)' : 'none',
         }}
         transition={{ type: 'spring', stiffness: 350, damping: 25 }}
       />
       {/* Inner Glowing Dot */}
       <motion.div
-        className="fixed h-2 w-2 rounded-full bg-[#ff8a00]"
+        className="fixed h-2 w-2 rounded-full bg-[#1ed760]"
         style={{
           x: dotX,
           y: dotY,
           translateX: '-50%',
           translateY: '-50%',
-          boxShadow: '0 0 10px #ff4b2b, 0 0 20px #ff8a00',
+          boxShadow: '0 0 10px #1DB954, 0 0 20px #1ed760',
         }}
       />
     </div>

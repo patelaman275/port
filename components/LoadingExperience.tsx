@@ -120,9 +120,9 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
               <defs>
                 <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#ff4b2b" />
-                  <stop offset="50%" stopColor="#ff8a00" />
-                  <stop offset="100%" stopColor="#cc1100" />
+                  <stop offset="0%" stopColor="#0d9488" />
+                  <stop offset="50%" stopColor="#1DB954" />
+                  <stop offset="100%" stopColor="#1ed760" />
                 </linearGradient>
               </defs>
               <circle
@@ -151,7 +151,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="font-mono text-4xl font-bold tracking-tighter text-white">
                 {Math.round(progress)}
-                <span className="text-xs text-[#ff8a00] font-normal font-sans ml-0.5">%</span>
+                <span className="text-xs text-[#1ed760] font-normal font-sans ml-0.5">%</span>
               </span>
             </div>
           </div>
@@ -172,7 +172,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-7 py-3 rounded-full font-semibold text-xs tracking-[0.2em] uppercase text-white bg-gradient-to-r from-[#cc1100] via-[#ff4b2b] to-[#ff8a00] shadow-[0_0_30px_rgba(255,75,43,0.4)] hover:shadow-[0_0_50px_rgba(255,138,0,0.7)] transition-all duration-300 flex items-center gap-2 cursor-pointer"
+                className="px-7 py-3 rounded-full font-semibold text-xs tracking-[0.2em] uppercase text-white bg-gradient-to-r from-[#0d9488] via-[#1DB954] to-[#1ed760] shadow-[0_0_30px_rgba(29,185,84,0.4)] hover:shadow-[0_0_50px_rgba(30,215,96,0.7)] transition-all duration-300 flex items-center gap-2 cursor-pointer"
               >
                 <span>ENTER EXPERIENCE</span>
                 <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
@@ -186,7 +186,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
         </div>
 
         {/* Ambient background glow */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_rgba(255,75,43,0.06)_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_rgba(29,185,84,0.06)_0%,_transparent_70%)]" />
       </motion.div>
     </AnimatePresence>
   );
