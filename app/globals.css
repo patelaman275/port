@@ -2,36 +2,39 @@
 
 @layer base {
   :root {
-    --bg-base: #0a080d;
-    --bg-surface: #100d14;
-    --bg-elevated: #18131e;
+    --bg-base: #cbb3e8;
+    --bg-surface: #000000;
+    --bg-elevated: #0d0a12;
     --color-lavender: #cbb3e8;
     --color-chartreuse: #D4ff3f;
     --color-tomato: #e34234;
-    --text-primary: #f6f2fa;
-    --text-muted: #cbb3e8;
-    --text-dim: #9d8db3;
+    --color-black: #000000;
+    --text-primary: #000000;
+    --text-muted: #1a1520;
+    --text-dim: #2e2638;
   }
 
   html {
     scroll-behavior: smooth;
+    background-color: #cbb3e8;
   }
 
   body {
-    background-color: var(--bg-base);
-    color: var(--text-primary);
+    background-color: #cbb3e8;
+    color: #000000;
     overflow-x: hidden;
   }
 
   ::-webkit-scrollbar {
-    width: 4px;
+    width: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0a080d;
+    background: #cbb3e8;
   }
   ::-webkit-scrollbar-thumb {
-    background: #D4ff3f;
+    background: #000000;
     border-radius: 4px;
+    border: 1px solid #D4ff3f;
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #e34234;
@@ -44,7 +47,7 @@
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.045;
+  opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
 }
@@ -73,10 +76,10 @@
 /* ── Rim glow pulse ────────────────────────────────────── */
 @keyframes rim-pulse {
   0%,100% {
-    filter: drop-shadow(-8px 0 40px rgba(212, 255, 63, 0.6)) drop-shadow(0 0 25px rgba(203, 179, 232, 0.4));
+    filter: drop-shadow(-8px 0 35px rgba(212, 255, 63, 0.7)) drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
   }
   50% {
-    filter: drop-shadow(-14px 0 60px rgba(227, 66, 52, 0.7)) drop-shadow(0 0 35px rgba(212, 255, 63, 0.5));
+    filter: drop-shadow(-14px 0 50px rgba(227, 66, 52, 0.8)) drop-shadow(0 0 30px rgba(212, 255, 63, 0.6));
   }
 }
 
@@ -114,39 +117,38 @@
   99% { transform: translate(5px, 2px); opacity: 0; }
 }
 
-/* ── Gradient text (Lavender #cbb3e8, Chartreuse #D4ff3f, Tomato Red #e34234) ─────────────────────── */
+/* ── High Contrast Gradient text (Black, Tomato Red, Chartreuse) ───────── */
 .gradient-text {
-  background: linear-gradient(120deg, #D4ff3f 0%, #cbb3e8 50%, #e34234 100%);
+  background: linear-gradient(120deg, #000000 0%, #e34234 50%, #000000 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-alt {
-  background: linear-gradient(120deg, #cbb3e8 0%, #D4ff3f 100%);
+  background: linear-gradient(120deg, #e34234 0%, #000000 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* ── Glass card ────────────────────────────────────────── */
+/* ── Glass / Solid Black card with high contrast ──────── */
 .glass-card {
-  background: rgba(22, 17, 28, 0.65);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(203, 179, 232, 0.12);
+  background: #000000;
+  color: #cbb3e8;
+  border: 2px solid #000000;
   border-radius: 1.25rem;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  background: rgba(30, 22, 38, 0.8);
-  border-color: rgba(212, 255, 63, 0.6);
+  background: #050505;
+  border-color: #D4ff3f;
   box-shadow:
-    0 0 0 1px rgba(212, 255, 63, 0.4),
-    0 20px 60px rgba(227, 66, 52, 0.2),
-    0 0 80px rgba(203, 179, 232, 0.2),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    0 0 0 2px #D4ff3f,
+    0 16px 45px rgba(227, 66, 52, 0.3),
+    0 0 50px rgba(0, 0, 0, 0.4);
   transform: translateY(-5px) scale(1.015);
 }
 
@@ -161,6 +163,6 @@
 
 /* ── Section divider gradient ──────────────────────────── */
 .section-divider {
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(227, 66, 52, 0.4) 20%, rgba(203, 179, 232, 0.6) 50%, rgba(212, 255, 63, 0.5) 80%, transparent);
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e34234 25%, #000000 50%, #D4ff3f 75%, transparent);
 }

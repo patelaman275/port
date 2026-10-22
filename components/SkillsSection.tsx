@@ -80,15 +80,14 @@ export default function SkillsSection() {
   return (
     <section
       id="skills"
-      className="relative py-28 px-6 md:px-12 lg:px-20 overflow-hidden"
-      style={{ background: '#0a080d' }}
+      className="relative py-28 px-6 md:px-12 lg:px-20 overflow-hidden bg-transparent"
     >
-      {/* Parallax depth background gradient mesh */}
+      {/* Background glow */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-25"
+        className="absolute inset-0 pointer-events-none opacity-20"
         style={{
           backgroundImage:
-            'radial-gradient(circle at 20% 80%, rgba(203,179,232,0.12) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(212,255,63,0.1) 0%, transparent 50%)',
+            'radial-gradient(circle at 20% 80%, rgba(212,255,63,0.4) 0%, transparent 50%), radial-gradient(circle at 80% 20%, rgba(227,66,52,0.3) 0%, transparent 50%)',
         }}
       />
 
@@ -100,21 +99,18 @@ export default function SkillsSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
-          <p
-            className="text-xs tracking-[0.4em] uppercase mb-3 font-bold text-[#D4ff3f]"
-          >
+          <span className="inline-block px-3.5 py-1 rounded-full bg-black text-[#D4ff3f] text-xs tracking-[0.35em] uppercase font-black mb-3 shadow-sm">
             Technical Expertise
-          </p>
+          </span>
           <h2
-            className="font-black tracking-tight text-3xl md:text-5xl"
+            className="font-black tracking-tight text-3xl md:text-5xl text-black"
           >
-            <span className="text-white">Technical </span>
-            <span className="gradient-text">Skills</span>
+            Technical <span className="text-[#e34234]">Skills</span>
           </h2>
         </motion.div>
         <div
-          className="mx-auto mt-5 h-px w-20"
-          style={{ background: 'linear-gradient(90deg, transparent, #cbb3e8, transparent)' }}
+          className="mx-auto mt-5 h-1 w-20 rounded-full"
+          style={{ background: 'linear-gradient(90deg, #e34234, #000000, #D4ff3f)' }}
         />
       </div>
 
@@ -131,10 +127,10 @@ export default function SkillsSection() {
             {/* Category label */}
             <div className="flex-shrink-0 w-36 pt-1">
               <span
-                className="text-xs font-bold tracking-widest uppercase flex items-center gap-2"
+                className="text-xs font-black tracking-widest uppercase flex items-center gap-2 px-2.5 py-1 rounded bg-black"
                 style={{ color: cat.color }}
               >
-                <span className="w-1.5 h-1.5 rounded-full" style={{ background: cat.color }} />
+                <span className="w-2 h-2 rounded-full" style={{ background: cat.color }} />
                 {cat.label}
               </span>
             </div>
@@ -148,15 +144,11 @@ export default function SkillsSection() {
                 <motion.span
                   key={skill}
                   variants={tagVariants}
-                  className="skill-tag inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-medium relative overflow-hidden transition-all duration-200"
-                  style={{
-                    background: `${cat.color}12`,
-                    border: `1px solid ${cat.color}35`,
-                    color: '#f0fdf4',
-                  }}
+                  className="skill-tag inline-flex items-center px-3.5 py-1.5 rounded-full text-xs font-bold relative overflow-hidden transition-all duration-200 bg-black text-white border border-black shadow-sm"
                   whileHover={{
-                    boxShadow: `0 0 16px ${cat.color}66, inset 0 0 8px ${cat.color}22`,
+                    boxShadow: `0 0 16px ${cat.color}`,
                     borderColor: cat.color,
+                    color: cat.color,
                     y: -2,
                   }}
                 >

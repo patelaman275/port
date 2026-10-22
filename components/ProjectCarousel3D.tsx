@@ -140,7 +140,7 @@ export default function ProjectCarousel3D() {
   };
 
   return (
-    <section id="projects" className="relative bg-[#080b07] text-white">
+    <section id="projects" className="relative bg-transparent text-black">
       {/* Eyebrow Header */}
       <div className="pt-16 pb-6 px-6 md:px-12 max-w-6xl mx-auto text-center relative z-30 pointer-events-auto">
         <motion.div
@@ -149,20 +149,20 @@ export default function ProjectCarousel3D() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest text-[#1DB954] bg-[#1DB954]/10 border border-[#1DB954]/30 mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-[#D4ff3f] bg-black border-2 border-black mb-4 shadow-md">
+            <Sparkles className="w-3.5 h-3.5 text-[#D4ff3f]" />
             Curated 4 of 44+ Projects
           </span>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
-            Featured <span className="gradient-text">Engineering Work</span>
+          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-black">
+            Featured <span className="text-[#e34234]">Engineering Work</span>
           </h2>
-          <p className="text-sm md:text-base text-white/60 max-w-xl mx-auto">
+          <p className="text-sm md:text-base text-black/80 max-w-xl mx-auto font-medium">
             This is a curated 4 out of 44+ production applications & AI systems I&apos;ve shipped.{' '}
             <a
               href="https://github.com/patelaman275"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#1ed760] hover:text-[#1DB954] font-medium underline underline-offset-4 transition-colors relative z-40 pointer-events-auto"
+              className="inline-flex items-center gap-1 text-[#e34234] hover:text-black font-bold underline underline-offset-4 transition-colors relative z-40 pointer-events-auto"
             >
               <span>Explore full repository list on GitHub</span>
               <ArrowUpRight className="w-4 h-4" />
@@ -177,8 +177,8 @@ export default function ProjectCarousel3D() {
           ref={containerRef}
           className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden z-20 pointer-events-auto"
         >
-          {/* Pulsing Central Green Radial Glow Anchor */}
-          <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(29,185,84,0.18)_0%,_rgba(30,215,96,0.06)_45%,_transparent_70%)] pointer-events-none blur-3xl animate-pulse" />
+          {/* Pulsing Central Radial Glow Anchor */}
+          <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(212,255,63,0.35)_0%,_rgba(227,66,52,0.15)_45%,_transparent_70%)] pointer-events-none blur-3xl animate-pulse" />
 
           {/* 3D Scene Viewport */}
           <div
@@ -279,7 +279,7 @@ export default function ProjectCarousel3D() {
                             e.stopPropagation();
                             window.open(project.demoUrl, '_blank', 'noopener,noreferrer');
                           }}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#0a080d] bg-gradient-to-r from-[#e34234] via-[#cbb3e8] to-[#D4ff3f] hover:opacity-90 transition-all duration-300 shadow-[0_4px_18px_rgba(212,255,63,0.35)] relative z-50 cursor-pointer pointer-events-auto"
+                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-black text-black bg-[#D4ff3f] hover:bg-[#cbb3e8] transition-all duration-300 shadow-[0_4px_18px_rgba(212,255,63,0.35)] relative z-50 cursor-pointer pointer-events-auto"
                         >
                           <ExternalLink className="w-3.5 h-3.5" />
                           <span>Live Demo</span>
@@ -295,7 +295,7 @@ export default function ProjectCarousel3D() {
                               e.stopPropagation();
                               window.open(project.paperUrl, '_blank', 'noopener,noreferrer');
                             }}
-                            className="inline-flex items-center justify-center px-3 py-2.5 rounded-xl text-[#cbb3e8] bg-[#cbb3e8]/15 border border-[#cbb3e8]/35 hover:bg-[#cbb3e8]/25 text-xs font-bold transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
+                            className="inline-flex items-center justify-center px-3 py-2.5 rounded-xl text-[#cbb3e8] bg-black border border-[#cbb3e8] hover:bg-white/10 text-xs font-bold transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
                             title="Read Published Research Paper (ICCCNet 2026)"
                           >
                             <span>Paper 📄</span>
@@ -311,7 +311,7 @@ export default function ProjectCarousel3D() {
                             e.stopPropagation();
                             window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
                           }}
-                          className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/70 bg-white/5 border border-white/10 hover:text-[#D4ff3f] hover:border-[#D4ff3f]/50 transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
+                          className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/80 bg-white/10 border border-white/20 hover:text-[#D4ff3f] hover:border-[#D4ff3f] transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
                           title="View GitHub Repository"
                         >
                           <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
@@ -326,7 +326,7 @@ export default function ProjectCarousel3D() {
             </div>
           </div>
 
-          {/* 4 Indicator Glowing Dots */}
+          {/* 4 Indicator Dots */}
           <div className="flex items-center gap-3 mt-6 z-30 pointer-events-auto">
             {PROJECTS.map((p, idx) => (
               <button
@@ -334,8 +334,8 @@ export default function ProjectCarousel3D() {
                 onClick={() => setActiveIndex(idx)}
                 className={`transition-all duration-300 rounded-full cursor-pointer ${
                   activeIndex === idx
-                    ? 'w-7 h-2 bg-[#D4ff3f] shadow-[0_0_12px_#D4ff3f]'
-                    : 'w-2 h-2 bg-white/20'
+                    ? 'w-8 h-2.5 bg-black shadow-[0_0_12px_rgba(0,0,0,0.5)]'
+                    : 'w-2.5 h-2.5 bg-black/25'
                 }`}
                 title={`Go to ${p.title}`}
               />
@@ -348,16 +348,16 @@ export default function ProjectCarousel3D() {
           <div className="w-full flex items-center justify-between gap-4 mb-4">
             <button
               onClick={() => setActiveIndex((prev) => (prev > 0 ? prev - 1 : 3))}
-              className="p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-[#D4ff3f] hover:border-[#D4ff3f]/50 cursor-pointer transition-colors"
+              className="p-2 rounded-full bg-black text-[#D4ff3f] border border-black cursor-pointer shadow-sm"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
-            <span className="text-xs text-[#D4ff3f] font-mono uppercase tracking-widest">
+            <span className="text-xs text-black font-black font-mono uppercase tracking-widest">
               PROJECT {activeIndex + 1} OF 4
             </span>
             <button
               onClick={() => setActiveIndex((prev) => (prev < 3 ? prev + 1 : 0))}
-              className="p-2 rounded-full bg-white/5 border border-white/10 text-white/70 hover:text-[#D4ff3f] hover:border-[#D4ff3f]/50 cursor-pointer transition-colors"
+              className="p-2 rounded-full bg-black text-[#D4ff3f] border border-black cursor-pointer shadow-sm"
             >
               <ChevronRight className="w-5 h-5" />
             </button>
@@ -371,7 +371,7 @@ export default function ProjectCarousel3D() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
-              className="w-full p-6 rounded-2xl glass-card border border-[#D4ff3f]/40 relative overflow-hidden pointer-events-auto z-40 shadow-[0_0_30px_rgba(212,255,63,0.2)]"
+              className="w-full p-6 rounded-2xl glass-card border-2 border-black relative overflow-hidden pointer-events-auto z-40 shadow-xl"
             >
               <div className="flex items-center gap-3 mb-3">
                 <span className="text-2xl">{PROJECTS[activeIndex].icon}</span>
@@ -391,7 +391,7 @@ export default function ProjectCarousel3D() {
                 </span>
               </div>
 
-              <p className="text-xs text-white/70 leading-relaxed mb-4">
+              <p className="text-xs text-white/80 leading-relaxed mb-4">
                 {PROJECTS[activeIndex].description}
               </p>
 
@@ -399,14 +399,14 @@ export default function ProjectCarousel3D() {
                 {PROJECTS[activeIndex].stack.map((tech) => (
                   <span
                     key={tech}
-                    className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 text-white/60 border border-white/10"
+                    className="text-[10px] px-2 py-0.5 rounded-md bg-white/10 text-white/90 border border-white/20"
                   >
                     {tech}
                   </span>
                 ))}
               </div>
 
-              <div className="flex items-center gap-2 pt-3 border-t border-white/10 relative z-50 pointer-events-auto">
+              <div className="flex items-center gap-2 pt-3 border-t border-white/15 relative z-50 pointer-events-auto">
                 <a
                   href={PROJECTS[activeIndex].demoUrl}
                   target="_blank"
@@ -416,7 +416,7 @@ export default function ProjectCarousel3D() {
                     e.stopPropagation();
                     window.open(PROJECTS[activeIndex].demoUrl, '_blank', 'noopener,noreferrer');
                   }}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-bold text-[#0a080d] bg-gradient-to-r from-[#e34234] via-[#cbb3e8] to-[#D4ff3f] cursor-pointer pointer-events-auto relative z-50 shadow-[0_4px_15px_rgba(212,255,63,0.3)]"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-black text-black bg-[#D4ff3f] hover:bg-[#cbb3e8] cursor-pointer pointer-events-auto relative z-50 shadow-md"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
                   <span>Live Demo</span>
@@ -432,7 +432,7 @@ export default function ProjectCarousel3D() {
                       e.stopPropagation();
                       window.open(PROJECTS[activeIndex].paperUrl, '_blank', 'noopener,noreferrer');
                     }}
-                    className="inline-flex items-center justify-center px-3 py-2.5 rounded-xl text-[#cbb3e8] bg-[#cbb3e8]/15 border border-[#cbb3e8]/35 hover:bg-[#cbb3e8]/25 text-xs font-bold transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
+                    className="inline-flex items-center justify-center px-3 py-2.5 rounded-xl text-[#cbb3e8] bg-black border border-[#cbb3e8] text-xs font-bold transition-all relative z-50 cursor-pointer pointer-events-auto"
                     title="Read Published Research Paper"
                   >
                     <span>Paper 📄</span>
@@ -448,7 +448,7 @@ export default function ProjectCarousel3D() {
                     e.stopPropagation();
                     window.open(PROJECTS[activeIndex].githubUrl, '_blank', 'noopener,noreferrer');
                   }}
-                  className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/70 bg-white/5 border border-white/10 hover:text-[#D4ff3f] hover:border-[#D4ff3f]/50 cursor-pointer pointer-events-auto relative z-50 transition-colors"
+                  className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/80 bg-white/10 border border-white/20 hover:text-[#D4ff3f] cursor-pointer pointer-events-auto relative z-50 transition-colors"
                 >
                   <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
                     <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
@@ -466,8 +466,8 @@ export default function ProjectCarousel3D() {
                 onClick={() => setActiveIndex(idx)}
                 className={`transition-all duration-300 rounded-full cursor-pointer ${
                   activeIndex === idx
-                    ? 'w-6 h-2 bg-[#D4ff3f] shadow-[0_0_10px_#D4ff3f]'
-                    : 'w-2 h-2 bg-white/20'
+                    ? 'w-6 h-2 bg-black'
+                    : 'w-2 h-2 bg-black/25'
                 }`}
               />
             ))}

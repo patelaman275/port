@@ -6,6 +6,8 @@ import { SoundProvider } from '@/components/SoundContext';
 import CustomCursor from '@/components/CustomCursor';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
 import LoadingExperience from '@/components/LoadingExperience';
+import LiveLavenderBackground from '@/components/LiveLavenderBackground';
+import RecruiterChatModal from '@/components/RecruiterChatModal';
 import PortraitGlitch from '@/components/PortraitGlitch';
 import OverlayText from '@/components/OverlayText';
 import ProjectCarousel3D from '@/components/ProjectCarousel3D';
@@ -152,94 +154,41 @@ export default function Home() {
       {/* Custom Glowing Trailing Cursor */}
       <CustomCursor />
 
+      {/* Living Dynamic Ambient Lavender Background */}
+      <LiveLavenderBackground />
+
       {/* Loading Intro Experience */}
       <LoadingExperience progress={preloadProgress} />
 
-      {/* Floating Quick Action: View / Download Resume */}
-      <div className="fixed top-5 right-5 z-[9990] flex items-center gap-2">
+      {/* Floating Quick Action: View / Download Resume & AI Recruiter Hub */}
+      <div className="fixed top-5 right-5 z-[9990] flex flex-col items-end gap-2.5">
         <a
           href="/resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-[#0c140c]/85 backdrop-blur-md border border-[#1DB954]/40 text-white font-semibold text-xs shadow-[0_0_20px_rgba(29,185,84,0.25)] hover:bg-[#1DB954] hover:text-black hover:border-[#1DB954] transition-all duration-300"
+          className="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-black text-[#D4ff3f] font-bold text-xs border-2 border-black shadow-[0_4px_20px_rgba(0,0,0,0.25)] hover:bg-[#D4ff3f] hover:text-black hover:border-black transition-all duration-300"
         >
-          <span className="w-2 h-2 rounded-full bg-[#1ed760] group-hover:bg-black animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-[#e34234] group-hover:bg-black animate-pulse" />
           <span>📄 View Resume</span>
         </a>
+
+        {/* LLM Recruiter Chatbot (Positioned directly below View Resume) */}
+        <RecruiterChatModal />
       </div>
 
-      <main className="bg-[#080b07] min-h-screen relative overflow-x-hidden">
-        {/* ══ HERO: ScrollyCanvas + Portrait + Overlay Text ══════════ */}
+      <main className="relative z-10 bg-transparent min-h-screen overflow-x-hidden text-black">
+        {/* ══ HERO: Portrait + Overlay Text on Living Lavender Canvas ══════════ */}
         <section
           ref={sectionRef}
-          className="relative"
-          style={{ height: '180vh' }}
-          aria-label="Hero scrollytelling section"
+          className="relative bg-transparent"
+          style={{ height: '160vh' }}
+          aria-label="Hero section"
         >
-          <div className="sticky top-0 w-full h-screen overflow-hidden">
-            {/* Canvas image sequence */}
-            <canvas
-              ref={canvasRef}
-              className="absolute inset-0 w-full h-full"
-              style={{ display: hasSequence ? 'block' : 'none' }}
-              aria-hidden="true"
-            />
-
-            {/* Fallback atmospheric background */}
-            {!hasSequence && (
-              <div
-                className="absolute inset-0"
-                style={{
-                  background:
-                    'radial-gradient(ellipse 90% 70% at 30% 60%, #0d1e11 0%, #08120a 35%, #080b07 70%)',
-                }}
-                aria-hidden="true"
-              />
-            )}
-
-            {/* Cinematic Vignette */}
-            <div
-              className="absolute inset-0 pointer-events-none z-[1]"
-              style={{
-                background:
-                  'radial-gradient(ellipse 140% 100% at 50% 50%, transparent 25%, rgba(8,11,7,0.55) 65%, rgba(8,11,7,0.92) 100%)',
-              }}
-              aria-hidden="true"
-            />
-
-            {/* Spotify Green particles */}
-            <div className="absolute inset-0 pointer-events-none z-[2] overflow-hidden">
-              {[...Array(14)].map((_, i) => (
-                <div
-                  key={i}
-                  className="absolute rounded-full bg-gradient-to-t from-[#1DB954] to-[#1ed760]"
-                  style={{
-                    left: `${10 + (i * 6.2) % 80}%`,
-                    top: `${15 + (i * 8.1) % 75}%`,
-                    width: `${2 + (i % 3)}px`,
-                    height: `${2 + (i % 3)}px`,
-                    boxShadow: '0 0 10px #1DB954, 0 0 20px #1ed760',
-                    opacity: 0.2 + (i % 4) * 0.15,
-                    animation: `float-y ${3 + (i % 4)}s ease-in-out infinite`,
-                    animationDelay: `${(i * 0.3) % 3}s`,
-                  }}
-                />
-              ))}
-            </div>
-
-            {/* Bottom fade into carousel */}
-            <div
-              className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none z-[5]"
-              style={{
-                background: 'linear-gradient(to bottom, transparent, #080b07)',
-              }}
-              aria-hidden="true"
-            />
-
+          <div className="sticky top-0 w-full h-screen overflow-hidden bg-transparent">
             {/* Portrait (right side - filling frame seamlessly, zero hard box borders) */}
             <PortraitGlitch scrollYProgress={scrollYProgress} />
 
-            {/* Overlay Text (left side with tagline quote) */}
+            {/* Overlay Text (left side with high-contrast typography) */}
             <OverlayText scrollYProgress={scrollYProgress} />
           </div>
         </section>

@@ -6,13 +6,7 @@ import { motion, useSpring } from 'framer-motion';
 export default function CustomCursor() {
   const [isHovered, setIsHovered] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isTouchDevice] = useState(() => {
-    if (typeof window === 'undefined') return false;
-    return (
-      window.matchMedia('(pointer: coarse)').matches ||
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    );
-  });
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const cursorX = useSpring(0, { stiffness: 400, damping: 28 });
   const cursorY = useSpring(0, { stiffness: 400, damping: 28 });
@@ -21,7 +15,11 @@ export default function CustomCursor() {
   const dotY = useSpring(0, { stiffness: 900, damping: 35 });
 
   useEffect(() => {
-    if (isTouchDevice) return;
+    const isTouch =
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    setIsTouchDevice(isTouch);
+    if (isTouch) return;
 
     const handleMouseMove = (e: MouseEvent) => {
       cursorX.set(e.clientX);

@@ -54,7 +54,7 @@ export default function PortraitGlitch({ scrollYProgress }: PortraitGlitchProps)
           filter: useTransform(blur, (v) => `blur(${v}px)`),
         }}
       >
-        {/* Soft Radial Gradient Mask — Seamless blend into #080608 with no hard box borders */}
+        {/* Soft Radial Gradient Mask — Seamless blend into Lavender #cbb3e8 with no hard box borders */}
         <div
           className="absolute inset-0 z-10 pointer-events-none"
           style={{

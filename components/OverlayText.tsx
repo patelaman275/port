@@ -33,12 +33,11 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           className="flex items-center gap-3"
         >
           <div
-            className="h-0.5 w-8"
-            style={{ background: 'linear-gradient(90deg, #e34234, #D4ff3f)' }}
+            className="h-1 w-8 rounded-full"
+            style={{ background: 'linear-gradient(90deg, #e34234, #000000)' }}
           />
           <span
-            className="text-xs tracking-[0.35em] uppercase font-bold"
-            style={{ color: '#D4ff3f' }}
+            className="text-xs tracking-[0.35em] uppercase font-black px-2.5 py-0.5 rounded bg-black text-[#D4ff3f]"
           >
             Portfolio
           </span>
@@ -58,8 +57,8 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
               lineHeight: '0.92',
             }}
           >
-            <span className="block text-white drop-shadow-lg">Aman</span>
-            <span className="block gradient-text drop-shadow-lg" style={{ marginTop: '0.05em' }}>
+            <span className="block text-black drop-shadow-md">Aman</span>
+            <span className="block drop-shadow-md" style={{ marginTop: '0.05em', color: '#e34234' }}>
               Patel
             </span>
           </h1>
@@ -73,16 +72,16 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           transition={{ duration: 0.9, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
           <p
-            className="font-medium tracking-wide text-sm md:text-base text-white/90"
-            style={{ letterSpacing: '0.04em' }}
+            className="font-bold tracking-wide text-sm md:text-base text-black"
+            style={{ letterSpacing: '0.03em' }}
           >
             Software Engineer&nbsp;
-            <span className="text-[#D4ff3f] font-semibold">·</span>
+            <span className="text-[#e34234] font-black">·</span>
             &nbsp;AI/ML & Full-Stack&nbsp;
-            <span className="text-[#cbb3e8] font-semibold">·</span>
+            <span className="text-[#000000] font-black">·</span>
             &nbsp;Backend Specialist
           </p>
-          <p className="text-xs text-[#cbb3e8]/80 mt-1 font-light">
+          <p className="text-xs text-black/85 mt-1 font-semibold">
             B.Tech CSE (Data Science) @ SRM IST &middot; CGPA: 8.83/10
           </p>
         </motion.div>
@@ -94,13 +93,13 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           transition={{ duration: 0.8, delay: 0.65 }}
           className="flex flex-wrap gap-2 pt-1"
         >
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-[#D4ff3f]/15 border border-[#D4ff3f]/35 text-[#D4ff3f] font-semibold">
+          <span className="text-[11px] px-3 py-1 rounded-full bg-black border border-[#D4ff3f] text-[#D4ff3f] font-bold shadow-sm">
             AWS Certified AI & Cloud
           </span>
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-[#cbb3e8]/15 border border-[#cbb3e8]/30 text-[#cbb3e8] font-medium">
+          <span className="text-[11px] px-3 py-1 rounded-full bg-black border border-[#e34234] text-[#e34234] font-bold shadow-sm">
             ICCCNet 2026 Author
           </span>
-          <span className="text-[11px] px-2.5 py-1 rounded-full bg-[#e34234]/15 border border-[#e34234]/30 text-[#e34234] font-medium">
+          <span className="text-[11px] px-3 py-1 rounded-full bg-black border border-[#cbb3e8] text-[#cbb3e8] font-bold shadow-sm">
             LeetCode 250+ Solved
           </span>
         </motion.div>
@@ -111,7 +110,7 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.75 }}
         >
-          <p className="text-xs md:text-sm font-light italic text-white/60 tracking-wide leading-relaxed">
+          <p className="text-xs md:text-sm font-semibold italic text-black/80 tracking-wide leading-relaxed">
             &ldquo;Building scalable full-stack applications and AI systems that solve real problems.&rdquo;
           </p>
         </motion.div>
@@ -126,11 +125,7 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           <MagneticButton>
             <a
               href="#projects"
-              className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full font-bold text-xs md:text-sm overflow-hidden transition-all duration-300 shadow-[0_4px_30px_rgba(212,255,63,0.35)] hover:shadow-[0_6px_45px_rgba(203,179,232,0.6)] hover:-translate-y-0.5"
-              style={{
-                background: 'linear-gradient(135deg, #e34234 0%, #cbb3e8 50%, #D4ff3f 100%)',
-                color: '#0a080d',
-              }}
+              className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full font-bold text-xs md:text-sm overflow-hidden transition-all duration-300 bg-black text-[#D4ff3f] border-2 border-black hover:bg-[#D4ff3f] hover:text-black shadow-[0_4px_25px_rgba(0,0,0,0.35)] hover:-translate-y-0.5 cursor-pointer"
             >
               <span>View Projects</span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
@@ -142,13 +137,7 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           <MagneticButton>
             <a
               href="#resume"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-xs md:text-sm transition-all duration-300 hover:border-[#D4ff3f]/60 hover:bg-[#D4ff3f]/10 hover:-translate-y-0.5"
-              style={{
-                background: 'rgba(203, 179, 232, 0.1)',
-                border: '1px solid rgba(203, 179, 232, 0.3)',
-                color: '#cbb3e8',
-                backdropFilter: 'blur(12px)',
-              }}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-xs md:text-sm transition-all duration-300 bg-black text-[#e34234] border-2 border-black hover:bg-[#e34234] hover:text-black shadow-[0_4px_25px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 cursor-pointer"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
@@ -162,7 +151,7 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
             <a
               href="/resume.pdf"
               download="Aman_Patel_Resume.pdf"
-              className="inline-flex items-center gap-2 px-4 py-3 rounded-full font-medium text-xs text-white/80 hover:text-white transition-all duration-300 hover:bg-white/10 border border-white/10"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-full font-bold text-xs bg-black text-[#cbb3e8] border-2 border-black hover:bg-[#cbb3e8] hover:text-black transition-all duration-300 shadow-[0_4px_25px_rgba(0,0,0,0.25)] hover:-translate-y-0.5 cursor-pointer"
               title="Download Resume PDF"
             >
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -185,16 +174,14 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
-            className="w-5 h-8 rounded-full border flex items-start justify-center pt-1.5"
-            style={{ borderColor: 'rgba(212,255,63,0.4)' }}
+            className="w-5 h-8 rounded-full border-2 border-black flex items-start justify-center pt-1.5"
           >
             <div
-              className="w-1 h-2 rounded-full"
-              style={{ background: 'linear-gradient(#D4ff3f, #cbb3e8)' }}
+              className="w-1.5 h-2.5 rounded-full bg-[#e34234]"
             />
           </motion.div>
           <span
-            className="text-xs tracking-widest uppercase text-white/30"
+            className="text-xs tracking-widest uppercase font-bold text-black/75"
           >
             Scroll to explore
           </span>

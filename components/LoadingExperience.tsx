@@ -12,23 +12,22 @@ interface LoadingExperienceProps {
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!';
 
 export default function LoadingExperience({ progress, onComplete }: LoadingExperienceProps) {
-  const [isVisible, setIsVisible] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('aman_portfolio_visited') !== 'true';
-    }
-    return true;
-  });
+  const [isVisible, setIsVisible] = useState(true);
   const [isEntering, setIsEntering] = useState(false);
   const [scrambleText, setScrambleText] = useState('INITIALIZING ARCHITECTURE');
-  const [reducedMotion] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    }
-    return false;
-  });
+  const [reducedMotion, setReducedMotion] = useState(false);
   const { playBootSound } = useSound();
 
   const targetText = 'LOADING EXPERIENCE';
+
+  useEffect(() => {
+    if (sessionStorage.getItem('aman_portfolio_visited') === 'true') {
+      setIsVisible(false);
+    }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setReducedMotion(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!isVisible) {
@@ -72,6 +71,16 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
     return () => clearInterval(interval);
   }, [progress, reducedMotion, isVisible]);
 
+  // Smooth auto-transition when assets are ready
+  useEffect(() => {
+    if (progress >= 100 && !isEntering && isVisible) {
+      const timer = setTimeout(() => {
+        handleEnter();
+      }, 1200);
+      return () => clearTimeout(timer);
+    }
+  }, [progress, isEntering, isVisible]);
+
   const handleEnter = () => {
     if (isEntering) return;
     setIsEntering(true);
@@ -98,7 +107,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#080608] text-white select-none overflow-hidden"
+        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#cbb3e8] text-black select-none overflow-hidden"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.6 }}
@@ -110,7 +119,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
             initial={{ clipPath: 'circle(150% at 50% 50%)' }}
             animate={{ clipPath: 'circle(0% at 50% 50%)' }}
             transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
-            style={{ background: '#080608' }}
+            style={{ background: '#cbb3e8' }}
           />
         )}
 
@@ -122,7 +131,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
               <defs>
                 <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" stopColor="#e34234" />
-                  <stop offset="50%" stopColor="#cbb3e8" />
+                  <stop offset="50%" stopColor="#000000" />
                   <stop offset="100%" stopColor="#D4ff3f" />
                 </linearGradient>
               </defs>
@@ -130,8 +139,8 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
                 cx="80"
                 cy="80"
                 r={radius}
-                className="stroke-white/10"
-                strokeWidth="2.5"
+                className="stroke-black/15"
+                strokeWidth="3.5"
                 fill="transparent"
               />
               <motion.circle
@@ -139,7 +148,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
                 cy="80"
                 r={radius}
                 stroke="url(#ringGradient)"
-                strokeWidth="3.5"
+                strokeWidth="4.5"
                 strokeLinecap="round"
                 fill="transparent"
                 strokeDasharray={circumference}
@@ -150,16 +159,16 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
 
             {/* Percentage Text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="font-mono text-4xl font-bold tracking-tighter text-white">
+              <span className="font-mono text-4xl font-black tracking-tighter text-black">
                 {Math.round(progress)}
-                <span className="text-xs text-[#D4ff3f] font-normal font-sans ml-0.5">%</span>
+                <span className="text-xs text-[#e34234] font-black font-sans ml-0.5">%</span>
               </span>
             </div>
           </div>
 
           {/* Kinetic Scramble Tagline */}
           <div className="mt-8 h-6 flex items-center justify-center">
-            <p className="font-mono text-xs tracking-[0.3em] uppercase text-white/60">
+            <p className="font-mono text-xs tracking-[0.3em] uppercase text-black font-bold">
               {scrambleText}
             </p>
           </div>
@@ -173,13 +182,13 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-7 py-3 rounded-full font-bold text-xs tracking-[0.2em] uppercase text-black bg-gradient-to-r from-[#e34234] via-[#cbb3e8] to-[#D4ff3f] shadow-[0_0_30px_rgba(212,255,63,0.4)] hover:shadow-[0_0_50px_rgba(203,179,232,0.7)] transition-all duration-300 flex items-center gap-2 cursor-pointer"
+                className="px-7 py-3 rounded-full font-black text-xs tracking-[0.2em] uppercase text-[#D4ff3f] bg-black border-2 border-black hover:bg-[#D4ff3f] hover:text-black shadow-[0_4px_30px_rgba(0,0,0,0.3)] transition-all duration-300 flex items-center gap-2 cursor-pointer"
               >
                 <span>ENTER EXPERIENCE</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-[#e34234] animate-ping" />
               </motion.button>
             ) : (
-              <p className="text-[10px] tracking-[0.25em] text-white/30 uppercase">
+              <p className="text-[10px] tracking-[0.25em] text-black/60 font-black uppercase">
                 PRELOADING ASSETS · {Math.round(progress)} / 100
               </p>
             )}
@@ -187,7 +196,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
         </div>
 
         {/* Ambient background glow */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_rgba(212,255,63,0.08)_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_rgba(212,255,63,0.3)_0%,_transparent_70%)]" />
       </motion.div>
     </AnimatePresence>
   );

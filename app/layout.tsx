@@ -45,9 +45,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${outfit.variable} ${inter.variable} font-[family-name:var(--font-outfit)] bg-[#080608] text-[#f0f4ff] antialiased`}
+        suppressHydrationWarning
+        className={`${outfit.variable} ${inter.variable} font-[family-name:var(--font-outfit)] bg-[#cbb3e8] text-black antialiased selection:bg-[#D4ff3f] selection:text-black`}
       >
         {/* Cinematic noise/grain overlay */}
         <div className="noise-overlay" aria-hidden="true" />
