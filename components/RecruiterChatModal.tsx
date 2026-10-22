@@ -25,10 +25,11 @@ interface ChatMessage {
 const SUGGESTED_PROMPTS = [
   'What are your top backend skills?',
   'Tell me about your published CNN research',
+  'How did you architect EasyTrip with WebSockets?',
   'What is your CGPA & education at SRM IST?',
   'What are your AWS certifications?',
-  'What production projects have you shipped?',
   'Why should we hire Aman for a Software Engineer role?',
+  'What technical and HR questions can you answer about Aman?',
 ];
 
 export default function RecruiterChatModal() {
@@ -39,16 +40,19 @@ export default function RecruiterChatModal() {
     {
       id: 'welcome-1',
       role: 'assistant',
-      content: `👋 Hello! I'm Aman Patel's personal AI portfolio assistant.
+      content: `### 👋 Welcome to Aman Patel's Portfolio AI Assistant
 
-I can answer any questions about:
-• **Academic Background**: SRM IST (CGPA 8.83/10, B.Tech CSE Data Science)
-• **Certifications**: AWS Certified AI & Cloud Practitioner (Credly verified)
-• **Published Research**: ICCCNet 2026 (98.2% Accuracy Dual-Pipeline CNN)
-• **Key Projects**: EasyTrip (Solo WebSockets GPS), ChickTech AI, Career Path Generator
-• **Technical Skills**: Java, Python, Node.js, Express, React, Next.js, 250+ LeetCode solved
+I am trained using **RAG (Retrieval-Augmented Generation)** on Aman's verified resume, academic transcripts, technical projects, and published research.
 
-Feel free to ask a question or click any prompt below!`,
+I am capable of answering recruiter and technical questions across:
+• **About Aman**: Background, career journey, strengths, and work ethic
+• **Academics**: SRM IST B.Tech in CSE Data Science (**8.83/10 CGPA**)
+• **Known Skills**: Java, Python, Node.js, Express, React, Next.js, AWS, TensorFlow & **250+ LeetCode streak**
+• **Project Architectures**: **EasyTrip** (solo real-time platform), **ChickTech AI** (ICCCNet 2026 paper), and **Career Path Generator**
+• **Technical Questions**: WebSockets, CNN pipelines, REST APIs, RAG architecture, and AWS cloud workflows
+• **HR & Behavioral Questions**: Team collaboration, why hire Aman, problem solving, and role availability
+
+Feel free to click any **Recruiter Prompt** below or type your own question!`,
       timestamp: 'Just now',
     },
   ]);
@@ -121,8 +125,8 @@ Feel free to ask a question or click any prompt below!`,
   };
 
   const renderFormattedLine = (line: string) => {
-    // Matches markdown links [text](url) and bold **text**
-    const tokenRegex = /(\[.*?\]\(.*?\)|\*\*.*?\*\*)/g;
+    // Matches markdown links [text](url), bold **text**, inline code `code`, italic *text*
+    const tokenRegex = /(\[.*?\]\(.*?\)|\*\*.*?\*\*|`.*?`|\*.*?\*)/g;
     const parts = line.split(tokenRegex);
 
     return parts.map((part, i) => {
@@ -153,6 +157,26 @@ Feel free to ask a question or click any prompt below!`,
         );
       }
 
+      // Check for inline code `text`
+      const codeMatch = part.match(/^`(.*?)`$/);
+      if (codeMatch) {
+        return (
+          <code key={i} className="bg-white/10 text-[#D4ff3f] px-1.5 py-0.5 rounded text-xs font-mono">
+            {codeMatch[1]}
+          </code>
+        );
+      }
+
+      // Check for italic *text*
+      const italicMatch = part.match(/^\*(.*?)\*$/);
+      if (italicMatch) {
+        return (
+          <em key={i} className="italic text-white font-medium">
+            {italicMatch[1]}
+          </em>
+        );
+      }
+
       return part;
     });
   };
@@ -180,9 +204,20 @@ Feel free to ask a question or click any prompt below!`,
         );
       }
 
-      // Bullet points (• or -)
-      if (trimmed.startsWith('• ') || trimmed.startsWith('- ')) {
-        const bulletText = trimmed.replace(/^[•\-]\s+/, '');
+      // Numbered lists
+      const numberMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
+      if (numberMatch) {
+        return (
+          <div key={lineIdx} className="flex items-start gap-2 my-1 pl-1">
+            <span className="text-[#D4ff3f] font-bold text-xs mt-0.5 min-w-[1.2rem]">{numberMatch[1]}.</span>
+            <span className="flex-1 text-white/95">{renderFormattedLine(numberMatch[2])}</span>
+          </div>
+        );
+      }
+
+      // Bullet points (• or - or *)
+      if (trimmed.startsWith('• ') || trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
+        const bulletText = trimmed.replace(/^[•\-\*]\s+/, '');
         return (
           <div key={lineIdx} className="flex items-start gap-2 my-1 pl-1">
             <span className="text-[#D4ff3f] font-black leading-none mt-1 text-sm">•</span>
@@ -248,7 +283,7 @@ Feel free to ask a question or click any prompt below!`,
                       </span>
                     </div>
                     <p className="text-[11px] text-[#cbb3e8]">
-                      SRM IST &middot; CGPA: 8.83/10 &middot; AWS Certified
+                      Trained with RAG &middot; Academics &middot; Projects &middot; Technical & HR Q&A
                     </p>
                   </div>
                 </div>
@@ -367,7 +402,7 @@ Feel free to ask a question or click any prompt below!`,
                   type="text"
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask about skills, projects, certifications, or hiring..."
+                  placeholder="Ask about backend skills, published research, projects, or HR questions..."
                   disabled={isLoading}
                   className="flex-1 bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-xs md:text-sm text-white placeholder-white/40 focus:outline-none focus:border-[#D4ff3f] transition-colors"
                 />

@@ -257,23 +257,58 @@ Which project would you like deeper technical details on?`;
 • **Cloud & Tools**: AWS (Certified AI & Cloud Practitioner), Git, GitHub, Docker, Postman, Vite, Vercel`;
   }
 
-  // 14. WHY HIRE AMAN / STRENGTHS
-  if (clean.includes('why') || clean.includes('strength') || clean.includes('hire') || clean.includes('tell me about aman') || clean.includes('who is aman')) {
-    return `### Why Consider Aman Patel for Your Engineering Team?
+  // 14. WHY HIRE AMAN / STRENGTHS / HR & BEHAVIORAL
+  if (clean.includes('why') || clean.includes('strength') || clean.includes('hire') || clean.includes('tell me about aman') || clean.includes('who is aman') || clean.includes('hr') || clean.includes('behavioral') || clean.includes('rag') || clean.includes('capable') || clean.includes('what can you answer') || clean.includes('question')) {
+    return `### 🤖 Aman Patel AI Portfolio Assistant (RAG-Trained)
 
-1. **Demonstrated Production Execution**:
-   I don't just write scripts—I build complete systems. From solo architecting **EasyTrip** with real-time WebSockets and GPS to shipping full-stack Next.js and React apps.
-2. **Published Deep Learning Research**:
-   Authored an accepted paper at **ICCCNet 2026** on a dual-pipeline CNN for poultry disease detection with 98.2% reported accuracy.
-3. **Double AWS Certified**:
-   Certified in both AWS AI and Cloud Architecture on Credly.
-4. **Strong Computer Science Fundamentals**:
-   Maintaining an **8.83/10 CGPA** at SRM IST, paired with **250+ LeetCode problems solved** (100-day badge).
-5. **Team Collaboration & Adaptability**:
-   Experienced working in agile team projects (like our AI Career Path Generator) as well as delivering end-to-end solo architectures.`;
+I am trained with **RAG (Retrieval-Augmented Generation)** on Aman's verified resume, academic transcripts, technical projects, and published research. I am fully capable of answering:
+
+1. **About Myself & Background**:
+   • Engineering journey, career aspirations, work ethic, and adaptability.
+2. **Academics & SRM IST**:
+   • B.Tech in CSE (Data Science) @ SRM Institute of Science and Technology with an **8.83 / 10 CGPA** (2023–2027).
+3. **Known Skills & Problem Solving**:
+   • Java, Python, Node.js, Express.js, React, Next.js, WebSockets (Socket.IO), MongoDB, AWS, and **250+ LeetCode problems solved** (100-day badge).
+4. **Project Architectures**:
+   • **EasyTrip**: Solo architected platform with live GPS tracking and Socket.IO SOS alerts.
+   • **ChickTech AI**: Dual-pipeline CNN (VGG16 + MobileNetV2), accepted ICCCNet 2026 research paper.
+   • **AI Career Path Generator**: GPT-4 personalized roadmaps and ATS resume analyzer.
+5. **Technical Questions**:
+   • Real-time WebSocket event architecture, deep learning CNNs, REST API design, and AWS cloud workflows.
+6. **HR & Behavioral Questions**:
+   • Why you should consider me for your engineering team, handling deadlines, agile team collaboration, and availability.
+
+Which area would you like to explore?`;
   }
 
-  // 15. CONTACT / RESUME
+  // 15. FULL-TIME OFFER / ACCENTURE / SALARY / HIKE / JOINING DATE
+  if (
+    clean.includes('offer') ||
+    clean.includes('accenture') ||
+    clean.includes('package') ||
+    clean.includes('ctc') ||
+    clean.includes('salary') ||
+    clean.includes('hike') ||
+    clean.includes('joining date') ||
+    clean.includes('current job') ||
+    clean.includes('full time') ||
+    clean.includes('holding')
+  ) {
+    return `### Current Offer Status & Career Goals
+
+Yes, I currently hold a full-time placement offer from **Accenture**:
+• **Company**: Accenture
+• **Role**: Associate Software Engineer (ASE)
+• **Current Package**: **4.5 LPA**
+• **Tentative Joining Date**: **4 July 2027** (following graduation from SRM IST)
+
+### What I Am Looking For:
+While I value Accenture's offer, I am actively seeking high-growth engineering roles (Software Engineer, Backend Developer, or AI/ML Engineer) where I can leverage my hands-on production engineering experience—such as solo architecting **EasyTrip**, authoring published deep learning research (**ICCCNet 2026**), earning dual **AWS certifications**, and solving **250+ LeetCode problems**.
+
+Given my demonstrated ability to ship scalable full-stack applications independently, I am targeting opportunities with a **~200% hike** (~13.5 LPA+ range). I am also very open to discussing pre-graduation internships and early onboarding!`;
+  }
+
+  // 16. CONTACT / RESUME
   if (clean.includes('contact') || clean.includes('email') || clean.includes('phone') || clean.includes('reach') || clean.includes('linkedin') || clean.includes('github') || clean.includes('resume') || clean.includes('pdf')) {
     return `### Contact & Official Resume
 
@@ -286,7 +321,7 @@ Which project would you like deeper technical details on?`;
 I am based in Lucknow, UP / Chennai, and am actively exploring entry-level **Software Engineer**, **Backend Developer**, and **AI/ML** roles!`;
   }
 
-  // 16. CONVERSATIONAL DIRECT FALLBACK
+  // 17. CONVERSATIONAL DIRECT FALLBACK
   return `I understand you're asking about "${query}". 
 
 As Aman's portfolio assistant, I can give you verified details on:
@@ -316,26 +351,47 @@ export async function POST(req: Request) {
     if (geminiKey) {
       try {
         const response = await fetch(
-          `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`,
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key=${geminiKey}`,
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              system_instruction: {
+                parts: [
+                  {
+                    text: `You are Aman Patel's personal portfolio AI assistant trained using RAG (Retrieval-Augmented Generation) on Aman's verified resume, GitHub repositories, and research publications. Answer recruiters and visitors in the first person ("I", "my") as Aman Patel.
+
+You are capable of answering:
+• About Myself: Background, career aspirations, work ethic, and adaptability.
+• Academics: SRM IST B.Tech in CSE Data Science (CGPA: 8.83/10, 2023–2027) & coursework.
+• Known Skills: Java, Python, Node.js, Express.js, React, Next.js, WebSockets (Socket.IO), MongoDB, MySQL, AWS (AI & Cloud Certified), TensorFlow, 250+ LeetCode problems solved (100-day badge).
+• Project Questions:
+  - ChickTech AI: Poultry disease detection, dual CNN (VGG16 + MobileNetV2) 98.2% experimental accuracy, ICCCNet 2026 conference paper author, Next.js UI, Gemini RAG integration.
+  - EasyTrip: Solo full-stack platform with Node/Express, MongoDB, Socket.IO live GPS tracking, route deviation alerts, emergency SOS dispatch.
+  - AI Career Path Generator: Team project with GPT-4 roadmaps and ATS resume analyzer.
+  - CampusConnect: MOZO-HACK 3rd prize WebRTC video networking.
+• Technical Questions: Deep learning classification, REST APIs, WebSockets event architecture, RAG workflows, database optimization.
+• HR & Behavioral Questions: Teamwork, handling pressure, why you should hire me, strengths, and immediate availability for software engineering roles.
+• Current Full-Time Offer & Expectations:
+  - Yes, I currently hold a placement offer from Accenture for the Associate Software Engineer (ASE) role at 4.5 LPA with a tentative joining date of 4 July 2027 (following graduation from SRM IST).
+  - I am actively seeking higher-impact Software Engineer / Backend / AI/ML opportunities offering a ~200% hike (~13.5 LPA+ range) reflecting my proven ability to independently ship production systems, accepted ICCCNet 2026 CNN paper, dual AWS certifications, and 250+ LeetCode solved.
+  - Open to pre-graduation technical internships and early onboarding.
+
+Strict rules:
+1. Speak professionally, naturally, and concisely (with bullet points and bold highlights for readability).
+2. Never invent details or metrics beyond this verified profile.
+3. If asked about contact or resume: Email: amanpatelsrm@gmail.com, Phone: +91 9918318385, Resume: /resume.pdf.`,
+                  },
+                ],
+              },
               contents: [
                 {
                   role: 'user',
-                  parts: [
-                    {
-                      text: `${KNOWLEDGE_BASE_SYSTEM_PROMPT}
-
-User question: ${latestMessage}
-
-Answer naturally in first person based strictly on the verified knowledge base above.`,
-                    },
-                  ],
+                  parts: [{ text: latestMessage }],
                 },
               ],
             }),
+            signal: AbortSignal.timeout(4500),
           }
         );
 
@@ -343,9 +399,12 @@ Answer naturally in first person based strictly on the verified knowledge base a
           const data = await response.json();
           const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
           if (text) return NextResponse.json({ reply: text });
+        } else {
+          const errText = await response.text();
+          console.error('Gemini API returned non-OK status:', response.status, errText);
         }
       } catch (err) {
-        console.error('Gemini API call failed, using verified knowledge engine:', err);
+        console.warn('Gemini request timed out or failed (>4.5s), instantly serving verified knowledge base reply:', err);
       }
     }
 

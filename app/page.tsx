@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { useScroll } from 'framer-motion';
 import { SoundProvider } from '@/components/SoundContext';
 import CustomCursor from '@/components/CustomCursor';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
@@ -18,133 +18,46 @@ import PublicationsSection from '@/components/PublicationsSection';
 import ResumeSection from '@/components/ResumeSection';
 import Footer from '@/components/Footer';
 
-const TOTAL_FRAMES = 80;
-const FRAME_PATH = (i: number) =>
-  `/sequence/frame_${String(i + 1).padStart(3, '0')}.webp`;
-
-function coverDraw(
-  ctx: CanvasRenderingContext2D,
-  img: HTMLImageElement,
-  cw: number,
-  ch: number
-) {
-  const iw = img.naturalWidth || img.width;
-  const ih = img.naturalHeight || img.height;
-  if (!iw || !ih) return;
-
-  const canvasAR = cw / ch;
-  const imgAR = iw / ih;
-
-  let sw: number, sh: number, sx: number, sy: number;
-
-  if (canvasAR > imgAR) {
-    sw = iw;
-    sh = iw / canvasAR;
-    sx = 0;
-    sy = (ih - sh) / 2;
-  } else {
-    sh = ih;
-    sw = ih * canvasAR;
-    sx = (iw - sw) / 2;
-    sy = 0;
-  }
-
-  ctx.clearRect(0, 0, cw, ch);
-  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, cw, ch);
-}
-
 export default function Home() {
   const sectionRef = useRef<HTMLElement>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const framesRef = useRef<HTMLImageElement[]>([]);
-  const rafRef = useRef<number>(0);
-  const currentFrameRef = useRef<number>(0);
-
   const [preloadProgress, setPreloadProgress] = useState(0);
-  const [isPreloaded, setIsPreloaded] = useState(false);
-  const [hasSequence, setHasSequence] = useState(true);
 
   const { scrollYProgress } = useScroll({ target: sectionRef });
-  const frameIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL_FRAMES - 1]);
 
-  // Preload sequence frames
+  // Cinematic 3.2-second smooth startup calibration timer
   useEffect(() => {
-    let loaded = 0;
-    let failed = 0;
-    const images: HTMLImageElement[] = new Array(TOTAL_FRAMES);
+    // Preload actual hero portrait
+    const heroImg = new window.Image();
+    heroImg.src = '/portrait.png';
 
-    const checkDone = () => {
-      const prog = Math.round(((loaded + failed) / TOTAL_FRAMES) * 100);
-      setPreloadProgress(prog);
+    const startTime = performance.now();
+    const duration = 3200; // 3.2 seconds smooth progression
 
-      if (loaded + failed === TOTAL_FRAMES) {
-        if (failed === TOTAL_FRAMES) setHasSequence(false);
-        setIsPreloaded(true);
-        framesRef.current = images;
+    let frameId: number;
+    const updateProgress = (now: number) => {
+      const elapsed = now - startTime;
+      const progressRatio = Math.min(elapsed / duration, 1);
+
+      // Smooth easing curve (accelerates and decelerates smoothly)
+      const easedProgress = Math.min(
+        100,
+        Math.round(
+          progressRatio < 0.5
+            ? 2 * progressRatio * progressRatio * 100
+            : (1 - Math.pow(-2 * progressRatio + 2, 2) / 2) * 100
+        )
+      );
+
+      setPreloadProgress(easedProgress);
+
+      if (progressRatio < 1) {
+        frameId = requestAnimationFrame(updateProgress);
       }
     };
 
-    for (let i = 0; i < TOTAL_FRAMES; i++) {
-      const img = new window.Image();
-      img.onload = () => {
-        loaded++;
-        checkDone();
-      };
-      img.onerror = () => {
-        failed++;
-        checkDone();
-      };
-      img.src = FRAME_PATH(i);
-      images[i] = img;
-    }
+    frameId = requestAnimationFrame(updateProgress);
+    return () => cancelAnimationFrame(frameId);
   }, []);
-
-  const drawFrame = useCallback((index: number) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    const img = framesRef.current[Math.round(index)];
-    if (!img || !img.complete || !img.naturalWidth) return;
-    coverDraw(ctx, img, canvas.width, canvas.height);
-  }, []);
-
-  useMotionValueEvent(frameIndex, 'change', (latest) => {
-    const idx = Math.round(latest);
-    if (idx === currentFrameRef.current) return;
-    currentFrameRef.current = idx;
-    cancelAnimationFrame(rafRef.current);
-    rafRef.current = requestAnimationFrame(() => drawFrame(idx));
-  });
-
-  useEffect(() => {
-    if (isPreloaded && hasSequence) requestAnimationFrame(() => drawFrame(0));
-  }, [isPreloaded, hasSequence, drawFrame]);
-
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    const handleResize = () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        drawFrame(currentFrameRef.current);
-      }, 150);
-    };
-
-    const canvas = canvasRef.current;
-    if (canvas) {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      clearTimeout(timer);
-    };
-  }, [drawFrame]);
 
   return (
     <SoundProvider>

@@ -16,14 +16,16 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
   const [isEntering, setIsEntering] = useState(false);
   const [scrambleText, setScrambleText] = useState('INITIALIZING ARCHITECTURE');
   const [reducedMotion, setReducedMotion] = useState(false);
-  const { playBootSound } = useSound();
+  const { playBootSound, playTickSound, unlockAudio, isAudioUnlocked } = useSound();
 
-  const targetText = 'LOADING EXPERIENCE';
+  const getTargetText = () => {
+    if (progress < 30) return 'INITIALIZING ARCHITECTURE';
+    if (progress < 65) return 'CALIBRATING NEURAL MESH';
+    if (progress < 95) return 'MOUNTING PRODUCTION SYSTEMS';
+    return 'SYSTEMS VERIFIED · READY';
+  };
 
   useEffect(() => {
-    if (sessionStorage.getItem('aman_portfolio_visited') === 'true') {
-      setIsVisible(false);
-    }
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setReducedMotion(true);
     }
@@ -35,26 +37,31 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
     }
   }, [isVisible, onComplete]);
 
-  // Attempt automatic audio trigger on load
+  // Play audio tick sound on progress increments
   useEffect(() => {
-    if (isVisible) {
-      playBootSound();
+    if (progress > 0 && progress < 100) {
+      playTickSound(progress);
     }
-  }, [isVisible, playBootSound]);
+  }, [progress, playTickSound]);
 
-  // Text scramble effect
+  // Text scramble effect synchronized with progress phase
   useEffect(() => {
-    if (reducedMotion || !isVisible) return;
+    const targetText = getTargetText();
+    if (reducedMotion || !isVisible) {
+      setScrambleText(targetText);
+      return;
+    }
+
     let frame = 0;
     const interval = setInterval(() => {
       frame++;
       const currentProgress = Math.min(progress / 100, 1);
-      const revealedLength = Math.floor(targetText.length * currentProgress);
+      const revealedLength = Math.floor(targetText.length * Math.min(currentProgress * 1.2, 1));
 
       const scrambled = targetText
         .split('')
         .map((char, index) => {
-          if (char === ' ') return ' ';
+          if (char === ' ' || char === '·') return char;
           if (index < revealedLength) return char;
           return CHARS[Math.floor(Math.random() * CHARS.length)];
         })
@@ -62,39 +69,35 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
 
       setScrambleText(scrambled);
 
-      if (currentProgress >= 1 && frame > targetText.length * 2) {
+      if (frame > targetText.length * 1.5) {
         clearInterval(interval);
         setScrambleText(targetText);
       }
-    }, 50);
+    }, 28);
 
     return () => clearInterval(interval);
   }, [progress, reducedMotion, isVisible]);
 
-  // Smooth auto-transition when assets are ready
+  // Transition when 100% is reached
   useEffect(() => {
     if (progress >= 100 && !isEntering && isVisible) {
+      playBootSound();
       const timer = setTimeout(() => {
         handleEnter();
-      }, 1200);
+      }, 400);
       return () => clearTimeout(timer);
     }
-  }, [progress, isEntering, isVisible]);
+  }, [progress, isEntering, isVisible, playBootSound]);
 
   const handleEnter = () => {
     if (isEntering) return;
     setIsEntering(true);
     playBootSound();
 
-    if (typeof window !== 'undefined') {
-      sessionStorage.getItem('aman_portfolio_visited');
-      sessionStorage.setItem('aman_portfolio_visited', 'true');
-    }
-
     setTimeout(() => {
       setIsVisible(false);
       onComplete?.();
-    }, 850);
+    }, 450);
   };
 
   if (!isVisible) return null;
@@ -107,18 +110,36 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#cbb3e8] text-black select-none overflow-hidden"
+        className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[#cbb3e8] text-black select-none overflow-hidden cursor-pointer"
         initial={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.4 }}
+        onClick={unlockAudio}
       >
+        {/* Audio Status Pill */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            unlockAudio();
+          }}
+          className="absolute top-6 right-6 flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black text-[#D4ff3f] border-2 border-black text-xs font-mono font-bold shadow-lg cursor-pointer hover:bg-[#D4ff3f] hover:text-black transition-colors"
+          title="Click to toggle or activate sound effects"
+        >
+          <span
+            className={`w-2 h-2 rounded-full ${
+              isAudioUnlocked ? 'bg-[#D4ff3f] animate-ping' : 'bg-[#e34234] animate-pulse'
+            }`}
+          />
+          <span>{isAudioUnlocked ? 'AUDIO ACTIVE' : 'TAP FOR SOUND'}</span>
+        </button>
+
         {/* Iris / Radial Mask wipe layer when entering */}
         {isEntering && (
           <motion.div
             className="absolute inset-0 z-50 pointer-events-none"
             initial={{ clipPath: 'circle(150% at 50% 50%)' }}
             animate={{ clipPath: 'circle(0% at 50% 50%)' }}
-            transition={{ duration: 0.85, ease: [0.76, 0, 0.24, 1] }}
+            transition={{ duration: 0.45, ease: [0.76, 0, 0.24, 1] }}
             style={{ background: '#cbb3e8' }}
           />
         )}
