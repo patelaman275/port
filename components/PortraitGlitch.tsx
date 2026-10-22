@@ -76,12 +76,12 @@ export default function PortraitGlitch({ scrollYProgress }: PortraitGlitchProps)
               style={{ mixBlendMode: 'normal' }}
             />
 
-            {/* Warm Spotify Green rim light overlay */}
+            {/* 3-Color Lavender / Chartreuse / Tomato Red rim light overlay */}
             <div
               className="absolute inset-0"
               style={{
                 background:
-                  'linear-gradient(110deg, rgba(29,185,84,0.22) 0%, rgba(30,215,96,0.1) 35%, transparent 60%)',
+                  'linear-gradient(110deg, rgba(212,255,63,0.25) 0%, rgba(203,179,232,0.18) 35%, rgba(227,66,52,0.1) 60%, transparent 80%)',
                 mixBlendMode: 'screen',
               }}
             />
@@ -96,7 +96,7 @@ export default function PortraitGlitch({ scrollYProgress }: PortraitGlitchProps)
                   width: '60%',
                   height: '100%',
                   background:
-                    'linear-gradient(90deg, transparent 0%, rgba(30,215,96,0.18) 30%, rgba(255,255,255,0.28) 50%, rgba(29,185,84,0.18) 70%, transparent 100%)',
+                    'linear-gradient(90deg, transparent 0%, rgba(212,255,63,0.2) 30%, rgba(203,179,232,0.3) 50%, rgba(227,66,52,0.2) 70%, transparent 100%)',
                   animation: 'shimmer-sweep 4s ease-in-out infinite',
                   animationDelay: '1s',
                   mixBlendMode: 'overlay',
@@ -105,26 +105,29 @@ export default function PortraitGlitch({ scrollYProgress }: PortraitGlitchProps)
               />
             </div>
 
-            {/* Sparkle Ember Dots */}
-            {SPARKLES.map((s, i) => (
-              <div
-                key={i}
-                style={{
-                  position: 'absolute',
-                  left: `${s.x}%`,
-                  top: `${s.y}%`,
-                  width: '3.5px',
-                  height: '3.5px',
-                  borderRadius: '50%',
-                  background: i % 2 === 0 ? '#1ed760' : '#1DB954',
-                  boxShadow: `0 0 8px 2px ${i % 2 === 0 ? 'rgba(30,215,96,0.8)' : 'rgba(29,185,84,0.8)'}`,
-                  animation: `sparkle-in ${s.dur}s ease-in-out infinite`,
-                  animationDelay: `${s.delay}s`,
-                  mixBlendMode: 'screen',
-                  pointerEvents: 'none',
-                }}
-              />
-            ))}
+            {/* Sparkle Ember Dots in 3 Colors: Chartreuse, Lavender, Tomato Red */}
+            {SPARKLES.map((s, i) => {
+              const color = i % 3 === 0 ? '#D4ff3f' : i % 3 === 1 ? '#cbb3e8' : '#e34234';
+              return (
+                <div
+                  key={i}
+                  style={{
+                    position: 'absolute',
+                    left: `${s.x}%`,
+                    top: `${s.y}%`,
+                    width: '3.5px',
+                    height: '3.5px',
+                    borderRadius: '50%',
+                    background: color,
+                    boxShadow: `0 0 10px 2px ${color}`,
+                    animation: `sparkle-in ${s.dur}s ease-in-out infinite`,
+                    animationDelay: `${s.delay}s`,
+                    mixBlendMode: 'screen',
+                    pointerEvents: 'none',
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
 

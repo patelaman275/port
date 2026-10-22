@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
+import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 import { SoundProvider } from '@/components/SoundContext';
 import CustomCursor from '@/components/CustomCursor';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
@@ -10,7 +10,10 @@ import PortraitGlitch from '@/components/PortraitGlitch';
 import OverlayText from '@/components/OverlayText';
 import ProjectCarousel3D from '@/components/ProjectCarousel3D';
 import SkillsSection from '@/components/SkillsSection';
+import CertificationsSection from '@/components/CertificationsSection';
+import EducationAndAchievements from '@/components/EducationAndAchievements';
 import PublicationsSection from '@/components/PublicationsSection';
+import ResumeSection from '@/components/ResumeSection';
 import Footer from '@/components/Footer';
 
 const TOTAL_FRAMES = 80;
@@ -152,7 +155,20 @@ export default function Home() {
       {/* Loading Intro Experience */}
       <LoadingExperience progress={preloadProgress} />
 
-      <main className="bg-[#080608] min-h-screen relative overflow-x-hidden">
+      {/* Floating Quick Action: View / Download Resume */}
+      <div className="fixed top-5 right-5 z-[9990] flex items-center gap-2">
+        <a
+          href="/resume.pdf"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex items-center gap-2 px-4 py-2 rounded-full bg-[#0c140c]/85 backdrop-blur-md border border-[#1DB954]/40 text-white font-semibold text-xs shadow-[0_0_20px_rgba(29,185,84,0.25)] hover:bg-[#1DB954] hover:text-black hover:border-[#1DB954] transition-all duration-300"
+        >
+          <span className="w-2 h-2 rounded-full bg-[#1ed760] group-hover:bg-black animate-pulse" />
+          <span>📄 View Resume</span>
+        </a>
+      </div>
+
+      <main className="bg-[#080b07] min-h-screen relative overflow-x-hidden">
         {/* ══ HERO: ScrollyCanvas + Portrait + Overlay Text ══════════ */}
         <section
           ref={sectionRef}
@@ -175,7 +191,7 @@ export default function Home() {
                 className="absolute inset-0"
                 style={{
                   background:
-                    'radial-gradient(ellipse 90% 70% at 30% 60%, #200808 0%, #110406 35%, #080608 70%)',
+                    'radial-gradient(ellipse 90% 70% at 30% 60%, #0d1e11 0%, #08120a 35%, #080b07 70%)',
                 }}
                 aria-hidden="true"
               />
@@ -186,23 +202,23 @@ export default function Home() {
               className="absolute inset-0 pointer-events-none z-[1]"
               style={{
                 background:
-                  'radial-gradient(ellipse 140% 100% at 50% 50%, transparent 25%, rgba(8,6,8,0.55) 65%, rgba(8,6,8,0.92) 100%)',
+                  'radial-gradient(ellipse 140% 100% at 50% 50%, transparent 25%, rgba(8,11,7,0.55) 65%, rgba(8,11,7,0.92) 100%)',
               }}
               aria-hidden="true"
             />
 
-            {/* Ember sparks */}
+            {/* Spotify Green particles */}
             <div className="absolute inset-0 pointer-events-none z-[2] overflow-hidden">
               {[...Array(14)].map((_, i) => (
                 <div
                   key={i}
-                  className="absolute rounded-full bg-gradient-to-t from-[#ff4b2b] to-[#ff8a00]"
+                  className="absolute rounded-full bg-gradient-to-t from-[#1DB954] to-[#1ed760]"
                   style={{
                     left: `${10 + (i * 6.2) % 80}%`,
                     top: `${15 + (i * 8.1) % 75}%`,
                     width: `${2 + (i % 3)}px`,
                     height: `${2 + (i % 3)}px`,
-                    boxShadow: '0 0 10px #ff4b2b, 0 0 20px #ff8a00',
+                    boxShadow: '0 0 10px #1DB954, 0 0 20px #1ed760',
                     opacity: 0.2 + (i % 4) * 0.15,
                     animation: `float-y ${3 + (i % 4)}s ease-in-out infinite`,
                     animationDelay: `${(i * 0.3) % 3}s`,
@@ -215,7 +231,7 @@ export default function Home() {
             <div
               className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none z-[5]"
               style={{
-                background: 'linear-gradient(to bottom, transparent, #080608)',
+                background: 'linear-gradient(to bottom, transparent, #080b07)',
               }}
               aria-hidden="true"
             />
@@ -240,8 +256,26 @@ export default function Home() {
         {/* Section divider */}
         <div className="section-divider mx-auto max-w-4xl" />
 
+        {/* ══ CERTIFICATIONS SECTION ═══════════════════════════════ */}
+        <CertificationsSection />
+
+        {/* Section divider */}
+        <div className="section-divider mx-auto max-w-4xl" />
+
+        {/* ══ EDUCATION & ACHIEVEMENTS SECTION ══════════════════════ */}
+        <EducationAndAchievements />
+
+        {/* Section divider */}
+        <div className="section-divider mx-auto max-w-4xl" />
+
         {/* ══ PUBLICATIONS SECTION ═════════════════════════════════ */}
         <PublicationsSection />
+
+        {/* Section divider */}
+        <div className="section-divider mx-auto max-w-4xl" />
+
+        {/* ══ RESUME SECTION (VIEW & DOWNLOAD) ══════════════════════ */}
+        <ResumeSection />
 
         {/* ══ FOOTER / CONTACT ═════════════════════════════════════ */}
         <Footer />

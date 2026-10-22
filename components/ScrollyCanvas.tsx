@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
-import { useScroll, useTransform, motion, useMotionValueEvent } from 'framer-motion';
+import { useScroll, useTransform, useMotionValueEvent } from 'framer-motion';
 
 const TOTAL_FRAMES = 80;
 const FRAME_PATH = (i: number) =>
@@ -70,7 +70,7 @@ export default function ScrollyCanvas({ onLoadProgress }: ScrollyCanvasProps) {
   const [hasSequence, setHasSequence] = useState(true);
   const scrollSpeedRef = useRef<number>(0);
   const lastScrollPosRef = useRef<number>(0);
-  const lastScrollTimeRef = useRef<number>(Date.now());
+  const lastScrollTimeRef = useRef<number>(0);
 
   const { scrollYProgress } = useScroll({ target: sectionRef });
   const frameIndex = useTransform(scrollYProgress, [0, 1], [0, TOTAL_FRAMES - 1]);

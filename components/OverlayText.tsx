@@ -34,11 +34,11 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
         >
           <div
             className="h-0.5 w-8"
-            style={{ background: 'linear-gradient(90deg, #0d9488, #1ed760)' }}
+            style={{ background: 'linear-gradient(90deg, #e34234, #D4ff3f)' }}
           />
           <span
-            className="text-xs tracking-[0.35em] uppercase font-medium"
-            style={{ color: '#1DB954' }}
+            className="text-xs tracking-[0.35em] uppercase font-bold"
+            style={{ color: '#D4ff3f' }}
           >
             Portfolio
           </span>
@@ -73,25 +73,46 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           transition={{ duration: 0.9, delay: 0.55, ease: [0.16, 1, 0.3, 1] }}
         >
           <p
-            className="font-light tracking-wide text-sm md:text-base text-white/80"
-            style={{ letterSpacing: '0.05em' }}
+            className="font-medium tracking-wide text-sm md:text-base text-white/90"
+            style={{ letterSpacing: '0.04em' }}
           >
-            ML Engineer&nbsp;
-            <span className="text-[#1DB954] font-semibold">·</span>
-            &nbsp;Full-Stack Developer&nbsp;
-            <span className="text-[#1DB954] font-semibold">·</span>
-            &nbsp;Data Science
+            Software Engineer&nbsp;
+            <span className="text-[#D4ff3f] font-semibold">·</span>
+            &nbsp;AI/ML & Full-Stack&nbsp;
+            <span className="text-[#cbb3e8] font-semibold">·</span>
+            &nbsp;Backend Specialist
+          </p>
+          <p className="text-xs text-[#cbb3e8]/80 mt-1 font-light">
+            B.Tech CSE (Data Science) @ SRM IST &middot; CGPA: 8.83/10
           </p>
         </motion.div>
 
-        {/* Single Tagline Quote (Replaces Stat Badges) */}
+        {/* Highlight Quick Badges */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.7 }}
+          transition={{ duration: 0.8, delay: 0.65 }}
+          className="flex flex-wrap gap-2 pt-1"
         >
-          <p className="text-xs md:text-sm font-light italic text-white/50 tracking-wide leading-relaxed">
-            &ldquo;Building things that learn, scale, and ship — one line of code at a time.&rdquo;
+          <span className="text-[11px] px-2.5 py-1 rounded-full bg-[#D4ff3f]/15 border border-[#D4ff3f]/35 text-[#D4ff3f] font-semibold">
+            AWS Certified AI & Cloud
+          </span>
+          <span className="text-[11px] px-2.5 py-1 rounded-full bg-[#cbb3e8]/15 border border-[#cbb3e8]/30 text-[#cbb3e8] font-medium">
+            ICCCNet 2026 Author
+          </span>
+          <span className="text-[11px] px-2.5 py-1 rounded-full bg-[#e34234]/15 border border-[#e34234]/30 text-[#e34234] font-medium">
+            LeetCode 250+ Solved
+          </span>
+        </motion.div>
+
+        {/* Single Tagline Quote */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.75 }}
+        >
+          <p className="text-xs md:text-sm font-light italic text-white/60 tracking-wide leading-relaxed">
+            &ldquo;Building scalable full-stack applications and AI systems that solve real problems.&rdquo;
           </p>
         </motion.div>
 
@@ -100,15 +121,15 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.85 }}
-          className="flex gap-4 flex-wrap pointer-events-auto mt-2"
+          className="flex gap-3 flex-wrap pointer-events-auto mt-2"
         >
           <MagneticButton>
             <a
               href="#projects"
-              className="group relative inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm overflow-hidden transition-all duration-300 shadow-[0_4px_30px_rgba(29,185,84,0.4)] hover:shadow-[0_6px_45px_rgba(30,215,96,0.65)] hover:-translate-y-0.5"
+              className="group relative inline-flex items-center gap-2.5 px-6 py-3 rounded-full font-bold text-xs md:text-sm overflow-hidden transition-all duration-300 shadow-[0_4px_30px_rgba(212,255,63,0.35)] hover:shadow-[0_6px_45px_rgba(203,179,232,0.6)] hover:-translate-y-0.5"
               style={{
-                background: 'linear-gradient(135deg, #0d9488 0%, #1DB954 60%, #1ed760 100%)',
-                color: '#fff',
+                background: 'linear-gradient(135deg, #e34234 0%, #cbb3e8 50%, #D4ff3f 100%)',
+                color: '#0a080d',
               }}
             >
               <span>View Projects</span>
@@ -120,14 +141,12 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
 
           <MagneticButton>
             <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:border-[#1DB954]/50 hover:bg-white/10 hover:-translate-y-0.5"
+              href="#resume"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full font-semibold text-xs md:text-sm transition-all duration-300 hover:border-[#D4ff3f]/60 hover:bg-[#D4ff3f]/10 hover:-translate-y-0.5"
               style={{
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                color: 'rgba(240,244,255,0.85)',
+                background: 'rgba(203, 179, 232, 0.1)',
+                border: '1px solid rgba(203, 179, 232, 0.3)',
+                color: '#cbb3e8',
                 backdropFilter: 'blur(12px)',
               }}
             >
@@ -135,7 +154,23 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
                 <polyline points="14,2 14,8 20,8" />
               </svg>
-              <span>Resume</span>
+              <span>View Resume</span>
+            </a>
+          </MagneticButton>
+
+          <MagneticButton>
+            <a
+              href="/resume.pdf"
+              download="Aman_Patel_Resume.pdf"
+              className="inline-flex items-center gap-2 px-4 py-3 rounded-full font-medium text-xs text-white/80 hover:text-white transition-all duration-300 hover:bg-white/10 border border-white/10"
+              title="Download Resume PDF"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>PDF</span>
             </a>
           </MagneticButton>
         </motion.div>
@@ -151,11 +186,11 @@ export default function OverlayText({ scrollYProgress }: OverlayTextProps) {
             animate={{ y: [0, 8, 0] }}
             transition={{ repeat: Infinity, duration: 1.8, ease: 'easeInOut' }}
             className="w-5 h-8 rounded-full border flex items-start justify-center pt-1.5"
-            style={{ borderColor: 'rgba(29,185,84,0.4)' }}
+            style={{ borderColor: 'rgba(212,255,63,0.4)' }}
           >
             <div
               className="w-1 h-2 rounded-full"
-              style={{ background: 'linear-gradient(#1DB954, #1ed760)' }}
+              style={{ background: 'linear-gradient(#D4ff3f, #cbb3e8)' }}
             />
           </motion.div>
           <span

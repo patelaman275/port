@@ -57,14 +57,14 @@ export default function Footer() {
       id="contact"
       className="relative border-t"
       style={{
-        background: '#080608',
-        borderColor: 'rgba(204,17,0,0.12)',
+        background: '#080b07',
+        borderColor: 'rgba(29,185,84,0.15)',
       }}
     >
       {/* Top glow line */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-px"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(204,17,0,0.5), transparent)' }}
+        style={{ background: 'linear-gradient(90deg, transparent, rgba(29,185,84,0.6), transparent)' }}
       />
 
       <div className="max-w-4xl mx-auto px-6 py-20 text-center">
@@ -81,16 +81,47 @@ export default function Footer() {
           >
             Aman Patel
           </h2>
-          <p className="text-sm mb-1" style={{ color: 'rgba(136,146,164,0.7)' }}>
-            ML Engineer · Full-Stack Developer · Data Science
+          <p className="text-sm mb-1 text-white/90 font-medium">
+            Software Engineer · AI/ML & Full-Stack Developer · Backend Specialist
           </p>
-          <p className="text-xs flex items-center justify-center gap-1.5 mb-10" style={{ color: 'rgba(136,146,164,0.5)' }}>
+          <p className="text-xs text-[#1ed760] font-semibold mb-2">
+            B.Tech CSE (Data Science) @ SRM IST &middot; CGPA: 8.83/10
+          </p>
+          <p className="text-xs flex items-center justify-center gap-1.5 mb-6 text-white/50">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
               <circle cx="12" cy="10" r="3"/>
             </svg>
             Lucknow, Uttar Pradesh, India
           </p>
+
+          {/* Resume Quick Action */}
+          <div className="flex items-center justify-center gap-3 mb-8 flex-wrap">
+            <a
+              href="/resume.pdf"
+              download="Aman_Patel_Resume.pdf"
+              className="px-6 py-2.5 rounded-full text-xs font-bold text-white bg-gradient-to-r from-[#0d9488] to-[#1DB954] hover:from-[#1DB954] hover:to-[#1ed760] shadow-md shadow-emerald-950/40 transition-all flex items-center gap-2"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              <span>Download Official Resume (PDF)</span>
+            </a>
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-2.5 rounded-full text-xs font-semibold text-[#1ed760] bg-white/5 border border-[#1DB954]/30 hover:bg-[#1DB954]/10 transition-all flex items-center gap-2"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14,2 14,8 20,8" />
+              </svg>
+              <span>View Resume</span>
+            </a>
+          </div>
         </motion.div>
 
         {/* Social links */}
@@ -111,15 +142,15 @@ export default function Footer() {
               style={{
                 background: 'rgba(255,255,255,0.04)',
                 border: '1px solid rgba(255,255,255,0.08)',
-                color: 'rgba(200,210,230,0.75)',
+                color: 'rgba(200,210,230,0.85)',
               }}
               whileHover={{
                 scale: 1.05,
                 y: -2,
-                background: 'rgba(204,17,0,0.12)',
-                borderColor: 'rgba(204,17,0,0.4)',
-                color: '#ff8866',
-                boxShadow: '0 4px 20px rgba(180,20,0,0.25)',
+                background: 'rgba(29,185,84,0.12)',
+                borderColor: 'rgba(29,185,84,0.4)',
+                color: '#1ed760',
+                boxShadow: '0 4px 20px rgba(29,185,84,0.25)',
               }}
               transition={{ type: 'spring', stiffness: 400, damping: 25 }}
             >

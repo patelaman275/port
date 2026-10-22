@@ -12,28 +12,29 @@ interface LoadingExperienceProps {
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*!';
 
 export default function LoadingExperience({ progress, onComplete }: LoadingExperienceProps) {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isVisible, setIsVisible] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('aman_portfolio_visited') !== 'true';
+    }
+    return true;
+  });
   const [isEntering, setIsEntering] = useState(false);
   const [scrambleText, setScrambleText] = useState('INITIALIZING ARCHITECTURE');
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const [reducedMotion] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+    return false;
+  });
   const { playBootSound } = useSound();
 
   const targetText = 'LOADING EXPERIENCE';
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const visited = sessionStorage.getItem('aman_portfolio_visited');
-      if (visited === 'true') {
-        setIsVisible(false);
-        onComplete?.();
-        return;
-      }
-
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        setReducedMotion(true);
-      }
+    if (!isVisible) {
+      onComplete?.();
     }
-  }, [onComplete]);
+  }, [isVisible, onComplete]);
 
   // Attempt automatic audio trigger on load
   useEffect(() => {
@@ -120,9 +121,9 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
             <svg className="w-full h-full transform -rotate-90" viewBox="0 0 160 160">
               <defs>
                 <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#0d9488" />
-                  <stop offset="50%" stopColor="#1DB954" />
-                  <stop offset="100%" stopColor="#1ed760" />
+                  <stop offset="0%" stopColor="#e34234" />
+                  <stop offset="50%" stopColor="#cbb3e8" />
+                  <stop offset="100%" stopColor="#D4ff3f" />
                 </linearGradient>
               </defs>
               <circle
@@ -151,7 +152,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
             <div className="absolute inset-0 flex flex-col items-center justify-center">
               <span className="font-mono text-4xl font-bold tracking-tighter text-white">
                 {Math.round(progress)}
-                <span className="text-xs text-[#1ed760] font-normal font-sans ml-0.5">%</span>
+                <span className="text-xs text-[#D4ff3f] font-normal font-sans ml-0.5">%</span>
               </span>
             </div>
           </div>
@@ -172,10 +173,10 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
                 animate={{ opacity: 1, scale: 1 }}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-7 py-3 rounded-full font-semibold text-xs tracking-[0.2em] uppercase text-white bg-gradient-to-r from-[#0d9488] via-[#1DB954] to-[#1ed760] shadow-[0_0_30px_rgba(29,185,84,0.4)] hover:shadow-[0_0_50px_rgba(30,215,96,0.7)] transition-all duration-300 flex items-center gap-2 cursor-pointer"
+                className="px-7 py-3 rounded-full font-bold text-xs tracking-[0.2em] uppercase text-black bg-gradient-to-r from-[#e34234] via-[#cbb3e8] to-[#D4ff3f] shadow-[0_0_30px_rgba(212,255,63,0.4)] hover:shadow-[0_0_50px_rgba(203,179,232,0.7)] transition-all duration-300 flex items-center gap-2 cursor-pointer"
               >
                 <span>ENTER EXPERIENCE</span>
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-black animate-ping" />
               </motion.button>
             ) : (
               <p className="text-[10px] tracking-[0.25em] text-white/30 uppercase">
@@ -186,7 +187,7 @@ export default function LoadingExperience({ progress, onComplete }: LoadingExper
         </div>
 
         {/* Ambient background glow */}
-        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_rgba(29,185,84,0.06)_0%,_transparent_70%)]" />
+        <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,_rgba(212,255,63,0.08)_0%,_transparent_70%)]" />
       </motion.div>
     </AnimatePresence>
   );

@@ -2,15 +2,14 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Award, ExternalLink, ShieldCheck, Cpu, Cloud, Layers } from 'lucide-react';
+import { ExternalLink, Award, Cpu, Cloud, Code } from 'lucide-react';
 
 interface Certification {
   id: number;
   title: string;
   issuer: string;
-  date: string;
-  credentialId: string;
-  url: string;
+  type: string;
+  url?: string;
   icon: React.ReactNode;
   skills: string[];
 }
@@ -18,43 +17,37 @@ interface Certification {
 const CERTIFICATIONS: Certification[] = [
   {
     id: 1,
-    title: 'TensorFlow Developer Certificate',
-    issuer: 'DeepLearning.AI / Google',
-    date: '2026',
-    credentialId: 'TF-DEV-884920',
-    url: 'https://github.com/patelaman275',
+    title: 'AWS Certified AI Practitioner',
+    issuer: 'Amazon Web Services (AWS)',
+    type: 'Foundational Certification',
+    url: 'https://www.credly.com/badges/004e33b3-890d-423f-bbd5-cda6f15d52ed/public_url',
     icon: <Cpu className="w-6 h-6 text-[#1DB954]" />,
-    skills: ['TensorFlow', 'Computer Vision', 'NLP', 'Time Series Forecasting'],
+    skills: ['Generative AI', 'Amazon Bedrock', 'Foundation Models', 'Responsible AI', 'ML Workflows'],
   },
   {
     id: 2,
-    title: 'Deep Learning Specialization',
-    issuer: 'DeepLearning.AI (Coursera)',
-    date: '2025',
-    credentialId: 'DL-SPEC-339281',
-    url: 'https://github.com/patelaman275',
-    icon: <Layers className="w-6 h-6 text-[#1ed760]" />,
-    skills: ['Neural Networks', 'CNNs', 'Structuring ML Projects', 'Hyperparameter Tuning'],
+    title: 'AWS Certified Cloud Practitioner',
+    issuer: 'Amazon Web Services (AWS)',
+    type: 'Foundational Certification',
+    url: 'https://www.credly.com/badges/0eaec43f-c20f-42e1-a781-1d5717784400/public_url',
+    icon: <Cloud className="w-6 h-6 text-[#1ed760]" />,
+    skills: ['Cloud Architecture', 'AWS Core Services', 'IAM & Security', 'Cloud Economics', 'Billing & Support'],
   },
   {
     id: 3,
-    title: 'Associate Cloud Engineer',
-    issuer: 'Google Cloud (GCP)',
-    date: '2025',
-    credentialId: 'GCP-ACE-774921',
-    url: 'https://github.com/patelaman275',
-    icon: <Cloud className="w-6 h-6 text-[#1DB954]" />,
-    skills: ['GCP Infrastructure', 'App Engine', 'Kubernetes Engine', 'Cloud IAM'],
+    title: 'Java Programming (Elite Certificate)',
+    issuer: 'NPTEL IIT (via SWAYAM / NPTEL)',
+    type: 'Elite Ministry of Education Credential',
+    icon: <Code className="w-6 h-6 text-[#1DB954]" />,
+    skills: ['Object-Oriented Programming', 'Multithreading', 'Collections Framework', 'Exception Handling', 'Design Patterns'],
   },
   {
     id: 4,
-    title: 'Meta Front-End Developer',
-    issuer: 'Meta (Coursera)',
-    date: '2025',
-    credentialId: 'META-FED-992083',
-    url: 'https://github.com/patelaman275',
-    icon: <ShieldCheck className="w-6 h-6 text-[#1ed760]" />,
-    skills: ['React.js', 'UI/UX Design Systems', 'Web Development', 'Version Control'],
+    title: 'Introduction to Machine Learning',
+    issuer: 'NPTEL IIT Kharagpur',
+    type: 'IIT Kharagpur Credential',
+    icon: <Award className="w-6 h-6 text-[#1ed760]" />,
+    skills: ['Supervised Learning', 'Unsupervised Learning', 'Neural Networks', 'Feature Engineering', 'Model Optimization'],
   },
 ];
 
@@ -136,15 +129,15 @@ export default function CertificationsSection() {
               <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#1DB954]/10 border border-[#1DB954]/20 flex-shrink-0">
                 {cert.icon}
               </div>
-              <span className="text-xs text-[#1DB954] font-semibold bg-[#1DB954]/10 border border-[#1DB954]/20 px-2.5 py-1 rounded-full uppercase tracking-wider">
-                {cert.date}
+              <span className="text-[11px] text-[#1ed760] font-semibold bg-[#1DB954]/10 border border-[#1DB954]/20 px-2.5 py-1 rounded-full">
+                {cert.type}
               </span>
             </div>
 
             <h3 className="font-bold text-white text-lg group-hover:text-[#1ed760] transition-colors duration-200 mb-1">
               {cert.title}
             </h3>
-            <p className="text-xs text-white/50 mb-3">{cert.issuer} &middot; Credential ID: {cert.credentialId}</p>
+            <p className="text-xs text-white/60 mb-3">{cert.issuer}</p>
 
             {/* Skills acquired */}
             <div className="flex flex-wrap gap-1.5 mb-6">
@@ -158,21 +151,23 @@ export default function CertificationsSection() {
               ))}
             </div>
 
-            {/* Link button */}
-            <a
-              href={cert.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                window.open(cert.url, '_blank', 'noopener,noreferrer');
-              }}
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/70 hover:text-[#1ed760] transition-colors cursor-pointer pointer-events-auto"
-            >
-              <span>View Credential</span>
-              <ExternalLink className="w-3.5 h-3.5" />
-            </a>
+            {/* Link button (Credly verification) */}
+            {cert.url && (
+              <a
+                href={cert.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  window.open(cert.url, '_blank', 'noopener,noreferrer');
+                }}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#1DB954]/10 border border-[#1DB954]/30 text-xs font-semibold text-[#1ed760] hover:bg-[#1DB954]/20 hover:text-white transition-all cursor-pointer pointer-events-auto"
+              >
+                <span>Verify on Credly</span>
+                <ExternalLink className="w-3.5 h-3.5" />
+              </a>
+            )}
           </motion.div>
         ))}
       </motion.div>

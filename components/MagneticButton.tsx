@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, useSpring } from 'framer-motion';
 
 interface MagneticButtonProps {
@@ -10,20 +10,16 @@ interface MagneticButtonProps {
 
 export default function MagneticButton({ children, className = '' }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisabled] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return (
+      window.matchMedia('(pointer: coarse)').matches ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    );
+  });
 
   const x = useSpring(0, { stiffness: 250, damping: 15 });
   const y = useSpring(0, { stiffness: 250, damping: 15 });
-
-  useEffect(() => {
-    if (
-      typeof window !== 'undefined' &&
-      (window.matchMedia('(pointer: coarse)').matches ||
-        window.matchMedia('(prefers-reduced-motion: reduce)').matches)
-    ) {
-      setIsDisabled(true);
-    }
-  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (isDisabled || !ref.current) return;

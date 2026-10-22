@@ -17,17 +17,17 @@ const PROJECTS: Project[] = [
     stack: ['Python', 'TensorFlow', 'VGG16', 'MobileNetV2', 'OpenCV', 'Flask', 'Next.js', 'Firebase'],
     description:
       'Dual-pipeline CNN on 5,000+ images detecting Coccidiosis in poultry. VGG16 + MobileNetV2 ensemble achieved 98.2% accuracy, published at ICCCNet 2026 (ADROID Conference Series, SRM IST). Integrated Gemini RAG for disease Q&A and Sarvam AI for multilingual voice diagnosis across 5+ languages. Sub-2s inference, 99.9% uptime.',
-    link: 'https://github.com/patelaman275',
-    accent: '#cc1100',
+    link: 'https://chick-tech-ai-diagnosis.vercel.app/',
+    accent: '#1DB954',
     icon: '🧬',
   },
   {
     title: 'AI Career Path Generator',
     stack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'OpenAI API'],
     description:
-      'SaaS platform generating personalized career roadmaps via GPT-4, cutting manual research time by 70%+. LLM-powered resume analyzer extracting 15+ skill signals with ATS optimization. AI Mentor chatbot for mock interviews with 50+ curated question flows.',
-    link: 'https://github.com/patelaman275',
-    accent: '#ff6b00',
+      'SaaS platform generating personalized career roadmaps via GPT-4, cutting manual research time by 70%+. LLM-powered resume analyzer extracting 15+ skill signals with ATS optimization. Live job search module aggregating listings from JSearch and Active Jobs DB with filters.',
+    link: 'https://ascend-career.vercel.app/',
+    accent: '#1ed760',
     icon: '🚀',
   },
   {
@@ -35,17 +35,17 @@ const PROJECTS: Project[] = [
     stack: ['React.js', 'Node.js', 'Express.js', 'Socket.io', 'Leaflet'],
     description:
       'Real-time group ride platform with 6-character invite codes, live GPS tracking, synchronized route polylines, and SOS alert system broadcasting distress overlays to all riders in under 500ms via Socket.io.',
-    link: 'https://github.com/patelaman275',
-    accent: '#dd3300',
+    link: 'https://easytrip-swart.vercel.app/',
+    accent: '#10b981',
     icon: '🗺️',
   },
   {
     title: 'CampusConnect — College Network',
     stack: ['MERN Stack', 'Socket.io', 'WebRTC', 'JWT', 'MongoDB Atlas'],
     description:
-      'College-exclusive networking platform with real-time chat, WebRTC video calls, LinkedIn-style profiles. JWT auth, bcrypt hashing, OTP email verification. Gemini API for AI resume analysis and ATS scoring.',
-    link: 'https://github.com/patelaman275',
-    accent: '#bb1500',
+      'Award-winning campus networking platform with real-time chat, WebRTC video calls, student profiles, and Gemini API for AI resume analysis. Secured 3rd Prize at MOZO-HACK (March 2024).',
+    link: 'https://campusconnect-mu-six.vercel.app/',
+    accent: '#059669',
     icon: '🎓',
   },
 ];
@@ -120,7 +120,7 @@ export default function ProjectsGrid() {
         whileInView="visible"
         viewport={{ once: true, margin: '-60px' }}
       >
-        {PROJECTS.map((project, i) => (
+        {PROJECTS.map((project) => (
           <motion.a
             key={project.title}
             href={project.link}
