@@ -26,16 +26,16 @@ export default function PublicationsSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="inline-block px-3.5 py-1 rounded-full bg-black text-[#D4ff3f] text-xs tracking-[0.35em] uppercase font-black mb-3 shadow-sm">
-            Research & Publications
+          <span className="inline-block px-3.5 py-1 rounded-full bg-[#3a0f34] text-[#eaaa00] text-xs tracking-[0.25em] uppercase font-bold mb-3 shadow-sm border border-[#eaaa00]/30">
+            Research &amp; Publications
           </span>
-          <h2 className="font-black tracking-tight text-3xl md:text-5xl text-black">
-            Published <span className="text-[#e34234]">Research</span>
+          <h2 className="font-extrabold tracking-tight text-3xl md:text-5xl text-[#3a0f34]">
+            Published <span className="text-[#eaaa00]">Research</span>
           </h2>
         </motion.div>
         <div
-          className="mx-auto mt-5 h-1 w-20 rounded-full"
-          style={{ background: 'linear-gradient(90deg, #e34234, #000000, #D4ff3f)' }}
+          className="mx-auto mt-4 h-1 w-20 rounded-full"
+          style={{ background: 'linear-gradient(90deg, #3a0f34, #eaaa00, #3a0f34)' }}
         />
       </div>
 
@@ -48,25 +48,29 @@ export default function PublicationsSection() {
         transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
       >
         <div
-          className="relative p-8 md:p-10 rounded-3xl overflow-hidden group bg-black border-2 border-black hover:border-[#D4ff3f] shadow-2xl transition-all duration-300"
+          className="relative p-8 md:p-10 rounded-3xl overflow-hidden group border border-[#eaaa00]/30 hover:border-[#eaaa00]/60 shadow-xl transition-all duration-300 text-[#3a0f34] backdrop-blur-md"
+          style={{ background: 'rgba(221, 227, 232, 0.92)' }}
         >
-          {/* Animated border gradient on hover */}
-          <div
-            className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-            style={{
-              background:
-                'linear-gradient(135deg, rgba(212,255,63,0.15) 0%, transparent 50%, rgba(227,66,52,0.1) 100%)',
-            }}
-          />
-
           <div className="relative z-10">
+            {/* macOS Window Controls */}
+            <div className="flex items-center justify-between pb-3 mb-5 border-b border-[#3a0f34]/15">
+              <div className="flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#e34234]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#eaaa00]" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#3a0f34]/20" />
+              </div>
+              <span className="text-[10px] font-mono text-[#3a0f34]/60 tracking-wider">
+                Paper_ICCCNet_2026.pdf
+              </span>
+            </div>
+
             {/* Badge */}
-            <div className="flex items-center gap-3 mb-6">
+            <div className="flex items-center gap-3 mb-4">
               <div
-                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-white/10 border border-white/20 text-[#D4ff3f]"
+                className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold tracking-wider uppercase bg-[#3a0f34]/10 border border-[#eaaa00]/40 text-[#3a0f34]"
               >
                 <span
-                  className="w-2 h-2 rounded-full bg-[#e34234] shadow-[0_0_6px_#e34234]"
+                  className="w-2 h-2 rounded-full bg-[#eaaa00] shadow-[0_0_6px_#eaaa00]"
                 />
                 ICCCNet 2026 · Published Research
               </div>
@@ -74,37 +78,37 @@ export default function PublicationsSection() {
 
             {/* Title */}
             <h3
-              className="font-black text-white mb-3 leading-snug text-lg md:text-2xl group-hover:text-[#D4ff3f] transition-colors"
+              className="font-extrabold text-[#3a0f34] mb-3 leading-snug text-lg md:text-2xl group-hover:text-[#eaaa00] transition-colors"
             >
               AI-Based Chicken Disease Detection Using CNN
             </h3>
 
             {/* Conference & Authorship */}
             <p
-              className="text-sm mb-4 leading-relaxed text-white/80 font-medium"
+              className="text-sm mb-4 leading-relaxed text-[#5e3b58] font-medium"
             >
               ADROID Conference Series: Engineering Sciences and Technology (ICCCNet 2026)
               <br />
-              <span className="text-white/60 text-xs">
-                SRM IST (Virtual), 17 June 2026 · Author & Lead Frontend/ML Pipeline Engineer
+              <span className="text-[#3a0f34]/60 text-xs">
+                SRM IST (Virtual), 17 June 2026 · Author &amp; Lead Frontend/ML Pipeline Engineer
               </span>
             </p>
 
             {/* Guidance note from resume */}
-            <div className="mb-6 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs text-white/80">
-              <span className="text-[#D4ff3f] font-bold">Supervision:</span> Research conducted under the guidance of{' '}
-              <span className="text-white font-bold">Dr. Monica Bhavani M</span>, Professor, SRM IST.
+            <div className="mb-6 px-4 py-2.5 rounded-xl bg-white/60 border border-[#3a0f34]/15 text-xs text-[#3a0f34]">
+              <span className="text-[#eaaa00] font-bold">Supervision:</span> Research conducted under the guidance of{' '}
+              <span className="text-[#3a0f34] font-bold">Dr. Monica Bhavani M</span>, Professor, SRM IST.
             </div>
 
             {/* Abstract preview */}
             <p
-              className="text-sm leading-relaxed mb-8 text-white/85"
+              className="text-sm leading-relaxed mb-8 text-[#3a0f34]/85"
             >
               A dual-pipeline convolutional neural network architecture leveraging VGG16 and
               MobileNetV2 ensemble achieving{' '}
-              <span className="text-[#D4ff3f] font-black">98.2% accuracy</span>{' '}
+              <span className="text-[#eaaa00] font-extrabold">98.2% accuracy</span>{' '}
               on a 5,000+ image poultry dataset collected and annotated from Kaggle, GitHub, and online repositories. Integrated with Gemini RAG for contextual
-              disease Q&A and Sarvam AI for multilingual voice diagnosis across 5+ Indian languages.
+              disease Q&amp;A and Sarvam AI for multilingual voice diagnosis across 5+ Indian languages.
             </p>
 
             {/* Stats row */}
@@ -117,15 +121,15 @@ export default function PublicationsSection() {
               ].map((s) => (
                 <div
                   key={s.label}
-                  className="text-center px-4 py-3 rounded-xl flex-1 min-w-[110px] bg-white/5 border border-white/10"
+                  className="text-center px-4 py-3 rounded-xl flex-1 min-w-[110px] bg-white/60 border border-[#3a0f34]/15"
                 >
                   <div
-                    className="font-black text-base text-[#D4ff3f]"
+                    className="font-black text-base text-[#3a0f34]"
                   >
                     {s.value}
                   </div>
                   <div
-                    className="text-xs mt-0.5 text-white/60"
+                    className="text-xs mt-0.5 text-[#5e3b58]"
                   >
                     {s.label}
                   </div>
@@ -139,7 +143,7 @@ export default function PublicationsSection() {
                 href="https://conferenceseries.adroidjournals.com/index.php/ACSET/article/view/120/90"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-black text-white bg-[#e34234] hover:bg-[#D4ff3f] hover:text-black transition-all shadow-md cursor-pointer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold text-[#3a0f34] bg-[#eaaa00] hover:bg-[#3a0f34] hover:text-[#eaaa00] transition-all shadow-md cursor-pointer"
               >
                 <span>Read Published Paper</span>
                 <ExternalLink className="w-3.5 h-3.5" />
@@ -148,16 +152,16 @@ export default function PublicationsSection() {
                 href="https://chick-tech-ai-diagnosis.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-black text-black bg-[#D4ff3f] hover:bg-white transition-all cursor-pointer shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-[#3a0f34] bg-[#3a0f34]/10 hover:bg-[#3a0f34]/20 transition-all cursor-pointer shadow-sm border border-[#3a0f34]/20"
               >
                 <span>Live App Demo</span>
                 <ExternalLink className="w-3.5 h-3.5" />
               </a>
               <a
-                href="https://github.com/patelaman275"
+                href="https://github.com/KunalBishwal/ChickTech-AI-Diagnosis"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white/90 bg-white/10 border border-white/20 hover:text-[#D4ff3f] transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-[#3a0f34] bg-[#3a0f34]/10 border border-[#3a0f34]/15 hover:border-[#eaaa00] hover:text-[#eaaa00] transition-all cursor-pointer"
               >
                 <span>GitHub Repo</span>
                 <ExternalLink className="w-3.5 h-3.5" />

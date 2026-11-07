@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   XCircle,
   RotateCcw,
-  Sparkles,
   BookOpen,
   Code2,
   Clock,
@@ -164,7 +163,7 @@ export default function AccentureSimulatorPage() {
             href="/interview"
             className="flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-md bg-gradient-to-r from-rose-600 to-rose-700 text-white shadow-sm hover:from-rose-500 hover:to-rose-600 transition"
           >
-            <Sparkles className="w-3.5 h-3.5" /> AI Interview & Speech Hub
+            <Zap className="w-3.5 h-3.5" /> AI Interview & Speech Hub
           </Link>
 
           {/* Section Selector Dropdown matching screenshot */}
@@ -361,7 +360,7 @@ export default function AccentureSimulatorPage() {
                     onClick={handleInsertMissingLines}
                     className="px-3 py-1 rounded bg-[#f59e0b] hover:bg-[#d97706] text-white font-bold text-xs flex items-center gap-1 transition"
                   >
-                    <Sparkles className="w-3.5 h-3.5" /> Insert Solution
+                    <Zap className="w-3.5 h-3.5" /> Insert Solution
                   </button>
                 </div>
               </div>

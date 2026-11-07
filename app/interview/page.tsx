@@ -12,7 +12,6 @@ import {
   Volume2,
   VolumeX,
   RotateCcw,
-  Sparkles,
   Award,
   BookOpen,
   CheckCircle2,
@@ -483,7 +482,7 @@ export default function AccentureInterviewPage() {
                 <h2 className="text-lg sm:text-xl font-bold text-white mb-2">{currentQuestion.question}</h2>
 
                 <div className="mt-3 p-3 rounded-xl bg-amber-950/20 border border-amber-800/30 text-xs text-amber-200/90 flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                  <Zap className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                   <div>
                     <strong className="text-amber-300">Accenture Panel Tip: </strong>
                     {currentQuestion.accentureTip}

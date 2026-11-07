@@ -1,20 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800", "900"],
-  display: "swap",
-});
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: "Aman Patel — ML Engineer & Full-Stack Developer",
@@ -46,9 +31,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preconnect"
+          href="https://fonts.cdnfonts.com"
+          crossOrigin="anonymous"
+        />
+        <link
+          href="https://fonts.cdnfonts.com/css/sf-pro-display"
+          rel="stylesheet"
+        />
+      </head>
       <body
         suppressHydrationWarning
-        className={`${outfit.variable} ${inter.variable} font-[family-name:var(--font-outfit)] bg-[#cbb3e8] text-black antialiased selection:bg-[#D4ff3f] selection:text-black`}
+        className="font-sans bg-[#0d1117] text-[#e6edf3] antialiased selection:bg-[#58a6ff] selection:text-[#0d1117]"
       >
         {/* Cinematic noise/grain overlay */}
         <div className="noise-overlay" aria-hidden="true" />

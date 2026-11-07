@@ -1,479 +1,623 @@
 'use client';
 
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { ExternalLink, Sparkles, ArrowUpRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ExternalLink,
+  FileText,
+  Bot,
+  ArrowUpRight,
+  Network,
+  X,
+  ChevronLeft,
+  ChevronRight,
+  Moon,
+  Sun,
+  Code2,
+} from 'lucide-react';
 
-if (typeof window !== 'undefined') {
-  gsap.registerPlugin(ScrollTrigger);
+function GithubIcon({ className = 'w-4 h-4' }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+      />
+    </svg>
+  );
 }
 
 interface Project {
   id: number;
+  slideNum: string;
   title: string;
   subtitle: string;
-  stack: string[];
-  description: string;
-  demoUrl: string;
-  githubUrl: string;
-  paperUrl?: string;
-  accent: string;
+  category: string;
   badge: string;
   icon: string;
+  description: string;
+  highlights: string[];
+  stack: string[];
+  demoUrl: string;
+  paperUrl?: string;
+  githubUrl: string;
+  architectureImg: string;
+  architectureDetails: string[];
+  appName: string;
 }
 
 const PROJECTS: Project[] = [
   {
     id: 1,
-    title: 'AI Chicken Disease Detection',
-    subtitle: 'Dual-Pipeline CNN · Published ICCCNet 2026',
-    stack: ['Python', 'TensorFlow', 'VGG16', 'MobileNetV2', 'Flask', 'Next.js', 'Firebase', 'Gemini RAG'],
+    slideNum: '01',
+    appName: 'ChickTech_AI.app',
+    title: 'AI-Based Chicken Disease Detection System',
+    subtitle: 'Published Research at ICCCNet 2026 · ADROID Conference Series',
+    category: 'Computer Vision & Deep Learning',
+    badge: '98.2% Accuracy · Dual CNN Pipeline · ADROID Published Paper',
+    icon: '🔬',
     description:
-      'Minor project — dual-pipeline VGG16 + MobileNetV2 CNN trained on 5,000+ poultry images achieving 98.2% accuracy on Coccidiosis detection. Engineered Next.js frontend and published research at ICCCNet 2026 (ADROID Conference). Integrated Gemini RAG for disease Q&A and Sarvam AI for multilingual voice diagnosis across 5+ languages.',
+      'Engineered an automated poultry disease diagnosis application for early disease prevention in rural poultry farms. Implemented dual-pipeline CNNs leveraging both VGG16 and MobileNetV2 feature extraction to classify poultry disease from images with sub-2s inference.',
+    highlights: [
+      'Published paper author in ADROID Conference Series (ICCCNet 2026, SRM IST)',
+      'Curated & annotated 5,000+ poultry images from Kaggle & GitHub repositories',
+      'Integrated Gemini RAG disease Q&A & Sarvam AI voice diagnosis in 5+ regional languages',
+    ],
+    stack: ['Python', 'TensorFlow', 'VGG16', 'MobileNetV2', 'OpenCV', 'Next.js 14', 'Gemini RAG', 'Sarvam AI', 'Flask API', 'Firebase'],
     demoUrl: 'https://chick-tech-ai-diagnosis.vercel.app/',
-    githubUrl: 'https://github.com/patelaman275',
     paperUrl: 'https://conferenceseries.adroidjournals.com/index.php/ACSET/article/view/120/90',
-    accent: '#D4ff3f',
-    badge: 'Published at ICCCNet 2026 · 98.2% Accuracy',
-    icon: '🧬',
+    githubUrl: 'https://github.com/KunalBishwal/ChickTech-AI-Diagnosis',
+    architectureImg: '/architecture/chicktech-arch.png',
+    architectureDetails: [
+      'Next.js 14 Client on Vercel with Diagnosis UI, Indic voice input, and OGL WebGL visual layer',
+      'Flask API on Render/Docker with Rate Limiter (flask-limiter), Bloom Filter (pybloom_live), and Magic bytes sanitizer',
+      'predict.py Dual CNN: Coccidiosis classification (MobileNetV2) & Lesion pipeline (Fowlpox, Bumblefoot)',
+      'rag_engine.py: Sentence-Transformers embedder with 47 chunks across 9 diseases + Gemini plan writer',
+    ],
   },
   {
     id: 2,
-    title: 'AI Career Path Generator',
-    subtitle: 'GPT-4 Roadmaps & ATS Resume Analyzer',
-    stack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'OpenAI API', 'RapidAPI'],
+    slideNum: '02',
+    appName: 'EasyTrip.app',
+    title: 'EasyTrip — Multi-Rider Safety & Travel Companion',
+    subtitle: 'Full-Stack Distributed System · Real-Time GPS & SOS Alerts',
+    category: 'Full-Stack & Distributed Web Systems',
+    badge: 'Sub-500ms Socket.io SOS · 6-Char Invite Sync · Leaflet Live Tracking',
+    icon: '🗺️',
     description:
-      'Team project — architected full-stack platform using GPT-4 to generate personalized career roadmaps, drastically reducing manual career research effort. Built LLM-powered resume analyzer extracting key skills with ATS optimization suggestions, and live job search module aggregating JSearch and Active Jobs DB with multi-filter support.',
-    demoUrl: 'https://ascend-career.vercel.app/',
-    githubUrl: 'https://github.com/patelaman275',
-    accent: '#cbb3e8',
-    badge: 'GPT-4 Career Engine · ATS Analyzer',
-    icon: '🚀',
+      'Architected a real-time group travel coordination application enabling synchronized routing, live GPS geolocation, and an emergency SOS broadcast mesh for multi-rider journeys.',
+    highlights: [
+      'Designed WebSocket mesh via Socket.io broadcasting distress overlays in under 500ms',
+      'Synchronized route polylines and member locations using Leaflet and OpenStreetMap',
+      'Implemented secure 6-character room codes for effortless group onboarding',
+    ],
+    stack: ['React.js', 'Vite', 'Node.js', 'Express.js', 'Socket.io', 'Leaflet', 'Tailwind CSS'],
+    demoUrl: 'https://easytrip-swart.vercel.app/',
+    githubUrl: 'https://github.com/patelaman275/easytrip',
+    architectureImg: '/architecture/easytrip-arch.png',
+    architectureDetails: [
+      'Rider Client (React + Vite): createRide/joinRide, live location transmission, checkpoints, route changes, SOS button, Leaflet map',
+      'Node + Express Server with Socket.io: Room manager (invite codes), Location relay, Checkpoint synchronization, Route sync',
+      'Real-Time SOS Broadcast: Sub-500ms distress alert dispatch broadcasting to all active riders in the group',
+      'In-Memory Room Store: Ultra-fast state management with zero database latency overhead',
+    ],
   },
   {
     id: 3,
-    title: 'EasyTrip — Multi-Rider Safety',
-    subtitle: 'Real-Time GPS & SOS Broadcast Platform',
-    stack: ['React.js', 'Node.js', 'Express.js', 'Socket.io', 'Leaflet'],
+    slideNum: '03',
+    appName: 'CareerPath_AI.app',
+    title: 'AI-Powered Career Roadmap & Resume Analyzer',
+    subtitle: 'Intelligent Career Acceleration Platform · React SPA & LLM Agents',
+    category: 'Generative AI & SaaS Platform',
+    badge: '70% Research Time Reduction · 15+ ATS Skill Signals Extracted',
+    icon: '🚀',
     description:
-      'Solo project — designed and implemented real-time group travel coordination application with live GPS tracking and shared routes for multiple riders at once. Developed invite-code trip management and SOS emergency alert broadcasting distress notifications and live rider coordinates to all members via Socket.io.',
-    demoUrl: 'https://easytrip-swart.vercel.app/',
-    githubUrl: 'https://github.com/patelaman275',
-    accent: '#e34234',
-    badge: 'Live GPS Tracking · Instant SOS Alerts',
-    icon: '🗺️',
+      'Built a production AI SaaS platform that dynamically generates personalized career roadmaps and provides real-time ATS resume scoring with targeted skill gap recommendations.',
+    highlights: [
+      'Integrated GPT-4 & Gemini API to formulate milestone-based career trajectories',
+      'Extracted 15+ actionable skill signals from uploaded resumes for ATS score optimization',
+      'Aggregated live job listings via JSearch API with smart location & compensation filters',
+    ],
+    stack: ['React SPA', 'Vite', 'Tailwind CSS', 'Firebase', 'Gemini API', 'YouTube API', 'JSearch API', 'Sarvam AI'],
+    demoUrl: 'https://ascend-career.vercel.app/',
+    githubUrl: 'https://github.com/KunalBishwal/Ascend-Career',
+    architectureImg: '/architecture/careerpath-arch.png',
+    architectureDetails: [
+      'React SPA on Vite: Career Galaxy interactive roadmap, Course picks from resume, Job matches, AI mentor chat & voice',
+      'Gemini API Multi-Agent Suite: Dynamic roadmap generator, deep resume analysis, and mentor conversational agent',
+      'External Aggregators: YouTube API v3 for targeted video courses, JSearch & Active Jobs DB via RapidAPI for live job listings',
+      'Firebase Backend: Authentication (session management), Firestore (chat history sync), and Storage (resume file uploads)',
+    ],
   },
   {
     id: 4,
-    title: 'CampusConnect — College Network',
-    subtitle: '3rd Prize Winner @ MOZO-HACK (2024)',
-    stack: ['React.js', 'Node.js', 'Express.js', 'MongoDB Atlas', 'Socket.io', 'WebRTC'],
-    description:
-      'Award-winning campus networking platform featuring real-time chat, WebRTC video calling, student profiles, and Gemini API resume analysis. Won 3rd Prize at MOZO-HACK (7 March 2024) for innovative real-time peer connectivity and career acceleration.',
-    demoUrl: 'https://campusconnect-mu-six.vercel.app/',
-    githubUrl: 'https://github.com/patelaman275',
-    accent: '#D4ff3f',
-    badge: '🏆 3rd Prize MOZO-HACK Winner',
+    slideNum: '04',
+    appName: 'CampusConnect.app',
+    title: 'CampusConnect — University Networking & Collaboration Hub',
+    subtitle: 'Award-Winning Student Platform · 3rd Prize MOZO-HACK Hackathon',
+    category: 'Real-Time Web & Peer-to-Peer Systems',
+    badge: 'MOZO-HACK 3rd Prize · WebRTC Video Mesh · AI Resume Matching',
     icon: '🎓',
+    description:
+      'Award-winning university networking platform featuring real-time peer messaging, WebRTC video calling rooms, verified student profiles, and automated resume analysis powered by Gemini API.',
+    highlights: [
+      'Won 3rd Prize at MOZO-HACK hackathon for real-time collaboration architecture',
+      'Integrated WebRTC peer connection mesh with custom signaling server',
+      'Engineered instant student community matching by shared courses & tech interests',
+    ],
+    stack: ['Next.js 14', 'Node.js', 'Express', 'MongoDB Atlas', 'WebRTC', 'Socket.io', 'Tailwind CSS'],
+    demoUrl: 'https://campusconnect-mu-six.vercel.app/',
+    githubUrl: 'https://github.com/patelaman275/campusconnect',
+    architectureImg: '/architecture/campusconnect-arch.png',
+    architectureDetails: [
+      'Next.js 14 App Router: Real-time discussion forum, course chat channels, video room UI, and member discovery',
+      'Signaling & Real-time Layer: Socket.io room orchestration with WebRTC mesh for direct P2P audio/video communication',
+      'Integrations: Nodemailer OTP email verification, Gemini API for ATS resume analysis, MongoDB Atlas cloud cluster',
+    ],
   },
 ];
 
 export default function ProjectCarousel3D() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const ringRef = useRef<HTMLDivElement>(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isGithubDark, setIsGithubDark] = useState(false);
+  const [activeArchProject, setActiveArchProject] = useState<Project | null>(null);
 
-  // Mouse 3D Tilt for active card
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const currentProject = PROJECTS[currentIndex];
 
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // GSAP 3D Ring Rotation on Scroll
-  useEffect(() => {
-    if (isMobile || !containerRef.current || !ringRef.current) return;
-
-    const ctx = gsap.context(() => {
-      ScrollTrigger.create({
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=180%',
-        pin: true,
-        scrub: 0.6,
-        onUpdate: (self) => {
-          const progress = self.progress; // 0 to 1
-          const targetRotationY = -progress * 270;
-
-          gsap.to(ringRef.current, {
-            rotationY: targetRotationY,
-            ease: 'power2.out',
-            duration: 0.3,
-            overwrite: 'auto',
-          });
-
-          const idx = Math.min(Math.round(progress * 3), 3);
-          setActiveIndex(idx);
-        },
-      });
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [isMobile]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (isMobile) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 16;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * -16;
-    setTilt({ x, y });
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? PROJECTS.length - 1 : prev - 1));
   };
 
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
   };
 
   return (
-    <section id="projects" className="relative bg-transparent text-black">
-      {/* Eyebrow Header */}
-      <div className="pt-16 pb-6 px-6 md:px-12 max-w-6xl mx-auto text-center relative z-30 pointer-events-auto">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest text-[#D4ff3f] bg-black border-2 border-black mb-4 shadow-md">
-            <Sparkles className="w-3.5 h-3.5 text-[#D4ff3f]" />
-            Curated 4 of 44+ Projects
-          </span>
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4 text-black">
-            Featured <span className="text-[#e34234]">Engineering Work</span>
-          </h2>
-          <p className="text-sm md:text-base text-black/80 max-w-xl mx-auto font-medium">
-            This is a curated 4 out of 44+ production applications & AI systems I&apos;ve shipped.{' '}
-            <a
-              href="https://github.com/patelaman275"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-[#e34234] hover:text-black font-bold underline underline-offset-4 transition-colors relative z-40 pointer-events-auto"
-            >
-              <span>Explore full repository list on GitHub</span>
-              <ArrowUpRight className="w-4 h-4" />
-            </a>
-          </p>
-        </motion.div>
-      </div>
-
-      {/* ── 3D Scroll Carousel (Desktop) ─────────────────────────────────── */}
-      {!isMobile ? (
-        <div
-          ref={containerRef}
-          className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden z-20 pointer-events-auto"
-        >
-          {/* Pulsing Central Radial Glow Anchor */}
-          <div className="absolute w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,_rgba(212,255,63,0.35)_0%,_rgba(227,66,52,0.15)_45%,_transparent_70%)] pointer-events-none blur-3xl animate-pulse" />
-
-          {/* 3D Scene Viewport */}
-          <div
-            className="relative w-full max-w-5xl h-[480px] flex items-center justify-center z-30 pointer-events-auto"
-            style={{ perspective: '1200px' }}
-          >
-            {/* 3D Rotating Ring Container */}
-            <div
-              ref={ringRef}
-              className="relative w-[420px] h-[440px] pointer-events-auto"
-              style={{ transformStyle: 'preserve-3d' }}
-            >
-              {PROJECTS.map((project, idx) => {
-                const angle = idx * 90;
-                const isActive = activeIndex === idx;
-                const radius = 420;
-
-                return (
-                  <div
-                    key={project.id}
-                    className={`absolute inset-0 p-7 rounded-2xl glass-card border transition-all duration-500 ${
-                      isActive
-                        ? 'border-[#D4ff3f]/60 shadow-[0_0_50px_rgba(212,255,63,0.3)] opacity-100 filter-none pointer-events-auto z-40'
-                        : 'border-white/10 opacity-20 filter blur-[4px] pointer-events-none z-0'
-                    }`}
-                    style={{
-                      transform: `rotateY(${angle}deg) translateZ(${radius}px)`,
-                      backfaceVisibility: 'hidden',
-                    }}
-                    onMouseMove={isActive ? handleMouseMove : undefined}
-                    onMouseLeave={isActive ? handleMouseLeave : undefined}
-                  >
-                    {/* Active Card Rotating Conic Gradient Border Glow */}
-                    {isActive && (
-                      <div className="absolute -inset-[1px] rounded-2xl bg-[conic-gradient(from_0deg_at_50%_50%,#D4ff3f,#cbb3e8,#e34234,#D4ff3f)] opacity-40 blur-xs -z-10 animate-[spin_8s_linear_infinite] pointer-events-none" />
-                    )}
-
-                    {/* Active Card Content */}
-                    <div className="w-full h-full flex flex-col justify-between relative z-50 pointer-events-auto">
-                      {/* Tilted Upper Details (To ensure tilt doesn't disrupt button clicks) */}
-                      <div
-                        className="flex-1 flex flex-col"
-                        style={{
-                          transform: isActive
-                            ? `rotateX(${tilt.y}deg) rotateY(${tilt.x}deg)`
-                            : 'none',
-                          transition: 'transform 0.15s ease-out',
-                        }}
-                      >
-                        {/* Header */}
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{project.icon}</span>
-                            <div>
-                              <h3 className="font-bold text-lg leading-tight text-white">
-                                {project.title}
-                              </h3>
-                              <p className="text-xs text-[#D4ff3f] font-medium mt-0.5">
-                                {project.subtitle}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Badge */}
-                        <div className="mb-3">
-                          <span className="inline-block text-[11px] px-2.5 py-0.5 rounded-full bg-[#D4ff3f]/15 text-[#D4ff3f] border border-[#D4ff3f]/30">
-                            {project.badge}
-                          </span>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-xs leading-relaxed text-white/70 mb-4 line-clamp-4">
-                          {project.description}
-                        </p>
-
-                        {/* Stack Tags */}
-                        <div className="flex flex-wrap gap-1.5 mb-4">
-                          {project.stack.map((tech) => (
-                            <span
-                              key={tech}
-                              className="text-[10px] px-2 py-0.5 rounded-md bg-white/5 text-white/60 border border-white/10"
-                            >
-                              {tech}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-
-                      {/* Flat Links Section (Outside the tilt container to guarantee clicks never get cancelled) */}
-                      <div className="flex items-center gap-2 pt-3 border-t border-white/10 mt-auto relative z-50 pointer-events-auto">
-                        <a
-                          href={project.demoUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.open(project.demoUrl, '_blank', 'noopener,noreferrer');
-                          }}
-                          className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-black text-black bg-[#D4ff3f] hover:bg-[#cbb3e8] transition-all duration-300 shadow-[0_4px_18px_rgba(212,255,63,0.35)] relative z-50 cursor-pointer pointer-events-auto"
-                        >
-                          <ExternalLink className="w-3.5 h-3.5" />
-                          <span>Live Demo</span>
-                        </a>
-
-                        {project.paperUrl && (
-                          <a
-                            href={project.paperUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              window.open(project.paperUrl, '_blank', 'noopener,noreferrer');
-                            }}
-                            className="inline-flex items-center justify-center px-3 py-2.5 rounded-xl text-[#cbb3e8] bg-black border border-[#cbb3e8] hover:bg-white/10 text-xs font-bold transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
-                            title="Read Published Research Paper (ICCCNet 2026)"
-                          >
-                            <span>Paper 📄</span>
-                          </a>
-                        )}
-
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            window.open(project.githubUrl, '_blank', 'noopener,noreferrer');
-                          }}
-                          className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/80 bg-white/10 border border-white/20 hover:text-[#D4ff3f] hover:border-[#D4ff3f] transition-all duration-300 relative z-50 cursor-pointer pointer-events-auto"
-                          title="View GitHub Repository"
-                        >
-                          <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
-                          </svg>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+    <section
+      id="projects"
+      className="relative bg-transparent text-[#3a0f34] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-full overflow-hidden"
+    >
+      <div className="w-full max-w-5xl mx-auto">
+        {/* Section Header with GitHub Theme Switch */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#3a0f34] text-[#eaaa00] text-xs font-bold tracking-wider uppercase shadow-sm mb-3">
+              <span>Selected Projects · 4 Featured Systems</span>
             </div>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#3a0f34]">
+              Engineering &amp; <span className="text-[#eaaa00]">AI Systems</span>
+            </h2>
+
+            <p className="text-sm sm:text-base text-[#5e3b58] mt-1 max-w-xl font-medium leading-relaxed">
+              Use arrow buttons to slide across all 4 production systems. Toggle GitHub dark theme for developer mode.
+            </p>
           </div>
 
-          {/* 4 Indicator Dots */}
-          <div className="flex items-center gap-3 mt-6 z-30 pointer-events-auto">
-            {PROJECTS.map((p, idx) => (
-              <button
-                key={p.id}
-                onClick={() => setActiveIndex(idx)}
-                className={`transition-all duration-300 rounded-full cursor-pointer ${
-                  activeIndex === idx
-                    ? 'w-8 h-2.5 bg-black shadow-[0_0_12px_rgba(0,0,0,0.5)]'
-                    : 'w-2.5 h-2.5 bg-black/25'
-                }`}
-                title={`Go to ${p.title}`}
-              />
-            ))}
+          {/* Carousel Navigation Controls */}
+          <div className="flex items-center gap-1.5 self-start sm:self-auto">
+            <button
+              onClick={handlePrev}
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer shadow-sm ${
+                isGithubDark
+                  ? 'bg-[#161b22] border-[#30363d] text-[#c9d1d9] hover:bg-[#21262d] hover:border-[#58a6ff]'
+                  : 'bg-white/80 border-[#3a0f34]/20 text-[#3a0f34] hover:bg-white hover:border-[#eaaa00]'
+              }`}
+              aria-label="Previous Project"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <button
+              onClick={handleNext}
+              className={`p-2.5 rounded-xl border transition-all cursor-pointer shadow-sm ${
+                isGithubDark
+                  ? 'bg-[#161b22] border-[#30363d] text-[#c9d1d9] hover:bg-[#21262d] hover:border-[#58a6ff]'
+                  : 'bg-white/80 border-[#3a0f34]/20 text-[#3a0f34] hover:bg-white hover:border-[#eaaa00]'
+              }`}
+              aria-label="Next Project"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
           </div>
         </div>
-      ) : (
-        /* ── Mobile Horizontal Swipeable Carousel ──────────────────────────── */
-        <div className="px-6 py-8 max-w-lg mx-auto flex flex-col items-center relative z-30 pointer-events-auto">
-          <div className="w-full flex items-center justify-between gap-4 mb-4">
-            <button
-              onClick={() => setActiveIndex((prev) => (prev > 0 ? prev - 1 : 3))}
-              className="p-2 rounded-full bg-black text-[#D4ff3f] border border-black cursor-pointer shadow-sm"
-            >
-              <ChevronLeft className="w-5 h-5" />
-            </button>
-            <span className="text-xs text-black font-black font-mono uppercase tracking-widest">
-              PROJECT {activeIndex + 1} OF 4
-            </span>
-            <button
-              onClick={() => setActiveIndex((prev) => (prev < 3 ? prev + 1 : 0))}
-              className="p-2 rounded-full bg-black text-[#D4ff3f] border border-black cursor-pointer shadow-sm"
-            >
-              <ChevronRight className="w-5 h-5" />
-            </button>
-          </div>
 
-          {/* Mobile Active Card */}
+        {/* ── Slide Dots Selector ── */}
+        <div className="flex items-center gap-2 mb-6">
+          {PROJECTS.map((p, idx) => (
+            <button
+              key={p.id}
+              onClick={() => setCurrentIndex(idx)}
+              className={`h-2 rounded-full transition-all cursor-pointer ${
+                currentIndex === idx
+                  ? isGithubDark
+                    ? 'w-10 bg-[#58a6ff]'
+                    : 'w-10 bg-[#eaaa00]'
+                  : isGithubDark
+                  ? 'w-2.5 bg-[#30363d] hover:bg-[#8b949e]'
+                  : 'w-2.5 bg-[#3a0f34]/25 hover:bg-[#3a0f34]/50'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* ── Sliding Project Card ── */}
+        <div className="relative overflow-hidden rounded-3xl">
           <AnimatePresence mode="wait">
             <motion.div
-              key={PROJECTS[activeIndex].id}
-              initial={{ opacity: 0, x: 20 }}
+              key={currentProject.id}
+              initial={{ opacity: 0, x: 40 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="w-full p-6 rounded-2xl glass-card border-2 border-black relative overflow-hidden pointer-events-auto z-40 shadow-xl"
+              exit={{ opacity: 0, x: -40 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className={`rounded-3xl border overflow-hidden shadow-2xl transition-colors duration-300 ${
+                isGithubDark
+                  ? 'bg-[#0d1117] border-[#30363d] text-[#c9d1d9]'
+                  : 'border-[#eaaa00]/30 text-[#3a0f34]'
+              }`}
+              style={{
+                background: isGithubDark ? '#0d1117' : 'rgba(221,227,232,0.92)',
+                backdropFilter: 'blur(10px)',
+              }}
             >
-              <div className="flex items-center gap-3 mb-3">
-                <span className="text-2xl">{PROJECTS[activeIndex].icon}</span>
-                <div>
-                  <h3 className="font-bold text-lg text-white">
-                    {PROJECTS[activeIndex].title}
-                  </h3>
-                  <p className="text-xs text-[#D4ff3f] font-medium">
-                    {PROJECTS[activeIndex].subtitle}
-                  </p>
+              {/* Card Window Titlebar */}
+              <div
+                className={`px-5 py-3.5 border-b flex items-center justify-between ${
+                  isGithubDark
+                    ? 'bg-[#161b22] border-[#30363d]'
+                    : 'bg-[#3a0f34] border-[#eaaa00]/20'
+                }`}
+              >
+                <div className="flex items-center gap-2">
+                  <span className="w-3 h-3 rounded-full bg-[#f85149] inline-block shadow-sm" />
+                  <span className="w-3 h-3 rounded-full bg-[#d29922] inline-block shadow-sm" />
+                  <span className="w-3 h-3 rounded-full bg-[#2ea043] inline-block shadow-sm" />
+                  <span
+                    className={`text-xs font-mono font-medium ml-2 tracking-tight ${
+                      isGithubDark ? 'text-[#8b949e]' : 'text-[#dde3e8]/80'
+                    }`}
+                  >
+                    {currentProject.appName}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <span
+                    className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
+                      isGithubDark
+                        ? 'bg-[#21262d] text-[#8b949e] border border-[#30363d]'
+                        : 'bg-white/15 text-[#dde3e8]/80'
+                    }`}
+                  >
+                    SLIDE {currentProject.slideNum} / 04
+                  </span>
+                  <span
+                    className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border hidden sm:inline-block ${
+                      isGithubDark
+                        ? 'bg-[#1f6feb]/15 text-[#58a6ff] border-[#1f6feb]/30'
+                        : 'bg-[#eaaa00]/20 text-[#eaaa00] border-[#eaaa00]/30'
+                    }`}
+                  >
+                    {currentProject.category}
+                  </span>
                 </div>
               </div>
 
-              <div className="mb-3">
-                <span className="inline-block text-[11px] px-2.5 py-0.5 rounded-full bg-[#D4ff3f]/15 text-[#D4ff3f] border border-[#D4ff3f]/30">
-                  {PROJECTS[activeIndex].badge}
-                </span>
-              </div>
+              {/* Project Card Content */}
+              <div className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start justify-between">
+                {/* Left Column: Details */}
+                <div className="flex-1 space-y-4">
+                  {/* Category & Badge */}
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span
+                      className={`text-xs font-bold px-3 py-1 rounded-full border ${
+                        isGithubDark
+                          ? 'bg-[#161b22] text-[#c9d1d9] border-[#30363d]'
+                          : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/20'
+                      }`}
+                    >
+                      {currentProject.icon} {currentProject.category}
+                    </span>
+                    <span
+                      className={`text-xs font-semibold px-3 py-1 rounded-full border ${
+                        isGithubDark
+                          ? 'bg-[#238636]/15 text-[#3fb950] border-[#238636]/40'
+                          : 'bg-[#eaaa00]/20 text-[#3a0f34] border-[#eaaa00]/40'
+                      }`}
+                    >
+                      {currentProject.badge}
+                    </span>
+                  </div>
 
-              <p className="text-xs text-white/80 leading-relaxed mb-4">
-                {PROJECTS[activeIndex].description}
-              </p>
+                  {/* Title & Subtitle */}
+                  <div>
+                    <h3
+                      className={`text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight ${
+                        isGithubDark ? 'text-white' : 'text-[#3a0f34]'
+                      }`}
+                    >
+                      {currentProject.title}
+                    </h3>
+                    <p
+                      className={`text-xs sm:text-sm font-semibold mt-1 tracking-tight ${
+                        isGithubDark ? 'text-[#58a6ff]' : 'text-[#eaaa00]'
+                      }`}
+                    >
+                      {currentProject.subtitle}
+                    </p>
+                  </div>
 
-              <div className="flex flex-wrap gap-1.5 mb-5">
-                {PROJECTS[activeIndex].stack.map((tech) => (
-                  <span
-                    key={tech}
-                    className="text-[10px] px-2 py-0.5 rounded-md bg-white/10 text-white/90 border border-white/20"
+                  {/* Description */}
+                  <p
+                    className={`text-xs sm:text-sm leading-relaxed font-normal ${
+                      isGithubDark ? 'text-[#8b949e]' : 'text-[#3a0f34]/75'
+                    }`}
                   >
-                    {tech}
-                  </span>
-                ))}
-              </div>
+                    {currentProject.description}
+                  </p>
 
-              <div className="flex items-center gap-2 pt-3 border-t border-white/15 relative z-50 pointer-events-auto">
-                <a
-                  href={PROJECTS[activeIndex].demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.open(PROJECTS[activeIndex].demoUrl, '_blank', 'noopener,noreferrer');
-                  }}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl text-xs font-black text-black bg-[#D4ff3f] hover:bg-[#cbb3e8] cursor-pointer pointer-events-auto relative z-50 shadow-md"
-                >
-                  <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Live Demo</span>
-                </a>
+                  {/* Highlights Bullet List */}
+                  <div className="space-y-1.5 pt-1">
+                    {currentProject.highlights.map((h, i) => (
+                      <div
+                        key={i}
+                        className={`flex items-start gap-2 text-xs sm:text-[13px] ${
+                          isGithubDark ? 'text-[#c9d1d9]' : 'text-[#3a0f34]/85'
+                        }`}
+                      >
+                        <span
+                          className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
+                            isGithubDark ? 'bg-[#3fb950]' : 'bg-[#eaaa00]'
+                          }`}
+                        />
+                        <span>{h}</span>
+                      </div>
+                    ))}
+                  </div>
 
-                {PROJECTS[activeIndex].paperUrl && (
+                  {/* Tech Stack Pills */}
+                  <div className="pt-2">
+                    <span
+                      className={`text-[10px] font-mono uppercase tracking-wider block mb-2 ${
+                        isGithubDark ? 'text-[#8b949e]' : 'text-[#3a0f34]/50'
+                      }`}
+                    >
+                      Core Technologies
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {currentProject.stack.map((tech) => (
+                        <span
+                          key={tech}
+                          className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
+                            isGithubDark
+                              ? 'bg-[#161b22] text-[#58a6ff] border-[#30363d] hover:border-[#58a6ff]'
+                              : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/15 hover:bg-[#eaaa00] hover:text-[#3a0f34]'
+                          }`}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Column: Action Buttons, Architecture & AI Trigger */}
+                <div className="w-full md:w-64 flex flex-col gap-2.5 shrink-0 pt-2 md:pt-0">
+                  {/* View Architecture Button */}
+                  <button
+                    onClick={() => setActiveArchProject(currentProject)}
+                    className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer ${
+                      isGithubDark
+                        ? 'bg-[#238636] hover:bg-[#2ea043] text-white'
+                        : 'bg-[#eaaa00] hover:bg-[#3a0f34] hover:text-[#eaaa00] text-[#3a0f34]'
+                    }`}
+                  >
+                    <Network className="w-4 h-4" />
+                    <span>View Architecture</span>
+                  </button>
+
+                  {/* Launch Live Demo */}
                   <a
-                    href={PROJECTS[activeIndex].paperUrl}
+                    href={currentProject.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      window.open(PROJECTS[activeIndex].paperUrl, '_blank', 'noopener,noreferrer');
-                    }}
-                    className="inline-flex items-center justify-center px-3 py-2.5 rounded-xl text-[#cbb3e8] bg-black border border-[#cbb3e8] text-xs font-bold transition-all relative z-50 cursor-pointer pointer-events-auto"
-                    title="Read Published Research Paper"
+                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer border ${
+                      isGithubDark
+                        ? 'bg-[#21262d] text-[#c9d1d9] border-[#30363d] hover:bg-[#30363d] hover:text-white'
+                        : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/20 hover:bg-[#3a0f34]/20'
+                    }`}
                   >
-                    <span>Paper 📄</span>
+                    <span>Launch Live Demo</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
                   </a>
-                )}
 
-                <a
-                  href={PROJECTS[activeIndex].githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.open(PROJECTS[activeIndex].githubUrl, '_blank', 'noopener,noreferrer');
-                  }}
-                  className="inline-flex items-center justify-center p-2.5 rounded-xl text-white/80 bg-white/10 border border-white/20 hover:text-[#D4ff3f] cursor-pointer pointer-events-auto relative z-50 transition-colors"
-                >
-                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                    <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2z" />
-                  </svg>
-                </a>
+                  {/* Research Paper (if available) */}
+                  {currentProject.paperUrl && (
+                    <a
+                      href={currentProject.paperUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer border ${
+                        isGithubDark
+                          ? 'bg-[#161b22] text-[#f0883e] border-[#f0883e]/30 hover:bg-[#21262d]'
+                          : 'bg-[#3a0f34]/10 text-[#eaaa00] border-[#eaaa00]/40 hover:bg-[#3a0f34]/20'
+                      }`}
+                    >
+                      <FileText className="w-3.5 h-3.5" />
+                      <span>ICCCNet Research Paper</span>
+                      <ArrowUpRight className="w-3.5 h-3.5" />
+                    </a>
+                  )}
+
+                  {/* View Source Code (Verified GitHub Link) */}
+                  <a
+                    href={currentProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer border ${
+                      isGithubDark
+                        ? 'bg-[#1f6feb]/15 text-[#58a6ff] border-[#1f6feb]/30 hover:bg-[#1f6feb]/25'
+                        : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/15 hover:bg-[#3a0f34]/20'
+                    }`}
+                  >
+                    <GithubIcon className="w-3.5 h-3.5" />
+                    <span>View on GitHub</span>
+                  </a>
+
+                  {/* Ask AI Assistant */}
+                  <button
+                    onClick={() => {
+                      if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('open-aman-chat'));
+                      }
+                    }}
+                    className={`w-full py-2 px-3 rounded-xl text-[11px] font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer mt-1 ${
+                      isGithubDark
+                        ? 'text-[#8b949e] hover:text-[#58a6ff] hover:bg-[#161b22]'
+                        : 'text-[#3a0f34]/50 hover:text-[#eaaa00] hover:bg-[#3a0f34]/5'
+                    }`}
+                  >
+                    <Bot className="w-3.5 h-3.5" />
+                    <span>Ask AI about this architecture</span>
+                  </button>
+                </div>
               </div>
             </motion.div>
           </AnimatePresence>
-
-          {/* Dots Indicator */}
-          <div className="flex items-center gap-2 mt-6">
-            {PROJECTS.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setActiveIndex(idx)}
-                className={`transition-all duration-300 rounded-full cursor-pointer ${
-                  activeIndex === idx
-                    ? 'w-6 h-2 bg-black'
-                    : 'w-2 h-2 bg-black/25'
-                }`}
-              />
-            ))}
-          </div>
         </div>
-      )}
+      </div>
+
+      {/* ── Architecture Diagram Modal ── */}
+      <AnimatePresence>
+        {activeArchProject && (
+          <div
+            role="dialog"
+            aria-modal="true"
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md"
+            onClick={() => setActiveArchProject(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 16 }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+              className={`relative w-full max-w-4xl max-h-[92vh] rounded-3xl border shadow-2xl flex flex-col overflow-hidden ${
+                isGithubDark
+                  ? 'bg-[#0d1117] border-[#30363d] text-[#c9d1d9]'
+                  : 'bg-[#3a0f34] border-[#eaaa00]/30 text-white'
+              }`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modal Titlebar */}
+              <div
+                className={`px-5 py-4 border-b flex items-center justify-between ${
+                  isGithubDark
+                    ? 'bg-[#161b22] border-[#30363d]'
+                    : 'bg-[#2b0a26] border-[#eaaa00]/20'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-8 rounded-lg bg-[#eaaa00] text-[#3a0f34] flex items-center justify-center font-bold">
+                    <Network className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold tracking-tight">
+                      System Architecture · {activeArchProject.title}
+                    </h3>
+                    <p className="text-[11px] opacity-75 font-mono">
+                      {activeArchProject.appName} &middot; Verified Design Diagram
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setActiveArchProject(null)}
+                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Modal Body */}
+              <div className="p-6 overflow-y-auto space-y-6">
+                <div
+                  className={`relative w-full rounded-2xl overflow-hidden border p-3 flex items-center justify-center ${
+                    isGithubDark
+                      ? 'bg-[#161b22] border-[#30363d]'
+                      : 'bg-white/5 border-white/10'
+                  }`}
+                >
+                  <Image
+                    src={activeArchProject.architectureImg}
+                    alt={`${activeArchProject.title} Architecture Diagram`}
+                    width={900}
+                    height={520}
+                    className="w-full h-auto object-contain rounded-xl"
+                  />
+                </div>
+
+                {/* Key Architecture Specifications */}
+                <div>
+                  <h4
+                    className={`text-xs font-mono uppercase tracking-wider font-bold mb-3 ${
+                      isGithubDark ? 'text-[#58a6ff]' : 'text-[#eaaa00]'
+                    }`}
+                  >
+                    System Pipeline &amp; Component Breakdown:
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {activeArchProject.architectureDetails.map((spec, i) => (
+                      <div
+                        key={i}
+                        className={`p-3.5 rounded-xl border text-xs leading-relaxed flex items-start gap-2.5 ${
+                          isGithubDark
+                            ? 'bg-[#161b22] border-[#30363d] text-[#c9d1d9]'
+                            : 'bg-white/5 border-white/10 text-white/90'
+                        }`}
+                      >
+                        <span
+                          className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
+                            isGithubDark ? 'bg-[#58a6ff]' : 'bg-[#eaaa00]'
+                          }`}
+                        />
+                        <span>{spec}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* External links in modal */}
+                <div className="flex items-center gap-3 pt-2">
+                  <a
+                    href={activeArchProject.demoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 rounded-xl text-xs font-bold bg-[#eaaa00] text-[#3a0f34] hover:bg-white transition-colors flex items-center gap-1.5"
+                  >
+                    <span>Open Live Project</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                  <a
+                    href={activeArchProject.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-colors flex items-center gap-1.5 ${
+                      isGithubDark
+                        ? 'bg-[#161b22] text-[#c9d1d9] border-[#30363d] hover:text-white'
+                        : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
+                    }`}
+                  >
+                    <GithubIcon className="w-3.5 h-3.5" />
+                    <span>View Repository</span>
+                  </a>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

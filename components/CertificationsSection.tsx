@@ -21,7 +21,7 @@ const CERTIFICATIONS: Certification[] = [
     issuer: 'Amazon Web Services (AWS)',
     type: 'Foundational Certification',
     url: 'https://www.credly.com/badges/004e33b3-890d-423f-bbd5-cda6f15d52ed/public_url',
-    icon: <Cpu className="w-6 h-6 text-[#D4ff3f]" />,
+    icon: <Cpu className="w-6 h-6 text-[#3a0f34]" />,
     skills: ['Generative AI', 'Amazon Bedrock', 'Foundation Models', 'Responsible AI', 'ML Workflows'],
   },
   {
@@ -30,7 +30,7 @@ const CERTIFICATIONS: Certification[] = [
     issuer: 'Amazon Web Services (AWS)',
     type: 'Foundational Certification',
     url: 'https://www.credly.com/badges/0eaec43f-c20f-42e1-a781-1d5717784400/public_url',
-    icon: <Cloud className="w-6 h-6 text-[#e34234]" />,
+    icon: <Cloud className="w-6 h-6 text-[#3a0f34]" />,
     skills: ['Cloud Architecture', 'AWS Core Services', 'IAM & Security', 'Cloud Economics', 'Billing & Support'],
   },
   {
@@ -38,7 +38,7 @@ const CERTIFICATIONS: Certification[] = [
     title: 'Java Programming (Elite Certificate)',
     issuer: 'NPTEL IIT (via SWAYAM / NPTEL)',
     type: 'Elite Ministry of Education Credential',
-    icon: <Code className="w-6 h-6 text-[#D4ff3f]" />,
+    icon: <Code className="w-6 h-6 text-[#eaaa00]" />,
     skills: ['Object-Oriented Programming', 'Multithreading', 'Collections Framework', 'Exception Handling', 'Design Patterns'],
   },
   {
@@ -46,7 +46,7 @@ const CERTIFICATIONS: Certification[] = [
     title: 'Introduction to Machine Learning',
     issuer: 'NPTEL IIT Kharagpur',
     type: 'IIT Kharagpur Credential',
-    icon: <Award className="w-6 h-6 text-[#e34234]" />,
+    icon: <Award className="w-6 h-6 text-[#eaaa00]" />,
     skills: ['Supervised Learning', 'Unsupervised Learning', 'Neural Networks', 'Feature Engineering', 'Model Optimization'],
   },
 ];
@@ -78,10 +78,10 @@ export default function CertificationsSection() {
     >
       {/* Background radial glow */}
       <div
-        className="absolute inset-0 pointer-events-none opacity-25"
+        className="absolute inset-0 pointer-events-none opacity-15"
         style={{
           background:
-            'radial-gradient(circle at 50% 50%, rgba(212, 255, 63, 0.35) 0%, transparent 60%)',
+            'radial-gradient(circle at 50% 50%, rgba(58,15,52,0.12) 0%, transparent 60%)',
         }}
       />
 
@@ -93,16 +93,16 @@ export default function CertificationsSection() {
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="inline-block px-3.5 py-1 rounded-full bg-black text-[#D4ff3f] text-xs tracking-[0.35em] uppercase font-black mb-3 shadow-sm">
+          <span className="inline-block px-3.5 py-1 rounded-full bg-[#3a0f34] text-[#eaaa00] text-xs tracking-[0.25em] uppercase font-bold mb-3 shadow-sm border border-[#eaaa00]/30">
             Credentials
           </span>
-          <h2 className="font-black tracking-tight text-3xl md:text-5xl text-black">
-            Professional <span className="text-[#e34234]">Certifications</span>
+          <h2 className="font-extrabold tracking-tight text-3xl md:text-5xl text-[#3a0f34]">
+            Professional <span className="text-[#eaaa00]">Certifications</span>
           </h2>
         </motion.div>
         <div
-          className="mx-auto mt-5 h-1 w-20 rounded-full"
-          style={{ background: 'linear-gradient(90deg, #e34234, #000000, #D4ff3f)' }}
+          className="mx-auto mt-4 h-1 w-20 rounded-full"
+          style={{ background: 'linear-gradient(90deg, #3a0f34, #eaaa00, #3a0f34)' }}
         />
       </div>
 
@@ -118,32 +118,32 @@ export default function CertificationsSection() {
           <motion.div
             key={cert.id}
             variants={cardVariants}
-            className="group relative p-7 rounded-2xl glass-card border-2 border-black hover:border-[#D4ff3f] transition-all duration-300 shadow-xl overflow-hidden bg-black"
-            whileHover={{ y: -5, boxShadow: '0 16px 40px rgba(0, 0, 0, 0.45)' }}
+            className="group relative p-7 rounded-2xl border border-[#eaaa00]/30 hover:border-[#eaaa00] transition-all duration-300 shadow-md overflow-hidden"
+            style={{ background: 'rgba(221,227,232,0.85)', backdropFilter: 'blur(8px)' }}
+            whileHover={{ y: -4, boxShadow: '0 16px 40px rgba(58, 15, 52, 0.3)' }}
           >
-            {/* Active Card Rotating Conic Gradient Border Glow */}
-            <div className="absolute -inset-[1px] rounded-2xl bg-[conic-gradient(from_0deg_at_50%_50%,#D4ff3f,#cbb3e8,#e34234,#D4ff3f)] opacity-0 group-hover:opacity-40 blur-xs -z-10 animate-[spin_8s_linear_infinite] transition-opacity duration-300 pointer-events-none" />
+            {/* Active Card Glow */}
+            <div className="absolute -inset-[1px] rounded-2xl bg-[#eaaa00] opacity-0 group-hover:opacity-15 blur-xs -z-10 transition-opacity duration-300 pointer-events-none" />
 
             <div className="flex items-start justify-between mb-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-white/10 border border-white/20 flex-shrink-0">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center bg-[#3a0f34]/10 border border-[#3a0f34]/20 flex-shrink-0">
                 {cert.icon}
               </div>
-              <span className="text-[11px] text-[#D4ff3f] font-bold bg-white/10 border border-white/20 px-2.5 py-1 rounded-full">
+              <span className="text-[11px] text-[#eaaa00] font-bold bg-[#3a0f34] border border-[#3a0f34]/30 px-2.5 py-1 rounded-full">
                 {cert.type}
-              </span>
-            </div>
+              </span>            </div>
 
-            <h3 className="font-black text-white text-lg group-hover:text-[#D4ff3f] transition-colors duration-200 mb-1">
+            <h3 className="font-black text-[#3a0f34] text-lg group-hover:text-[#eaaa00] transition-colors duration-200 mb-1">
               {cert.title}
             </h3>
-            <p className="text-xs text-white/70 mb-3">{cert.issuer}</p>
+            <p className="text-xs text-[#3a0f34]/60 mb-3">{cert.issuer}</p>
 
             {/* Skills acquired */}
             <div className="flex flex-wrap gap-1.5 mb-6">
               {cert.skills.map((skill) => (
                 <span
                   key={skill}
-                  className="text-[10px] px-2 py-0.5 rounded bg-white/10 text-white/90 border border-white/20"
+                  className="text-[10px] px-2 py-0.5 rounded bg-[#3a0f34]/10 text-[#3a0f34] border border-[#3a0f34]/20"
                 >
                   {skill}
                 </span>
@@ -161,7 +161,7 @@ export default function CertificationsSection() {
                   e.stopPropagation();
                   window.open(cert.url, '_blank', 'noopener,noreferrer');
                 }}
-                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#D4ff3f] text-black font-black text-xs hover:bg-[#cbb3e8] transition-all cursor-pointer pointer-events-auto shadow-sm"
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#eaaa00] text-[#3a0f34] font-black text-xs hover:bg-[#3a0f34] hover:text-[#eaaa00] transition-all cursor-pointer pointer-events-auto shadow-sm"
               >
                 <span>Verify on Credly</span>
                 <ExternalLink className="w-3.5 h-3.5" />

@@ -1,168 +1,255 @@
 @import "tailwindcss";
 
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+}
+
 @layer base {
   :root {
-    --bg-base: #cbb3e8;
-    --bg-surface: #000000;
-    --bg-elevated: #0d0a12;
-    --color-lavender: #cbb3e8;
-    --color-chartreuse: #D4ff3f;
-    --color-tomato: #e34234;
-    --color-black: #000000;
-    --text-primary: #000000;
-    --text-muted: #1a1520;
-    --text-dim: #2e2638;
+    --font-sf: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+    --font-sf-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+    --bg-base: #dde3e8;
+    --bg-surface: #ffffff;
+    --bg-elevated: #f2f5f8;
+    --color-silver: #dde3e8;
+    --color-aubergine: #3a0f34;
+    --color-marigold: #eaaa00;
+    --text-primary: #3a0f34;
+    --text-muted: #5e3b58;
+    --text-dim: #7d5977;
+  }
+
+  *, *::before, *::after {
+    box-sizing: border-box;
   }
 
   html {
     scroll-behavior: smooth;
-    background-color: #cbb3e8;
+    overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    background-color: #cbb3e8;
-    color: #000000;
     overflow-x: hidden;
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.01em;
   }
 
   ::-webkit-scrollbar {
-    width: 6px;
+    width: 8px;
   }
   ::-webkit-scrollbar-track {
-    background: #cbb3e8;
+    background: #0d1117;
   }
   ::-webkit-scrollbar-thumb {
-    background: #000000;
+    background: #30363d;
     border-radius: 4px;
-    border: 1px solid #D4ff3f;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #e34234;
+    background: #8b949e;
   }
 }
 
-/* ── Noise / grain overlay ─────────────────────────────── */
+/* =========================================================
+   AUTHENTIC GITHUB DARK THEME (Primer Design System)
+   ========================================================= */
+
+.github-dark {
+  background-color: #0d1117 !important;
+  color: #e6edf3 !important;
+  min-height: 100vh;
+}
+
+.github-dark main {
+  background-color: transparent !important;
+  color: #e6edf3 !important;
+}
+
+.github-dark section {
+  background-color: transparent !important;
+}
+
+/* 1. All Headings & Titles in Dark Mode (Pure GitHub White) */
+.github-dark h1,
+.github-dark h2,
+.github-dark h3,
+.github-dark h4,
+.github-dark h5,
+.github-dark h6,
+.github-dark h1 *,
+.github-dark h2 *,
+.github-dark h3 * {
+  color: #f0f6fc !important;
+  font-weight: 700 !important;
+}
+
+/* 2. Highlight spans & Accent links (GitHub Blue) */
+.github-dark h2 span,
+.github-dark h3 span,
+.github-dark .text-\[\#eaaa00\],
+.github-dark .text-\[\#eaaa00\] * {
+  color: #58a6ff !important;
+}
+
+/* 3. Overriding All Hardcoded Purple/Aubergine Text to Clean GitHub Text */
+.github-dark [class*="text-[#3a0f34]"],
+.github-dark [class*="text-[#5e3b58]"],
+.github-dark [class*="text-[#7d5977]"],
+.github-dark .text-\[\#3a0f34\],
+.github-dark .text-\[\#5e3b58\],
+.github-dark .text-\[\#7d5977\] {
+  color: #e6edf3 !important;
+}
+
+/* Paragraphs & Muted Descriptions in GitHub Neutral Gray */
+.github-dark p,
+.github-dark p [class*="text-[#5e3b58]"],
+.github-dark p [class*="text-[#3a0f34]"],
+.github-dark span[class*="text-[#5e3b58]"] {
+  color: #8b949e !important;
+}
+
+/* Icons in GitHub Blue */
+.github-dark svg[class*="text-[#3a0f34]"],
+.github-dark .text-\[\#3a0f34\] svg {
+  color: #58a6ff !important;
+}
+
+/* 4. Badges, Eyebrows & Tags (GitHub Pill Style) */
+.github-dark .bg-\[\#3a0f34\]\/8,
+.github-dark .bg-\[\#3a0f34\]\/10,
+.github-dark .bg-\[\#3a0f34\],
+.github-dark span[class*="bg-[#3a0f34]"] {
+  background-color: #21262d !important;
+  border-color: #30363d !important;
+  color: #58a6ff !important;
+}
+
+/* 5. Section Divider */
+.github-dark .section-divider {
+  height: 1px !important;
+  background: #30363d !important;
+  opacity: 0.8 !important;
+}
+
+/* 6. Cards & Containers (GitHub Dark Box Container #161b22) */
+.github-dark [style*="rgba(221, 227, 232"],
+.github-dark [style*="rgba(221,227,232"],
+.github-dark .glass-card,
+.github-dark .apple-window {
+  background-color: #161b22 !important;
+  border: 1px solid #30363d !important;
+  box-shadow: 0 8px 24px rgba(1, 4, 9, 0.6) !important;
+  color: #e6edf3 !important;
+}
+
+/* Titlebars on cards (GitHub Box Header #161b22) */
+.github-dark .bg-\[\#3a0f34\],
+.github-dark .bg-\[\#2b0a26\],
+.github-dark .bg-\[\#250821\] {
+  background-color: #161b22 !important;
+  border-color: #30363d !important;
+  color: #f0f6fc !important;
+}
+
+/* Inner nested sub-cards */
+.github-dark .bg-white\/60,
+.github-dark .bg-white\/70,
+.github-dark .bg-white\/80,
+.github-dark .bg-white\/90,
+.github-dark .bg-white\/5,
+.github-dark .bg-white\/10 {
+  background-color: #0d1117 !important;
+  border-color: #30363d !important;
+  color: #e6edf3 !important;
+}
+
+/* 7. Action Buttons */
+/* Primary CTA button (GitHub Green) */
+.github-dark .bg-\[\#eaaa00\],
+.github-dark button.bg-\[\#eaaa00\],
+.github-dark a.bg-\[\#eaaa00\] {
+  background-color: #238636 !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(240, 246, 252, 0.1) !important;
+}
+.github-dark .bg-\[\#eaaa00\]:hover,
+.github-dark button.bg-\[\#eaaa00\]:hover,
+.github-dark a.bg-\[\#eaaa00\]:hover {
+  background-color: #2ea043 !important;
+  color: #ffffff !important;
+}
+
+/* Secondary Action Button (GitHub Gray Button #21262d) */
+.github-dark a.bg-white,
+.github-dark button.bg-white,
+.github-dark a.bg-\[\#3a0f34\],
+.github-dark button.bg-\[\#3a0f34\] {
+  background-color: #21262d !important;
+  border: 1px solid #30363d !important;
+  color: #e6edf3 !important;
+}
+.github-dark a.bg-white:hover,
+.github-dark button.bg-white:hover,
+.github-dark a.bg-\[\#3a0f34\]:hover,
+.github-dark button.bg-\[\#3a0f34\]:hover {
+  background-color: #30363d !important;
+  border-color: #8b949e !important;
+  color: #ffffff !important;
+}
+
+/* 8. Form Inputs in Dark Mode */
+.github-dark input,
+.github-dark textarea,
+.github-dark select {
+  background-color: #0d1117 !important;
+  border: 1px solid #30363d !important;
+  color: #e6edf3 !important;
+}
+.github-dark input::placeholder,
+.github-dark textarea::placeholder {
+  color: #6e7681 !important;
+}
+.github-dark input:focus,
+.github-dark textarea:focus,
+.github-dark select:focus {
+  border-color: #58a6ff !important;
+  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3) !important;
+  outline: none !important;
+}
+
+/* 9. Tech Pills & Labels (GitHub Topics Style) */
+.github-dark span.bg-\[\#3a0f34\]\/10,
+.github-dark span.bg-white\/10,
+.github-dark span.bg-white\/5,
+.github-dark div.bg-\[\#3a0f34\]\/10 {
+  background-color: rgba(56, 139, 253, 0.12) !important;
+  border: 1px solid rgba(56, 139, 253, 0.35) !important;
+  color: #58a6ff !important;
+}
+
+/* 10. Avatar Profile Ring in GitHub Dev Gradient */
+.github-dark .bg-gradient-to-tr.from-\[\#3a0f34\] {
+  background: linear-gradient(135deg, #238636, #1f6feb, #8957e5) !important;
+  box-shadow: 0 0 35px rgba(31, 111, 235, 0.25) !important;
+}
+
 .noise-overlay {
   position: fixed;
   inset: 0;
   z-index: 9999;
   pointer-events: none;
-  opacity: 0.035;
+  opacity: 0.02;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
-}
-
-/* ── Shimmer light sweep ───────────────────────────────── */
-@keyframes shimmer-sweep {
-  0%   { transform: translateX(-150%) skewX(-18deg); opacity: 0; }
-  6%   { opacity: 1; }
-  94%  { opacity: 1; }
-  100% { transform: translateX(250%) skewX(-18deg); opacity: 0; }
-}
-
-/* ── Sparkle / glitter ─────────────────────────────────── */
-@keyframes sparkle-in {
-  0%   { opacity: 0; transform: scale(0) rotate(0deg); }
-  40%  { opacity: 1; transform: scale(1.4) rotate(180deg); }
-  100% { opacity: 0; transform: scale(0) rotate(360deg); }
-}
-
-/* ── Scanlines animation ───────────────────────────────── */
-@keyframes scanlines {
-  0%   { background-position: 0 0; }
-  100% { background-position: 0 8px; }
-}
-
-/* ── Rim glow pulse ────────────────────────────────────── */
-@keyframes rim-pulse {
-  0%,100% {
-    filter: drop-shadow(-8px 0 35px rgba(212, 255, 63, 0.7)) drop-shadow(0 0 20px rgba(0, 0, 0, 0.4));
-  }
-  50% {
-    filter: drop-shadow(-14px 0 50px rgba(227, 66, 52, 0.8)) drop-shadow(0 0 30px rgba(212, 255, 63, 0.6));
-  }
-}
-
-/* ── Floating bob ──────────────────────────────────────── */
-@keyframes float-y {
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(-6px); }
-}
-
-/* ── RGB channel split (glitch) ───────────────────────── */
-@keyframes glitch-r {
-  0%,90%,100% { transform: translate(0,0); opacity: 0; }
-  91% { transform: translate(-4px, 2px); opacity: 0.6; }
-  93% { transform: translate(3px, -1px); opacity: 0.4; }
-  95% { transform: translate(-2px, 3px); opacity: 0.5; }
-  97% { transform: translate(4px, -2px); opacity: 0.3; }
-  99% { transform: translate(-3px, 1px); opacity: 0; }
-}
-
-@keyframes glitch-g {
-  0%,90%,100% { transform: translate(0,0); opacity: 0; }
-  91% { transform: translate(5px, -3px); opacity: 0.5; }
-  93% { transform: translate(-4px, 2px); opacity: 0.3; }
-  95% { transform: translate(3px, -1px); opacity: 0.4; }
-  97% { transform: translate(-5px, 3px); opacity: 0.25; }
-  99% { transform: translate(2px, -2px); opacity: 0; }
-}
-
-@keyframes glitch-b {
-  0%,90%,100% { transform: translate(0,0); opacity: 0; }
-  91% { transform: translate(3px, 5px); opacity: 0.4; }
-  93% { transform: translate(-5px, -2px); opacity: 0.3; }
-  95% { transform: translate(4px, 1px); opacity: 0.35; }
-  97% { transform: translate(-2px, -4px); opacity: 0.2; }
-  99% { transform: translate(5px, 2px); opacity: 0; }
-}
-
-/* ── High Contrast Gradient text (Black, Tomato Red, Chartreuse) ───────── */
-.gradient-text {
-  background: linear-gradient(120deg, #000000 0%, #e34234 50%, #000000 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.gradient-text-alt {
-  background: linear-gradient(120deg, #e34234 0%, #000000 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* ── Glass / Solid Black card with high contrast ──────── */
-.glass-card {
-  background: #000000;
-  color: #cbb3e8;
-  border: 2px solid #000000;
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.glass-card:hover {
-  background: #050505;
-  border-color: #D4ff3f;
-  box-shadow:
-    0 0 0 2px #D4ff3f,
-    0 16px 45px rgba(227, 66, 52, 0.3),
-    0 0 50px rgba(0, 0, 0, 0.4);
-  transform: translateY(-5px) scale(1.015);
-}
-
-/* ── Skill tag ─────────────────────────────────────────── */
-.skill-tag {
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: default;
-}
-.skill-tag:hover {
-  transform: translateY(-2px) scale(1.06);
-}
-
-/* ── Section divider gradient ──────────────────────────── */
-.section-divider {
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #e34234 25%, #000000 50%, #D4ff3f 75%, transparent);
 }

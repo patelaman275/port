@@ -321,18 +321,99 @@ Given my demonstrated ability to ship scalable full-stack applications independe
 I am based in Lucknow, UP / Chennai, and am actively exploring entry-level **Software Engineer**, **Backend Developer**, and **AI/ML** roles!`;
   }
 
-  // 17. CONVERSATIONAL DIRECT FALLBACK
-  return `I understand you're asking about "${query}". 
+  // 17. LLM / LARGE LANGUAGE MODELS / GPT / FOUNDATION MODELS
+  if (clean.includes('llm') || clean.includes('large language model') || clean.includes('transformer') || clean.includes('gpt') || clean.includes('foundation model') || clean.includes('generative ai')) {
+    return `### 🧠 Understanding LLMs & How I Implement Them
 
-As Aman's portfolio assistant, I can give you verified details on:
-1. **AI Chicken Disease Detection System** (98.2% accuracy CNN, ICCCNet 2026 paper, Next.js frontend)
-2. **EasyTrip** (My solo full-stack platform with real-time GPS tracking & Socket.IO SOS)
-3. **AI Career Path Generator** (Team project with GPT-4 roadmaps & ATS analyzer)
-4. **AWS Certifications** (AI Practitioner & Cloud Practitioner on Credly)
-5. **Academic Record at SRM IST** (B.Tech CSE Data Science, 8.83/10 CGPA)
-6. **LeetCode Problem Solving** (250+ solved with 100-day streak)
+**What is an LLM?**
+A **Large Language Model (LLM)** is a deep learning model built upon transformer architectures (specifically multi-head self-attention mechanisms). Trained on massive corpora of text tokens, LLMs model statistical dependencies in human language to comprehend context, generate fluent responses, reason across domains, and synthesize structured data (such as JSON or code).
 
-Which area would you like to explore?`;
+**How I Apply LLMs in My Engineering Projects:**
+1. **AI Career Path Generator**:
+   • Integrated **OpenAI GPT-4** and **Google Gemini API** to generate milestone-driven learning roadmaps from user target roles.
+   • Built an automated ATS resume parser extracting 15+ skill signals and suggesting keyword alignments.
+2. **ChickTech AI (ICCCNet 2026 Published Research)**:
+   • Coupled dual-pipeline CNNs with **Gemini API via RAG** (Retrieval-Augmented Generation) over 47 specialized knowledge chunks across 9 avian diseases, preventing model hallucination and delivering grounded veterinary guidance.
+   • Integrated **Sarvam AI** for multilingual speech synthesis across 5+ Indian regional dialects.
+3. **AWS Certified AI Practitioner**:
+   • Certified on Amazon Bedrock, foundation model tuning, prompt engineering, and responsible AI guardrails.
+
+Would you like to review the architecture diagram of ChickTech AI or Career Path Generator?`;
+  }
+
+  // 18. RAG (RETRIEVAL-AUGMENTED GENERATION)
+  if (clean.includes('rag') || clean.includes('retrieval augmented') || clean.includes('retrieval-augmented') || clean.includes('vector') || clean.includes('embeddings')) {
+    return `### ⚡ RAG (Retrieval-Augmented Generation) Architecture
+
+**What is RAG?**
+**Retrieval-Augmented Generation (RAG)** bridges the gap between static LLM knowledge and proprietary domain data. Instead of fine-tuning the entire model, relevant document chunks are retrieved from a knowledge base via vector embedding similarity and injected directly into the LLM prompt context at runtime, dramatically eliminating hallucinations.
+
+**My Implementation in ChickTech AI:**
+• **Embedder**: Used \`Sentence-Transformers\` to generate dense vector embeddings of poultry pathology research.
+• **Knowledge Store**: 47 curated, verified medical chunks spanning 9 poultry diseases.
+• **Inference**: When farmers ask symptom questions, cosine similarity fetches the top-k relevant chunks, which \`Gemini 1.5\` synthesizes into treatment and biosecurity plans with sub-2s latency.
+
+Click **View Architecture** on the ChickTech project to see the exact \`rag_engine.py\` pipeline diagram!`;
+  }
+
+  // 19. CNN / COMPUTER VISION / DEEP LEARNING
+  if (clean.includes('cnn') || clean.includes('convolutional') || clean.includes('computer vision') || clean.includes('vgg') || clean.includes('mobilenet')) {
+    return `### 🔬 Convolutional Neural Networks (CNN) & Computer Vision
+
+**What is a CNN?**
+A **Convolutional Neural Network** processes grid-structured data like images. Using learnable kernels, it extracts hierarchical spatial features—from low-level edges and textures in early layers to complex anatomical patterns in deeper layers—with spatial translation invariance.
+
+**My Published Research (ICCCNet 2026):**
+• **Dual Pipeline Architecture**:
+  - **VGG16 Pipeline**: Deep 16-layer feature representation for nuanced microscopic lesion patterns.
+  - **MobileNetV2 Pipeline**: Inverted residual blocks with depthwise separable convolutions optimized for low-latency edge deployment.
+• **Results**: Achieved **98.2% accuracy** classifying poultry diseases (Coccidiosis, Fowlpox, Bumblefoot) across a curated dataset of 5,000+ annotated images.
+• **Publication**: Author in ADROID Conference Series (ICCCNet 2026) under Dr. Monica Bhavani M at SRM IST.
+
+Check out the interactive **View Architecture** modal on the ChickTech project card!`;
+  }
+
+  // 20. WEBSOCKETS & REAL-TIME PROTOCOLS (SOCKET.IO)
+  if (clean.includes('socket') || clean.includes('websocket') || clean.includes('real-time') || clean.includes('realtime') || clean.includes('gps')) {
+    return `### 📡 Real-Time WebSockets vs HTTP Polling
+
+**Why WebSockets?**
+Unlike standard stateless HTTP request/response polling which adds heavy TCP handshake overhead, **WebSockets** establish a persistent, full-duplex TCP channel allowing client and server to push events bidirectionally with sub-millisecond network latency.
+
+**How I Built EasyTrip with Socket.io:**
+• **Event Relay**: Designed event handlers for continuous GPS coordinate streaming (\`sendLocation\` ↔ \`receiveLocation\`).
+• **Sub-500ms Emergency SOS**: Designed an urgent distress broadcast that relays GPS coordinates and route deviation overlays across all connected riders in the room in under 500ms.
+• **In-Memory Room Store**: Engineered an in-memory session store eliminating database round-trip bottlenecks during active highway journeys.
+
+Click **View Architecture** on EasyTrip to examine the Node/Express + Socket.io room store pipeline!`;
+  }
+
+  // 21. WEBRTC & PEER-TO-PEER VIDEO
+  if (clean.includes('webrtc') || clean.includes('peer') || clean.includes('video call') || clean.includes('signaling')) {
+    return `### 🎥 WebRTC Peer-to-Peer Architecture
+
+**What is WebRTC?**
+**WebRTC** (Web Real-Time Communication) enables direct browser-to-browser audio, video, and arbitrary data streaming without routing media through a central application server, minimizing latency and server bandwidth.
+
+**My Implementation in CampusConnect:**
+• Used a custom **Node.js/Express + Socket.io** signaling server to exchange SDP offers/answers and ICE candidate packets.
+• Once the peer-to-peer mesh is established, video/audio tracks stream directly between student browsers.
+• Secured **3rd Prize at MOZO-HACK** for real-time collaboration architecture.
+
+Click **View Architecture** on CampusConnect to see the client/server signaling flow diagram!`;
+  }
+
+  // 22. CONVERSATIONAL INTELLIGENT FALLBACK
+  return `Thank you for asking about "${query}".
+
+As Aman Patel's portfolio assistant, I can provide detailed insights into:
+• **Full-Stack & Backend Systems**: Node.js, Express, Flask, REST API design, WebSockets (Socket.IO), WebRTC, and in-memory architectures.
+• **AI & Deep Learning**: Dual CNN architectures (VGG16 + MobileNetV2, 98.2% accuracy), Gemini API RAG pipelines, and LLM agent workflows.
+• **Published Research**: Accepted research paper at **ICCCNet 2026** (ADROID Conference Series).
+• **Education & Credentials**: SRM IST B.Tech in CSE Data Science (CGPA: 8.83/10), AWS Certified AI Practitioner & Cloud Practitioner, and 250+ LeetCode problems solved.
+• **Interactive System Architectures**: Click any project's **"View Architecture"** button to inspect system diagrams for ChickTech AI, EasyTrip, Career Path Generator, and CampusConnect!
+
+Feel free to ask a specific technical, architectural, or behavioral question, or reach out directly at [amanpatelsrm@gmail.com](mailto:amanpatelsrm@gmail.com).`;
 }
 
 export async function POST(req: Request) {
