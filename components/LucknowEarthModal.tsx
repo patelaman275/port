@@ -12,7 +12,7 @@ interface LucknowEarthModalProps {
 
 export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModalProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
-  const [animProgress, setAnimProgress] = useState(0); // 0 (outer space) -> 1 (zoomed in on Lucknow)
+  const [animProgress, setAnimProgress] = useState(0);
   const [isZoomedIn, setIsZoomedIn] = useState(false);
   const [replayKey, setReplayKey] = useState(0);
 
@@ -38,7 +38,7 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
     // ── 1. Scene, Camera, Renderer ─────────────────────────
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, width / height, 0.1, 100);
-    camera.position.set(0, 0, 8.5); // Start far in space (Zoomed Out)
+    camera.position.set(0, 0, 8.5); // Outer space perspective
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -48,119 +48,84 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.3;
+    renderer.toneMappingExposure = 1.15;
     container.appendChild(renderer.domElement);
 
-    // ── 2. Earth Globe Geometry & Texture ───────────────────
+    // ── 2. Earth Globe Geometry & Photorealistic Texture ───
     const earthRadius = 2.0;
     const earthGroup = new THREE.Group();
     scene.add(earthGroup);
 
-    // Deep obsidian-blue ocean sphere
-    const oceanGeo = new THREE.SphereGeometry(earthRadius, 64, 64);
-    const oceanMat = new THREE.MeshPhysicalMaterial({
-      color: new THREE.Color('#0c131a'),
-      emissive: new THREE.Color('#05090d'),
-      roughness: 0.6,
-      metalness: 0.2,
-      clearcoat: 0.5,
+    const textureLoader = new THREE.TextureLoader();
+
+    // High-resolution Earth texture map (NASA Blue Marble)
+    const earthMap = textureLoader.load('/earth-map.jpg', () => {
+      renderer.render(scene, camera);
     });
-    const oceanMesh = new THREE.Mesh(oceanGeo, oceanMat);
-    earthGroup.add(oceanMesh);
+    earthMap.colorSpace = THREE.SRGBColorSpace;
 
-    // ── 3. Continental Landmass Points (Procedural Dot-Matrix Continents) ──
-    // Coordinates of world continents + detailed India/Asia cluster
-    const landPoints: THREE.Vector3[] = [];
-    const numPoints = 2600;
+    const earthGeo = new THREE.SphereGeometry(earthRadius, 64, 64);
+    const earthMat = new THREE.MeshStandardMaterial({
+      map: earthMap,
+      roughness: 0.65,
+      metalness: 0.1,
+    });
+    const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+    earthGroup.add(earthMesh);
 
-    // Approximate continent clusters
-    const isLand = (lat: number, lon: number): boolean => {
-      // India & South Asia (High density focus!)
-      if (lat >= 7 && lat <= 36 && lon >= 68 && lon <= 96) return true;
-      // Central & East Asia
-      if (lat >= 15 && lat <= 65 && lon >= 60 && lon <= 140) return true;
-      // Europe
-      if (lat >= 36 && lat <= 70 && lon >= -10 && lon <= 50) return true;
-      // Africa
-      if (lat >= -35 && lat <= 37 && lon >= -18 && lon <= 52) return true;
-      // North America
-      if (lat >= 25 && lat <= 70 && lon >= -160 && lon <= -55) return true;
-      // South America
-      if (lat >= -55 && lat <= 12 && lon >= -80 && lon <= -35) return true;
-      // Australia
-      if (lat >= -44 && lat <= -10 && lon >= 113 && lon <= 154) return true;
-      return false;
-    };
-
-    for (let i = 0; i < numPoints; i++) {
-      // Golden spiral distribution on sphere
-      const phi = Math.acos(-1 + (2 * i) / numPoints);
-      const theta = Math.sqrt(numPoints * Math.PI) * phi;
-
-      const lat = 90 - (phi * 180) / Math.PI;
-      const lon = ((theta * 180) / Math.PI) % 360 - 180;
-
-      if (isLand(lat, lon)) {
-        const radLat = (lat * Math.PI) / 180;
-        const radLon = (lon * Math.PI) / 180;
-        const r = earthRadius + 0.015;
-
-        const x = r * Math.cos(radLat) * Math.sin(radLon);
-        const y = r * Math.sin(radLat);
-        const z = r * Math.cos(radLat) * Math.cos(radLon);
-
-        landPoints.push(new THREE.Vector3(x, y, z));
-      }
-    }
-
-    const landGeo = new THREE.BufferGeometry().setFromPoints(landPoints);
-    const landMat = new THREE.PointsMaterial({
-      color: new THREE.Color('#4a5968'),
-      size: 0.045,
+    // ── 3. Realistic Atmospheric Cloud Layer ─────────────────
+    const cloudsMap = textureLoader.load('/earth-clouds.png', () => {
+      renderer.render(scene, camera);
+    });
+    const cloudsGeo = new THREE.SphereGeometry(earthRadius * 1.012, 64, 64);
+    const cloudsMat = new THREE.MeshStandardMaterial({
+      map: cloudsMap,
       transparent: true,
-      opacity: 0.85,
+      opacity: 0.42,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
     });
-    const landMesh = new THREE.Points(landGeo, landMat);
-    earthGroup.add(landMesh);
+    const cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
+    earthGroup.add(cloudsMesh);
 
-    // ── 4. Glowing Atmosphere Rim ──────────────────────────
-    const atmoGeo = new THREE.SphereGeometry(earthRadius * 1.08, 48, 48);
+    // ── 4. Glowing Blue Atmospheric Haze (Fresnel Rim) ─────
+    const atmoGeo = new THREE.SphereGeometry(earthRadius * 1.04, 64, 64);
     const atmoMat = new THREE.MeshBasicMaterial({
-      color: new THREE.Color('#FE8040'),
+      color: new THREE.Color('#38bdf8'),
       transparent: true,
-      opacity: 0.08,
+      opacity: 0.15,
       side: THREE.BackSide,
+      blending: THREE.AdditiveBlending,
     });
     const atmoMesh = new THREE.Mesh(atmoGeo, atmoMat);
     earthGroup.add(atmoMesh);
 
-    // ── 5. Lucknow Target Beacon Pin (26.8467° N, 80.9462° E) ──
+    // ── 5. Lucknow Target Pin (26.8467° N, 80.9462° E) ─────
     const lucknowLat = 26.8467;
     const lucknowLon = 80.9462;
 
-    const radLuckLat = (lucknowLat * Math.PI) / 180;
-    const radLuckLon = (lucknowLon * Math.PI) / 180;
-    const pinR = earthRadius + 0.03;
+    const phi = (90 - lucknowLat) * (Math.PI / 180);
+    const theta = (lucknowLon + 180) * (Math.PI / 180);
 
-    const lx = pinR * Math.cos(radLuckLat) * Math.sin(radLuckLon);
-    const ly = pinR * Math.sin(radLuckLat);
-    const lz = pinR * Math.cos(radLuckLat) * Math.cos(radLuckLon);
+    const lx = -(earthRadius * Math.sin(phi) * Math.cos(theta));
+    const lz = earthRadius * Math.sin(phi) * Math.sin(theta);
+    const ly = earthRadius * Math.cos(phi);
 
     const lucknowVec = new THREE.Vector3(lx, ly, lz);
 
-    // Target Pin Mesh Group
+    // Target Pin Group anchored at Lucknow
     const pinGroup = new THREE.Group();
     pinGroup.position.copy(lucknowVec);
 
     // Glowing orange beacon dot
-    const pinCore = new THREE.Mesh(
-      new THREE.SphereGeometry(0.065, 16, 16),
+    const pinDot = new THREE.Mesh(
+      new THREE.SphereGeometry(0.045, 16, 16),
       new THREE.MeshBasicMaterial({ color: 0xfe8040 })
     );
-    pinGroup.add(pinCore);
+    pinGroup.add(pinDot);
 
     // Radiating radar pulse ring around Lucknow
-    const ringGeo = new THREE.RingGeometry(0.08, 0.12, 32);
+    const ringGeo = new THREE.RingGeometry(0.06, 0.1, 32);
     const ringMat = new THREE.MeshBasicMaterial({
       color: 0xfe8040,
       side: THREE.DoubleSide,
@@ -173,42 +138,49 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
 
     earthGroup.add(pinGroup);
 
+    // Target Quaternion that rotates Earth so Lucknow faces directly at the camera (+Z axis)
+    const targetQuat = new THREE.Quaternion().setFromUnitVectors(
+      lucknowVec.clone().normalize(),
+      new THREE.Vector3(0, 0, 1)
+    );
+
+    // Initial overview orientation (showing broad angle)
+    const initialEuler = new THREE.Euler(0.2, -1.8, 0, 'XYZ');
+    const initialQuat = new THREE.Quaternion().setFromEuler(initialEuler);
+    earthGroup.quaternion.copy(initialQuat);
+
     // ── 6. Stars in Deep Space ─────────────────────────────
-    const starsCount = 450;
+    const starsCount = 500;
     const starCoords: number[] = [];
     for (let i = 0; i < starsCount; i++) {
-      const sx = (Math.random() - 0.5) * 50;
-      const sy = (Math.random() - 0.5) * 50;
-      const sz = -10 - Math.random() * 40;
+      const sx = (Math.random() - 0.5) * 55;
+      const sy = (Math.random() - 0.5) * 55;
+      const sz = -12 - Math.random() * 45;
       starCoords.push(sx, sy, sz);
     }
     const starGeo = new THREE.BufferGeometry();
     starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
-    const starMat = new THREE.PointsMaterial({ color: 0x999999, size: 0.08, transparent: true, opacity: 0.5 });
+    const starMat = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.07,
+      transparent: true,
+      opacity: 0.65,
+    });
     const starField = new THREE.Points(starGeo, starMat);
     scene.add(starField);
 
     // ── 7. Lighting ─────────────────────────────────────────
-    scene.add(new THREE.AmbientLight(0x191919, 1.8));
+    scene.add(new THREE.AmbientLight(0xffffff, 0.85));
 
-    const sunLight = new THREE.DirectionalLight(0xffffff, 3.8);
+    const sunLight = new THREE.DirectionalLight(0xffffff, 2.6);
     sunLight.position.set(5, 3, 5);
     scene.add(sunLight);
 
-    const orangeBacklight = new THREE.PointLight(0xfe8040, 2.5, 15);
-    orangeBacklight.position.set(-4, -2, -3);
-    scene.add(orangeBacklight);
+    const softFillLight = new THREE.DirectionalLight(0x38bdf8, 0.4);
+    softFillLight.position.set(-5, -2, -2);
+    scene.add(softFillLight);
 
-    // ── 8. Zoom Animation Math ──────────────────────────────
-    // To face Lucknow (Lat 26.8°, Lon 80.9°) directly at the camera (Z axis):
-    // Rotation Y must be -radLon, Rotation X must be radLat
-    const targetRotY = -radLuckLon;
-    const targetRotX = radLuckLat;
-
-    // Start Earth rotation showing a broad overview
-    earthGroup.rotation.y = targetRotY - 2.5;
-    earthGroup.rotation.x = 0;
-
+    // ── 8. Zoom Animation Loop & Interactive Drag ───────────
     let startTime = performance.now();
     let animId: number;
 
@@ -223,7 +195,6 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
     const ro = new ResizeObserver(handleResize);
     ro.observe(container);
 
-    // Interactive mouse rotation drag
     let isDragging = false;
     let prevMousePos = { x: 0, y: 0 };
 
@@ -238,8 +209,16 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
       const dy = e.clientY - prevMousePos.y;
       prevMousePos = { x: e.clientX, y: e.clientY };
 
-      earthGroup.rotation.y += dx * 0.005;
-      earthGroup.rotation.x += dy * 0.005;
+      const deltaQuatY = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        dx * 0.005
+      );
+      const deltaQuatX = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(1, 0, 0),
+        dy * 0.005
+      );
+      earthGroup.quaternion.multiplyQuaternions(deltaQuatY, earthGroup.quaternion);
+      earthGroup.quaternion.multiplyQuaternions(deltaQuatX, earthGroup.quaternion);
     };
 
     const onMouseUp = () => {
@@ -250,33 +229,31 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
     window.addEventListener('mousemove', onMouseMove);
     window.addEventListener('mouseup', onMouseUp);
 
-    // ── 9. Render & Zoom-In Interpolation Loop ──────────────
     const render = () => {
       animId = requestAnimationFrame(render);
       const elapsed = (performance.now() - startTime) / 1000;
 
+      // Slowly rotate clouds
+      cloudsMesh.rotation.y += 0.0004;
+
       // Pulse pin ring
-      const pulse = 1 + Math.sin(elapsed * 4) * 0.4;
+      const pulse = 1 + Math.sin(elapsed * 4.5) * 0.35;
       pinRing.scale.set(pulse, pulse, pulse);
       ringMat.opacity = Math.max(0, 1 - (pulse - 0.7));
 
-      // Phase 1 (0 to 1.0s): Float in outer space
-      // Phase 2 (1.0 to 3.8s): Smooth orbital swoop & dramatic zoom in directly to Lucknow!
-      const zoomDuration = 2.8;
-      const delay = 0.6;
+      // Space to Lucknow Zoom In Interpolation
+      const zoomDuration = 2.6;
+      const delay = 0.5;
       const progress = Math.min(Math.max((elapsed - delay) / zoomDuration, 0), 1);
-
-      // Smooth Quintic Ease-Out curve for dramatic space-to-ground zoom
       const ease = 1 - Math.pow(1 - progress, 4);
       setAnimProgress(ease);
 
       if (!isDragging) {
-        // Interpolate Earth rotation to center Lucknow
-        earthGroup.rotation.y = (targetRotY - 2.5) * (1 - ease) + targetRotY * ease;
-        earthGroup.rotation.x = 0 * (1 - ease) + targetRotX * ease;
+        // Slerp Earth quaternion to center Lucknow directly in front of camera
+        earthGroup.quaternion.slerpQuaternions(initialQuat, targetQuat, ease);
       }
 
-      // Camera zooms from space (8.5) down to tight orbital view (3.0)
+      // Camera zooms from space (8.5) down to tight orbital view (3.05)
       camera.position.z = 8.5 * (1 - ease) + 3.05 * ease;
 
       if (progress >= 0.95 && !isZoomedIn) {
@@ -297,10 +274,12 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
       if (renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
-      oceanGeo.dispose();
-      oceanMat.dispose();
-      landGeo.dispose();
-      landMat.dispose();
+      earthGeo.dispose();
+      earthMat.dispose();
+      earthMap.dispose();
+      cloudsGeo.dispose();
+      cloudsMat.dispose();
+      cloudsMap.dispose();
       atmoGeo.dispose();
       atmoMat.dispose();
       starGeo.dispose();
@@ -322,9 +301,9 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
         onClick={onClose}
       >
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, scale: 0.92, y: 15 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.9, y: 20 }}
+          exit={{ opacity: 0, scale: 0.92, y: 15 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
           className="relative w-full max-w-4xl h-[86vh] max-h-[680px] rounded-2xl border border-[#303030] shadow-2xl bg-[#090b0e] overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
@@ -343,13 +322,13 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
                   className="text-sm font-bold text-[#F5F5F5] flex items-center gap-2"
                   style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                 >
-                  <span>Orbital Geolocation Telemetry</span>
+                  <span>Orbital Geolocation</span>
                   <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-[#FE8040]/15 text-[#FE8040] border border-[#FE8040]/30">
                     SATELLITE LOCK
                   </span>
                 </h3>
                 <p className="text-[11px] text-[#777777] font-mono">
-                  Orbital Descent &middot; Space to Lucknow, Uttar Pradesh, India
+                  Descent trajectory &middot; Space to Lucknow, UP, India
                 </p>
               </div>
             </div>
@@ -361,10 +340,10 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
                   setReplayKey((k) => k + 1);
                 }}
                 className="px-3 py-1.5 rounded-lg bg-[#191919] hover:bg-[#222222] text-[#999999] hover:text-[#FE8040] border border-[#303030] text-xs font-mono transition-colors flex items-center gap-1.5 cursor-pointer"
-                title="Replay Zoom In Animation"
+                title="Replay Zoom In"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Replay Zoom</span>
+                <span className="hidden sm:inline">Replay</span>
               </button>
 
               <button
@@ -377,22 +356,22 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
             </div>
           </div>
 
-          {/* 3D Earth WebGL Canvas Mount */}
+          {/* 3D Realistic Earth Canvas */}
           <div className="relative flex-1 w-full overflow-hidden bg-[#000000]">
             <div ref={mountRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
 
             {/* Orbit HUD Altitude Indicator */}
             <div className="absolute top-4 left-4 z-10 bg-[#121212]/80 backdrop-blur-md p-3 rounded-xl border border-[#303030] font-mono text-xs space-y-1">
               <div className="flex items-center justify-between gap-4 text-[#777777]">
-                <span>ORBITAL ALTITUDE:</span>
+                <span>ALTITUDE:</span>
                 <span className="text-[#FE8040] font-bold">
                   {Math.round((1 - animProgress) * 35786 + 420)} KM
                 </span>
               </div>
               <div className="flex items-center justify-between gap-4 text-[#777777]">
-                <span>DESCENT TRAJECTORY:</span>
+                <span>TRAJECTORY:</span>
                 <span className="text-[#F5F5F5] font-bold">
-                  {animProgress >= 0.95 ? 'LOCKED ON TARGET' : 'INTERPOLATING'}
+                  {animProgress >= 0.95 ? 'LOCKED ON TARGET' : 'DESCENDING'}
                 </span>
               </div>
               <div className="w-44 h-1 bg-[#222222] rounded-full overflow-hidden mt-1.5">
@@ -465,7 +444,7 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
             {/* Drag hint on bottom-left */}
             <div className="absolute bottom-4 left-4 z-10 hidden sm:flex items-center gap-1.5 text-[11px] font-mono text-[#777777] bg-[#121212]/60 px-3 py-1.5 rounded-lg border border-[#303030]/60">
               <Compass className="w-3 h-3 text-[#FE8040]" />
-              <span>Click &amp; drag anywhere to rotate Earth</span>
+              <span>Click &amp; drag to rotate Earth</span>
             </div>
           </div>
         </motion.div>

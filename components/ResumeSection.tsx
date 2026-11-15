@@ -123,7 +123,7 @@ export default function ResumeSection() {
                   title="Click to view Lucknow on 3D Earth"
                 >
                   <MapPin className="w-3.5 h-3.5 text-[#FE8040]" />
-                  <span>Lucknow, UP, India 🌍</span>
+                  <span>Lucknow, UP, India</span>
                 </button>
               </div>
 

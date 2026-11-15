@@ -298,13 +298,10 @@ export default function Footer() {
           <button
             onClick={() => setShowEarthModal(true)}
             className="inline-flex items-center justify-center gap-1.5 mb-6 text-xs text-[#999999] hover:text-[#FE8040] transition-all cursor-pointer group px-3.5 py-1.5 rounded-full border border-[#303030] hover:border-[#FE8040] bg-[#191919] hover:bg-[#222222]"
-            title="Click to view 3D Earth Zoom to Lucknow, India"
+            title="Click to view Lucknow on 3D Earth"
           >
             <MapPin className="w-3.5 h-3.5 text-[#FE8040] group-hover:scale-110 transition-transform" />
             <span className="font-medium">Lucknow, Uttar Pradesh, India</span>
-            <span className="text-[10px] text-[#FE8040] font-mono px-2 py-0.5 rounded bg-[#FE8040]/10 border border-[#FE8040]/30 ml-1">
-              View on Earth 🌍
-            </span>
           </button>
 
           <div className="flex items-center justify-center gap-3 mb-8 flex-wrap">
