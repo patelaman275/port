@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
-import * as THREE from 'three';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Image from 'next/image';
 
 interface InteractiveAnimeCharacterProps {
   className?: string;
@@ -10,467 +10,334 @@ interface InteractiveAnimeCharacterProps {
 export default function InteractiveAnimeCharacter({
   className = '',
 }: InteractiveAnimeCharacterProps) {
-  const mountRef = useRef<HTMLDivElement | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const targetRotX = useRef(0);
-  const targetRotY = useRef(0);
-  const currentRotX = useRef(0);
-  const currentRotY = useRef(0);
-  const targetPupilX = useRef(0);
-  const targetPupilY = useRef(0);
-  const currentPupilX = useRef(0);
-  const currentPupilY = useRef(0);
-  const blinkProgress = useRef(0);
+  // Pupil offset (px) for eye gaze tracking
+  const [pupilOffset, setPupilOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  // Head / face 3D rotation and translation
+  const [faceTransform, setFaceTransform] = useState({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
+  // Dynamic lens reflection glint position (percent)
+  const [glintPos, setGlintPos] = useState({ x: 50, y: 40, opacity: 0.25 });
+  const [isBlinking, setIsBlinking] = useState(false);
 
-  // ── Build Scene ────────────────────────────────────────────────────────────
+  // Smooth lerp targets for 60fps animation
+  const targetPupil = useRef({ x: 0, y: 0 });
+  const currentPupil = useRef({ x: 0, y: 0 });
+  const targetFace = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
+  const currentFace = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
+  const animFrameId = useRef<number | null>(null);
+
+  // Natural Blinking Loop (every 2.8 to 5.5 seconds with occasional double blink)
   useEffect(() => {
-    const container = mountRef.current;
-    if (!container) return;
+    let blinkTimeout: ReturnType<typeof setTimeout>;
 
-    let width = container.clientWidth || 400;
-    let height = container.clientHeight || 500;
-
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      alpha: true,
-      powerPreference: 'high-performance',
-    });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.shadowMap.enabled = true;
-    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-    renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
-    container.appendChild(renderer.domElement);
-
-    // Scene & Camera
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(36, width / height, 0.1, 100);
-    camera.position.set(0, 0.25, 5.8);
-
-    // Lighting
-    const keyLight = new THREE.DirectionalLight(0xfff5e8, 3.0);
-    keyLight.position.set(-2, 3, 4);
-    keyLight.castShadow = true;
-    scene.add(keyLight);
-
-    const fillLight = new THREE.DirectionalLight(0xc0d8ff, 1.1);
-    fillLight.position.set(3, 1, 2);
-    scene.add(fillLight);
-
-    const rimLight = new THREE.DirectionalLight(0xfe8040, 1.6);
-    rimLight.position.set(0.5, -1, -4);
-    scene.add(rimLight);
-
-    scene.add(new THREE.AmbientLight(0x1a1420, 2.0));
-
-    // Materials
-    const mk = (color: string, rough = 0.65, metal = 0.0, emissive?: string, emissiveInt = 0) => {
-      const m = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(color),
-        roughness: rough,
-        metalness: metal,
-      });
-      if (emissive) {
-        m.emissive = new THREE.Color(emissive);
-        m.emissiveIntensity = emissiveInt;
-      }
-      return m;
-    };
-
-    const skinMat      = mk('#f5c5a3', 0.65);
-    const skinDarkMat  = mk('#e8a882', 0.7);
-    const hairMat      = mk('#1a1a2e', 0.5, 0.3);
-    const hairHiMat    = mk('#2a2a46', 0.4, 0.4);
-    const eyeWhiteMat  = mk('#f4f4ff', 0.1);
-    const irisMat      = mk('#1a3a5c', 0.1, 0.2, '#0a1a2c', 0.3);
-    const pupilMat     = mk('#050a0f', 0.0, 0.1);
-    const hlMat        = mk('#ffffff', 0.0, 0.0, '#ffffff', 1.0);
-    const lashMat      = mk('#0a0a18', 0.5);
-    const glassMat     = new THREE.MeshStandardMaterial({
-      color: new THREE.Color('#303060'), roughness: 0.0, metalness: 0.9,
-      transparent: true, opacity: 0.28,
-    });
-    const frameMatG    = mk('#1a1a2e', 0.3, 0.8);
-    const lipMat       = mk('#e8907a', 0.5);
-    const browMat      = mk('#1a1a2e', 0.6);
-    const shirtMat     = mk('#0d0d1a', 0.8, 0.1);
-    const accentMat    = mk('#fe8040', 0.6);
-
-    // ── Head Group (rotates with mouse) ───────────────────────────────────────
-    const headGroup = new THREE.Group();
-    scene.add(headGroup);
-
-    // Neck
-    const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.28, 0.5, 20), skinMat);
-    neck.position.set(0, -1.0, 0);
-    neck.castShadow = true;
-    headGroup.add(neck);
-
-    // Shirt/collar base
-    const shirt = new THREE.Mesh(new THREE.CylinderGeometry(0.65, 0.95, 0.52, 20), shirtMat);
-    shirt.position.set(0, -1.44, 0);
-    shirt.castShadow = true;
-    headGroup.add(shirt);
-
-    // Collar accent ring
-    const collar = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.035, 8, 24, Math.PI), accentMat);
-    collar.position.set(0, -1.08, 0.18);
-    collar.rotation.x = 0.1 * Math.PI;
-    headGroup.add(collar);
-
-    // Face (squashed oval)
-    const face = new THREE.Mesh(new THREE.SphereGeometry(1.0, 48, 48), skinMat);
-    face.scale.set(0.92, 1.05, 0.88);
-    face.castShadow = true;
-    face.receiveShadow = true;
-    headGroup.add(face);
-
-    // Chin
-    const chin = new THREE.Mesh(new THREE.SphereGeometry(0.6, 32, 32), skinMat);
-    chin.position.set(0, -0.78, 0.0);
-    chin.scale.set(0.68, 0.45, 0.72);
-    chin.castShadow = true;
-    headGroup.add(chin);
-
-    // Ears
-    const earGeo = new THREE.SphereGeometry(0.22, 20, 20);
-    [-0.9, 0.9].forEach((xPos) => {
-      const ear = new THREE.Mesh(earGeo, skinMat);
-      ear.position.set(xPos, 0.0, -0.08);
-      ear.scale.set(0.5, 0.75, 0.4);
-      headGroup.add(ear);
-    });
-
-    // ── Hair ─────────────────────────────────────────────────────────────────
-    const hairGroup = new THREE.Group();
-    headGroup.add(hairGroup);
-
-    const hairCap = new THREE.Mesh(
-      new THREE.SphereGeometry(1.05, 48, 32, 0, Math.PI * 2, 0, Math.PI * 0.65),
-      hairMat
-    );
-    hairCap.position.set(0, 0.1, -0.05);
-    hairCap.scale.set(0.95, 0.98, 0.98);
-    hairCap.castShadow = true;
-    hairGroup.add(hairCap);
-
-    // Forehead fringe
-    const fringes = [
-      { x: -0.42, y: 1.08, z: 0.68, rx: -0.9, rz: -0.3, mat: hairMat },
-      { x: -0.18, y: 1.1,  z: 0.75, rx: -0.85, rz: -0.1, mat: hairMat },
-      { x:  0.08, y: 1.09, z: 0.78, rx: -0.82, rz:  0.05, mat: hairHiMat },
-      { x:  0.32, y: 1.06, z: 0.74, rx: -0.88, rz:  0.2, mat: hairHiMat },
-      { x:  0.52, y: 1.0,  z: 0.65, rx: -0.95, rz:  0.35, mat: hairMat },
-    ];
-    fringes.forEach(({ x, y, z, rx, rz, mat }) => {
-      const strand = new THREE.Mesh(new THREE.ConeGeometry(0.1, 0.42, 6), mat);
-      strand.position.set(x, y, z);
-      strand.rotation.set(rx, 0, rz);
-      strand.castShadow = true;
-      hairGroup.add(strand);
-    });
-
-    // Side strands
-    const sides = [
-      { x: -0.98, y: 0.1, z: 0.0, rx: 0.1, rz: -1.2, mat: hairMat },
-      { x: -0.9, y: -0.3, z: 0.1, rx: 0.2, rz: -1.0, mat: hairMat },
-      { x:  0.98, y: 0.1, z: 0.0, rx: 0.1, rz:  1.2, mat: hairHiMat },
-      { x:  0.9, y: -0.3, z: 0.1, rx: 0.2, rz:  1.0, mat: hairHiMat },
-    ];
-    sides.forEach(({ x, y, z, rx, rz, mat }) => {
-      const s = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.48, 6), mat);
-      s.position.set(x, y, z);
-      s.rotation.set(rx, 0, rz);
-      hairGroup.add(s);
-    });
-
-    const backHair = new THREE.Mesh(
-      new THREE.SphereGeometry(1.04, 32, 32, 0, Math.PI * 2, Math.PI * 0.4, Math.PI * 0.6),
-      hairMat
-    );
-    backHair.position.set(0, -0.1, -0.08);
-    backHair.scale.set(0.98, 1.0, 1.02);
-    hairGroup.add(backHair);
-
-    // ── Eyebrows ──────────────────────────────────────────────────────────────
-    const browGeo = new THREE.BoxGeometry(0.36, 0.055, 0.08);
-    [[-0.34, 0.12], [0.34, -0.12]].forEach(([xPos, rz]) => {
-      const brow = new THREE.Mesh(browGeo, browMat);
-      brow.position.set(xPos, 0.42, 0.78);
-      brow.rotation.z = rz;
-      brow.scale.set(1, 1, 0.5);
-      headGroup.add(brow);
-    });
-
-    // ── Eyes ──────────────────────────────────────────────────────────────────
-    const leftEyeGroup = new THREE.Group();
-    const rightEyeGroup = new THREE.Group();
-    let leftPupilRef: THREE.Mesh | null = null;
-    let rightPupilRef: THREE.Mesh | null = null;
-    let leftUpperLidRef: THREE.Mesh | null = null;
-    let rightUpperLidRef: THREE.Mesh | null = null;
-    let leftIrisRef: THREE.Mesh | null = null;
-    let rightIrisRef: THREE.Mesh | null = null;
-    let leftHlRef: THREE.Mesh | null = null;
-    let rightHlRef: THREE.Mesh | null = null;
-
-    const buildEye = (xPos: number, grp: THREE.Group, side: 'L' | 'R') => {
-      grp.position.set(xPos, 0.18, 0.72);
-
-      // Sclera (eyeball)
-      const sclera = new THREE.Mesh(new THREE.SphereGeometry(0.185, 24, 24), eyeWhiteMat);
-      sclera.scale.set(1, 1.05, 0.85);
-      grp.add(sclera);
-
-      // Iris
-      const iris = new THREE.Mesh(new THREE.CircleGeometry(0.12, 32), irisMat);
-      iris.position.set(0, 0, 0.154);
-      grp.add(iris);
-      if (side === 'L') leftIrisRef = iris;
-      else rightIrisRef = iris;
-
-      // Pupil
-      const pupil = new THREE.Mesh(new THREE.CircleGeometry(0.07, 24), pupilMat);
-      pupil.position.set(0, 0, 0.158);
-      grp.add(pupil);
-      if (side === 'L') leftPupilRef = pupil;
-      else rightPupilRef = pupil;
-
-      // Highlight dot
-      const hl = new THREE.Mesh(new THREE.CircleGeometry(0.028, 12), hlMat);
-      hl.position.set(0.04, 0.038, 0.162);
-      grp.add(hl);
-      if (side === 'L') leftHlRef = hl;
-      else rightHlRef = hl;
-
-      // Upper lid (blinking)
-      const lid = new THREE.Mesh(
-        new THREE.SphereGeometry(0.19, 24, 12, 0, Math.PI * 2, 0, Math.PI * 0.5),
-        lashMat
-      );
-      lid.position.set(0, 0, 0);
-      lid.scale.set(1.08, 0.001, 0.92);
-      lid.rotation.x = -0.3;
-      grp.add(lid);
-      if (side === 'L') leftUpperLidRef = lid;
-      else rightUpperLidRef = lid;
-
-      headGroup.add(grp);
-    };
-
-    buildEye(-0.34, leftEyeGroup, 'L');
-    buildEye(0.34, rightEyeGroup, 'R');
-
-    // Eyelashes
-    const buildLashes = (xPos: number) => {
-      const lg = new THREE.Group();
-      lg.position.set(xPos, 0.18, 0.72);
-      [-0.12, -0.06, 0, 0.06, 0.12].forEach((lx, i) => {
-        const lash = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.065, 0.01), lashMat);
-        lash.position.set(lx, 0.185, 0.165);
-        lash.rotation.z = (i - 2) * 0.18;
-        lg.add(lash);
-      });
-      headGroup.add(lg);
-    };
-    buildLashes(-0.34);
-    buildLashes(0.34);
-
-    // ── Glasses ───────────────────────────────────────────────────────────────
-    const buildFrame = (xPos: number) => {
-      const frame = new THREE.Mesh(new THREE.TorusGeometry(0.22, 0.025, 10, 40), frameMatG);
-      frame.position.set(xPos, 0.17, 0.74);
-      frame.scale.set(1.05, 1.0, 0.3);
-      headGroup.add(frame);
-
-      const lens = new THREE.Mesh(new THREE.CircleGeometry(0.2, 32), glassMat);
-      lens.position.set(xPos, 0.17, 0.75);
-      lens.scale.set(1.05, 1.0, 1);
-      headGroup.add(lens);
-    };
-    buildFrame(-0.34);
-    buildFrame(0.34);
-
-    // Bridge & temples
-    const bridge = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.025, 0.04), frameMatG);
-    bridge.position.set(0, 0.17, 0.75);
-    headGroup.add(bridge);
-
-    [[-0.76, -0.4], [0.76, 0.4]].forEach(([tx, ry]) => {
-      const temple = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.02, 0.025), frameMatG);
-      temple.position.set(tx, 0.17, 0.5);
-      temple.rotation.y = ry;
-      headGroup.add(temple);
-    });
-
-    // ── Nose ──────────────────────────────────────────────────────────────────
-    const noseGeo = new THREE.SphereGeometry(0.07, 16, 16);
-    const noseBridge = new THREE.Mesh(noseGeo, skinDarkMat);
-    noseBridge.position.set(0, -0.08, 0.86);
-    noseBridge.scale.set(0.9, 0.7, 0.75);
-    headGroup.add(noseBridge);
-    [-0.08, 0.08].forEach((nx) => {
-      const nostril = new THREE.Mesh(noseGeo, skinDarkMat);
-      nostril.position.set(nx, -0.14, 0.84);
-      nostril.scale.set(0.6, 0.45, 0.5);
-      headGroup.add(nostril);
-    });
-
-    // ── Mouth & Lips ──────────────────────────────────────────────────────────
-    const upperLip = new THREE.Mesh(
-      new THREE.TorusGeometry(0.14, 0.038, 8, 24, Math.PI),
-      lipMat
-    );
-    upperLip.position.set(0, -0.42, 0.8);
-    upperLip.rotation.x = -0.1;
-    headGroup.add(upperLip);
-
-    const lowerLip = new THREE.Mesh(new THREE.SphereGeometry(0.19, 24, 12), lipMat);
-    lowerLip.position.set(0, -0.52, 0.8);
-    lowerLip.scale.set(0.85, 0.3, 0.55);
-    headGroup.add(lowerLip);
-
-    // ── Resize Observer ───────────────────────────────────────────────────────
-    const handleResize = () => {
-      const w = container.clientWidth;
-      const h = container.clientHeight;
-      camera.aspect = w / h;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
-    };
-    const ro = new ResizeObserver(handleResize);
-    ro.observe(container);
-
-    // ── Blink Scheduler ───────────────────────────────────────────────────────
-    let blinkTimer: ReturnType<typeof setTimeout>;
     const scheduleBlink = () => {
-      blinkTimer = setTimeout(() => {
-        const start = performance.now();
-        const dur = 180;
-        const doBlink = () => {
-          const t = Math.min((performance.now() - start) / dur, 1);
-          blinkProgress.current = t < 0.5 ? t * 2 : (1 - t) * 2;
-          if (t < 1) requestAnimationFrame(doBlink);
-          else blinkProgress.current = 0;
-        };
-        doBlink();
-        scheduleBlink();
-      }, 2600 + Math.random() * 3400);
+      const nextInterval = 2800 + Math.random() * 2700;
+      blinkTimeout = setTimeout(() => {
+        setIsBlinking(true);
+
+        setTimeout(() => {
+          setIsBlinking(false);
+
+          // 22% chance of a quick double blink
+          if (Math.random() < 0.22) {
+            setTimeout(() => {
+              setIsBlinking(true);
+              setTimeout(() => {
+                setIsBlinking(false);
+                scheduleBlink();
+              }, 95);
+            }, 120);
+          } else {
+            scheduleBlink();
+          }
+        }, 125);
+      }, nextInterval);
     };
+
     scheduleBlink();
-
-    // ── Render Loop ───────────────────────────────────────────────────────────
-    const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
-    let elapsed = 0;
-    let last = performance.now();
-    let animId: number;
-
-    const render = () => {
-      animId = requestAnimationFrame(render);
-      const now = performance.now();
-      elapsed += (now - last) / 1000;
-      last = now;
-
-      // Lerp head rotation
-      currentRotX.current = lerp(currentRotX.current, targetRotX.current, 0.09);
-      currentRotY.current = lerp(currentRotY.current, targetRotY.current, 0.09);
-      headGroup.rotation.x = currentRotX.current;
-      headGroup.rotation.y = currentRotY.current;
-
-      // Idle breathing bob
-      headGroup.position.y = Math.sin(elapsed * 1.1) * 0.025;
-
-      // Hair subtle lag
-      hairGroup.rotation.x = currentRotX.current * -0.05;
-      hairGroup.rotation.y = currentRotY.current * -0.04;
-
-      // Lerp pupils
-      currentPupilX.current = lerp(currentPupilX.current, targetPupilX.current, 0.14);
-      currentPupilY.current = lerp(currentPupilY.current, targetPupilY.current, 0.14);
-      const px = currentPupilX.current;
-      const py = currentPupilY.current;
-
-      if (leftIrisRef) leftIrisRef.position.set(px, py, 0.154);
-      if (leftPupilRef) leftPupilRef.position.set(px, py, 0.158);
-      if (leftHlRef) leftHlRef.position.set(px + 0.04, py + 0.038, 0.162);
-      if (rightIrisRef) rightIrisRef.position.set(px, py, 0.154);
-      if (rightPupilRef) rightPupilRef.position.set(px, py, 0.158);
-      if (rightHlRef) rightHlRef.position.set(px + 0.04, py + 0.038, 0.162);
-
-      // Blink
-      const bp = blinkProgress.current;
-      if (leftUpperLidRef) leftUpperLidRef.scale.set(1.08, Math.max(0.001, bp * 1.1), 0.92);
-      if (rightUpperLidRef) rightUpperLidRef.scale.set(1.08, Math.max(0.001, bp * 1.1), 0.92);
-
-      renderer.render(scene, camera);
-    };
-    render();
-
-    return () => {
-      clearTimeout(blinkTimer);
-      cancelAnimationFrame(animId);
-      ro.disconnect();
-      if (renderer.domElement && container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
-    };
+    return () => clearTimeout(blinkTimeout);
   }, []);
 
-  // ── Mouse Tracking ────────────────────────────────────────────────────────
+  // Smooth 60fps lerp animation loop
+  const animate = useCallback(() => {
+    const factor = 0.11;
+
+    // Smooth pupils lerp
+    currentPupil.current.x += (targetPupil.current.x - currentPupil.current.x) * factor;
+    currentPupil.current.y += (targetPupil.current.y - currentPupil.current.y) * factor;
+
+    // Smooth face 3D rotation & translation lerp
+    currentFace.current.rotX += (targetFace.current.rotX - currentFace.current.rotX) * factor;
+    currentFace.current.rotY += (targetFace.current.rotY - currentFace.current.rotY) * factor;
+    currentFace.current.rotZ += (targetFace.current.rotZ - currentFace.current.rotZ) * factor;
+    currentFace.current.x += (targetFace.current.x - currentFace.current.x) * factor;
+    currentFace.current.y += (targetFace.current.y - currentFace.current.y) * factor;
+
+    setPupilOffset({
+      x: Number(currentPupil.current.x.toFixed(2)),
+      y: Number(currentPupil.current.y.toFixed(2)),
+    });
+
+    setFaceTransform({
+      rotX: Number(currentFace.current.rotX.toFixed(3)),
+      rotY: Number(currentFace.current.rotY.toFixed(3)),
+      rotZ: Number(currentFace.current.rotZ.toFixed(3)),
+      x: Number(currentFace.current.x.toFixed(2)),
+      y: Number(currentFace.current.y.toFixed(2)),
+    });
+
+    // Dynamic lens glint tracks opposite angle
+    const glintX = 50 + currentFace.current.rotY * 1.5;
+    const glintY = 38 - currentFace.current.rotX * 1.2;
+    setGlintPos({
+      x: Math.max(20, Math.min(80, glintX)),
+      y: Math.max(20, Math.min(65, glintY)),
+      opacity: 0.18 + Math.abs(currentFace.current.rotY) * 0.012,
+    });
+
+    animFrameId.current = requestAnimationFrame(animate);
+  }, []);
+
   useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    animFrameId.current = requestAnimationFrame(animate);
+    return () => {
+      if (animFrameId.current) cancelAnimationFrame(animFrameId.current);
+    };
+  }, [animate]);
+
+  // Track mouse coordinates across the entire window
+  useEffect(() => {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const isMobileScreen = window.innerWidth < 768;
+
+    if (prefersReducedMotion || (isTouchDevice && isMobileScreen)) {
+      targetPupil.current = { x: 0, y: 0 };
+      targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
+      return;
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
-      const container = mountRef.current;
-      if (!container) return;
+      if (!containerRef.current) return;
 
-      const rect = container.getBoundingClientRect();
-      const cx = rect.left + rect.width * 0.5;
-      const cy = rect.top + rect.height * 0.42;
+      const rect = containerRef.current.getBoundingClientRect();
 
-      const nx = Math.max(-1, Math.min(1, (e.clientX - cx) / (window.innerWidth * 0.5)));
-      const ny = Math.max(-1, Math.min(1, (e.clientY - cy) / (window.innerHeight * 0.5)));
+      // Eye & face center in viewport coordinates
+      const faceCenterX = rect.left + rect.width * 0.51;
+      const faceCenterY = rect.top + rect.height * 0.38;
 
-      targetRotY.current = nx * 0.44;
-      targetRotX.current = ny * 0.32;
-      targetPupilX.current = nx * 0.055;
-      targetPupilY.current = -ny * 0.04;
+      const deltaX = e.clientX - faceCenterX;
+      const deltaY = e.clientY - faceCenterY;
+
+      // Normalized coordinates (-1 to +1) based on screen dimensions
+      const screenHalfW = Math.max(window.innerWidth * 0.5, 400);
+      const screenHalfH = Math.max(window.innerHeight * 0.5, 300);
+
+      const nx = Math.max(-1, Math.min(1, deltaX / screenHalfW));
+      const ny = Math.max(-1, Math.min(1, deltaY / screenHalfH));
+
+      // Ease curve: natural, responsive, and smoothly bounded at edges
+      const dist = Math.hypot(nx, ny);
+      const ease = dist > 0 ? Math.pow(Math.min(dist, 1), 0.85) : 0;
+      const angle = Math.atan2(ny, nx);
+
+      const easedX = Math.cos(angle) * ease;
+      const easedY = Math.sin(angle) * ease;
+
+      // ── Face 3D Head Turn ─────────────────────────────────
+      // Yaw (rotY): up to ±20° left/right
+      // Pitch (rotX): up to ±14° up/down
+      // Roll (rotZ): up to ±3° natural micro-tilt
+      // Lateral/Vertical shift: up to ±16px X, ±10px Y
+      targetFace.current = {
+        rotX: -easedY * 14,
+        rotY: easedX * 20,
+        rotZ: easedX * 3,
+        x: easedX * 16,
+        y: easedY * 10,
+      };
+
+      // ── Pupil Offset (eyes move inside the face) ──────────
+      targetPupil.current = {
+        x: easedX * 7.0,
+        y: easedY * 4.5,
+      };
     };
 
-    const handleLeave = () => {
-      targetRotX.current = 0;
-      targetRotY.current = 0;
-      targetPupilX.current = 0;
-      targetPupilY.current = 0;
+    const handleMouseLeave = () => {
+      targetPupil.current = { x: 0, y: 0 };
+      targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mouseleave', handleLeave);
+    document.addEventListener('mouseleave', handleMouseLeave);
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleLeave);
+      document.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
 
   return (
     <div
+      ref={containerRef}
       className={`relative select-none ${className}`}
-      style={{ aspectRatio: '4 / 5' }}
+      style={{ aspectRatio: '936 / 1024' }}
     >
-      {/* Orange ambient back-glow */}
+      {/* Soft orange ambient back-glow behind card */}
       <div
-        className="absolute inset-0 rounded-2xl pointer-events-none -z-10"
+        className="absolute inset-0 rounded-3xl pointer-events-none -z-10"
         style={{
-          background:
-            'radial-gradient(ellipse at 50% 55%, rgba(254,128,64,0.14) 0%, transparent 70%)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(254,128,64,0.16) 0%, rgba(100,50,20,0.05) 55%, transparent 75%)',
         }}
       />
 
-      {/* Three.js WebGL canvas — transparent background, no border */}
-      <div ref={mountRef} className="w-full h-full" style={{ background: 'transparent' }} />
+      {/* ══════════════════════════════════════════════════════════
+          1. STATIC OUTER CARD FRAME (Does NOT tilt or move)
+          Anchored firmly with clean charcoal border and obsidian shadow
+          ══════════════════════════════════════════════════════════ */}
+      <div
+        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#303030] shadow-2xl bg-[#090204]"
+        style={{
+          boxShadow: '0 0 50px rgba(254,128,64,0.08), 0 25px 50px rgba(0,0,0,0.85)',
+          perspective: '1200px',
+        }}
+      >
+        {/* Ambient subtle background dust particles in 3D */}
+        <div className="absolute inset-0 pointer-events-none opacity-40">
+          <div
+            className="absolute w-2 h-2 rounded-full bg-[#FE8040]/30 blur-xs"
+            style={{ top: '20%', left: '15%' }}
+          />
+          <div
+            className="absolute w-1.5 h-1.5 rounded-full bg-[#FE8040]/40 blur-xs"
+            style={{ top: '65%', right: '18%' }}
+          />
+          <div
+            className="absolute w-1 h-1 rounded-full bg-white/40"
+            style={{ top: '35%', right: '25%' }}
+          />
+        </div>
+
+        {/* ══════════════════════════════════════════════════════════
+            2. 3D MOVING CHARACTER RIG (Nested 3D parallax layers)
+            Scaled (1.15) so 3D rotation & translation never clip
+            ══════════════════════════════════════════════════════════ */}
+        <div
+          className="relative w-full h-full will-change-transform"
+          style={{
+            transformStyle: 'preserve-3d',
+            transformOrigin: '50% 72%', // Neck pivot
+            transform: `
+              scale(1.15)
+              rotateX(${faceTransform.rotX}deg)
+              rotateY(${faceTransform.rotY}deg)
+              rotateZ(${faceTransform.rotZ}deg)
+              translate3d(${faceTransform.x}px, ${faceTransform.y}px, 0)
+            `,
+            transition: 'transform 0.04s linear',
+          }}
+        >
+          {/* Layer 1: Base Character Portrait (Face, hair, body) at Z: 0px */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{ transform: 'translateZ(0px)' }}
+          >
+            <Image
+              src="/character-base.png"
+              alt="Aman Patel Character Portrait"
+              fill
+              priority
+              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
+              className="object-cover object-center pointer-events-none"
+            />
+          </div>
+
+          {/* Layer 2: Interactive Mouse-Tracking Pupils at Z: 10px in 3D depth */}
+          <div
+            className="absolute inset-0 pointer-events-none will-change-transform"
+            style={{
+              transform: `translate3d(${pupilOffset.x}px, ${pupilOffset.y}px, 10px)`,
+              transition: 'transform 0.04s linear',
+            }}
+          >
+            <Image
+              src="/pupils.png"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
+              className="object-cover object-center pointer-events-none"
+            />
+          </div>
+
+          {/* Layer 3: Natural Anime Blink at Z: 16px */}
+          <div
+            className="absolute inset-0 pointer-events-none transition-opacity"
+            style={{
+              transform: 'translateZ(16px)',
+              opacity: isBlinking ? 1 : 0,
+              transitionDuration: isBlinking ? '60ms' : '110ms',
+            }}
+          >
+            <Image
+              src="/blink.png"
+              alt=""
+              fill
+              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
+              className="object-cover object-center pointer-events-none"
+            />
+          </div>
+
+          {/* Layer 4: Glasses Frames & Eyelash Overlay at Z: 26px (True 3D Parallax!)
+              Because this layer sits in FRONT of the eyes, when his head turns,
+              the glasses frames shift realistically across the pupils! */}
+          <div
+            className="absolute inset-0 pointer-events-none will-change-transform"
+            style={{
+              transform: `translate3d(${pupilOffset.x * 0.2}px, ${pupilOffset.y * 0.2}px, 26px)`,
+              transition: 'transform 0.04s linear',
+            }}
+          >
+            <Image
+              src="/eyelid-overlay.png"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
+              className="object-cover object-center pointer-events-none"
+            />
+          </div>
+
+          {/* Layer 5: Dynamic 3D Glasses Lens Sheen Glint at Z: 32px */}
+          <div
+            className="absolute inset-0 pointer-events-none overflow-hidden"
+            style={{ transform: 'translateZ(32px)' }}
+          >
+            <div
+              className="absolute w-24 h-16 rounded-full blur-md transition-all duration-75"
+              style={{
+                top: `${glintPos.y}%`,
+                left: `${glintPos.x - 10}%`,
+                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.35) 0%, rgba(254,128,64,0.15) 50%, transparent 80%)',
+                opacity: glintPos.opacity,
+                transform: `rotate(${faceTransform.rotY * 1.5 - 20}deg)`,
+              }}
+            />
+            <div
+              className="absolute w-20 h-14 rounded-full blur-md transition-all duration-75"
+              style={{
+                top: `${glintPos.y}%`,
+                left: `${glintPos.x + 16}%`,
+                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, rgba(254,128,64,0.12) 50%, transparent 80%)',
+                opacity: glintPos.opacity,
+                transform: `rotate(${faceTransform.rotY * 1.5 - 20}deg)`,
+              }}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

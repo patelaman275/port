@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface LoadingExperienceProps {
@@ -8,11 +8,73 @@ interface LoadingExperienceProps {
   onComplete?: () => void;
 }
 
+// Simple, soothing harmonic entry sound (Web Audio API + fallback tone)
+function playSimpleEntrySound() {
+  if (typeof window === 'undefined') return;
+
+  // 1. Try Web Audio API soothing harmonic chime
+  try {
+    const AudioCtx =
+      window.AudioContext ||
+      (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+    if (AudioCtx) {
+      const ctx = new AudioCtx();
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+      const t = ctx.currentTime;
+
+      // Soft, elegant 2-tone melodic chime: C5 (523.25Hz) -> G5 (783.99Hz)
+      const notes = [
+        { freq: 523.25, time: t + 0.02, duration: 1.1, gain: 0.08 },
+        { freq: 783.99, time: t + 0.14, duration: 1.3, gain: 0.06 },
+      ];
+
+      notes.forEach(({ freq, time, duration, gain }) => {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, time);
+
+        // Smooth acoustic envelope
+        g.gain.setValueAtTime(0.0001, time);
+        g.gain.linearRampToValueAtTime(gain, time + 0.04);
+        g.gain.exponentialRampToValueAtTime(0.0001, time + duration);
+
+        osc.connect(g);
+        g.connect(ctx.destination);
+
+        osc.start(time);
+        osc.stop(time + duration + 0.05);
+      });
+    }
+  } catch {
+    // Silently handle autoplay restrictions
+  }
+
+  // 2. Also try HTML5 audio for tone.mp3
+  try {
+    const audio = new Audio('/tone.mp3');
+    audio.volume = 0.25;
+    audio.play().catch(() => {});
+  } catch {
+    // Ignore
+  }
+}
+
 export default function LoadingExperience({ progress, onComplete }: LoadingExperienceProps) {
   const [isVisible, setIsVisible] = useState(true);
+  const soundPlayedRef = useRef(false);
 
   useEffect(() => {
     if (progress >= 100 && isVisible) {
+      if (!soundPlayedRef.current) {
+        soundPlayedRef.current = true;
+        // Play simple entry sound right as entering portfolio
+        playSimpleEntrySound();
+      }
+
       const timer = setTimeout(() => {
         setIsVisible(false);
         onComplete?.();
