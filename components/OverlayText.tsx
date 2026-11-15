@@ -1,10 +1,90 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, FileText, Bot } from 'lucide-react';
 import InteractiveAnimeCharacter from '@/components/InteractiveAnimeCharacter';
 import Hero3DElement from '@/components/Hero3DElement';
+
+function AnimatedHeroName() {
+  const [suffix, setSuffix] = useState('XXX');
+  const [isDecoded, setIsDecoded] = useState(false);
+  const glyphs = 'XYZ0123456789!@#$%&*?';
+
+  const runDecodeAnimation = useCallback(() => {
+    setIsDecoded(false);
+    setSuffix('XXX');
+
+    // Step 1: Brief start delay
+    const startTimer = setTimeout(() => {
+      let step = 0;
+      const interval = setInterval(() => {
+        step++;
+
+        if (step < 6) {
+          // Scramble all 3 letters
+          const c1 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          const c2 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          const c3 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          setSuffix(c1 + c2 + c3);
+        } else if (step < 10) {
+          // Letter 1 resolves: 't'
+          const c2 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          const c3 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          setSuffix('t' + c2 + c3);
+        } else if (step < 14) {
+          // Letter 2 resolves: 'te'
+          const c3 = glyphs[Math.floor(Math.random() * glyphs.length)];
+          setSuffix('te' + c3);
+        } else {
+          // Full resolution: 'tel' -> Aman Patel
+          setSuffix('tel');
+          setIsDecoded(true);
+          clearInterval(interval);
+        }
+      }, 50);
+
+      return () => clearInterval(interval);
+    }, 450);
+
+    return () => clearTimeout(startTimer);
+  }, []);
+
+  useEffect(() => {
+    const cleanup = runDecodeAnimation();
+    return () => {
+      if (cleanup) cleanup();
+    };
+  }, [runDecodeAnimation]);
+
+  return (
+    <h1
+      onMouseEnter={() => {
+        if (isDecoded) runDecodeAnimation();
+      }}
+      className="font-bold tracking-[-0.03em] leading-none text-[#F5F5F5] cursor-default select-none group"
+      style={{
+        fontFamily: "var(--font-space-grotesk), 'Space Grotesk', sans-serif",
+        fontSize: 'clamp(3.5rem, 8vw, 6.5rem)',
+        lineHeight: '0.96',
+      }}
+    >
+      <span>Aman </span>
+      <span className="text-[#FE8040] inline-flex items-baseline">
+        <span>Pa</span>
+        <span
+          className={`transition-all duration-200 ${
+            isDecoded
+              ? 'text-[#FE8040]'
+              : 'text-[#FF995F] font-mono tracking-wider opacity-90 inline-block scale-105'
+          }`}
+        >
+          {suffix}
+        </span>
+      </span>
+    </h1>
+  );
+}
 
 export default function OverlayText() {
   const handleOpenChat = () => {
@@ -30,23 +110,13 @@ export default function OverlayText() {
             <Hero3DElement />
           </motion.div>
 
-          {/* Name — Space Grotesk Bold, Off-White + Orange Accent */}
+          {/* Animated Name: Starts as Aman PaXXX -> decodes into Aman Patel */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
           >
-            <h1
-              className="font-bold tracking-[-0.03em] leading-none text-[#F5F5F5]"
-              style={{
-                fontFamily: "var(--font-space-grotesk), 'Space Grotesk', sans-serif",
-                fontSize: 'clamp(3.5rem, 8vw, 6.5rem)',
-                lineHeight: '0.96',
-              }}
-            >
-              <span>Aman </span>
-              <span className="text-[#FE8040]">Patel</span>
-            </h1>
+            <AnimatedHeroName />
           </motion.div>
 
           {/* Subtitle & Degree */}

@@ -55,7 +55,7 @@ export default function InteractiveAnimeCharacter({
     return () => clearTimeout(blinkTimeout);
   }, []);
 
-  // Smooth 60fps lerp animation loop
+  // Smooth 60fps lerp animation loop for head 3D rotation
   const animate = useCallback(() => {
     const factor = 0.11;
 
@@ -129,11 +129,8 @@ export default function InteractiveAnimeCharacter({
       const easedX = Math.cos(angle) * ease;
       const easedY = Math.sin(angle) * ease;
 
-      // ── Face 3D Head Turn ─────────────────────────────────
-      // Yaw (rotY): up to ±20° left/right
-      // Pitch (rotX): up to ±14° up/down
-      // Roll (rotZ): up to ±2.8° natural micro-tilt
-      // Lateral/Vertical shift: up to ±16px X, ±10px Y
+      // ── Face 3D Head Turn (Yaw, Pitch, Roll) ─────────────────
+      // Pupils stay naturally part of the face (no detached pupil movement)
       targetFace.current = {
         rotX: -easedY * 14,
         rotY: easedX * 20,
@@ -199,6 +196,7 @@ export default function InteractiveAnimeCharacter({
 
         {/* ══════════════════════════════════════════════════════════
             2. 3D MOVING CHARACTER RIG (Head moves with mouse)
+            Uses character.png (complete with natural dark pupils)
             Scaled (1.14) so 3D rotation never reveals frame edges
             ══════════════════════════════════════════════════════════ */}
         <div
@@ -216,10 +214,10 @@ export default function InteractiveAnimeCharacter({
             transition: 'transform 0.04s linear',
           }}
         >
-          {/* Unified High-Resolution Character Portrait */}
+          {/* Complete Character Portrait with Natural Dark Pupils */}
           <div className="absolute inset-0 pointer-events-none">
             <Image
-              src="/character-base.png"
+              src="/character.png"
               alt="Aman Patel Character Portrait"
               fill
               priority
@@ -228,7 +226,7 @@ export default function InteractiveAnimeCharacter({
             />
           </div>
 
-          {/* Natural Anime Eyelid Blink (Only appears during 120ms blink) */}
+          {/* Natural Anime Eyelid Blink (Only appears during 130ms blink) */}
           <div
             className="absolute inset-0 pointer-events-none transition-opacity"
             style={{
@@ -245,7 +243,7 @@ export default function InteractiveAnimeCharacter({
             />
           </div>
 
-          {/* Dynamic 3D Glasses Lens Specular Glint (Light sheen moves across lenses) */}
+          {/* Dynamic 3D Glasses Lens Specular Glint */}
           <div
             className="absolute inset-0 pointer-events-none overflow-hidden"
             style={{ transform: 'translateZ(15px)' }}
