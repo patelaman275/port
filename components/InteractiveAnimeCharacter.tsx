@@ -12,30 +12,29 @@ export default function InteractiveAnimeCharacter({
 }: InteractiveAnimeCharacterProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Pupil offset in pixels (relative to scaled rendered image)
+  // Pupil offset (px)
   const [pupilOffset, setPupilOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  // Head tilt & rotation — full 3D head/body tracking with mouse
+  const [headTransform, setHeadTransform] = useState({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
   const [isBlinking, setIsBlinking] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
-  // Target and current animated values for smooth 60fps lerp
-  const targetPos = useRef({ x: 0, y: 0 });
-  const currentPos = useRef({ x: 0, y: 0 });
+  // Smooth lerp targets
+  const targetPupil = useRef({ x: 0, y: 0 });
+  const currentPupil = useRef({ x: 0, y: 0 });
+  const targetHead = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
+  const currentHead = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
   const animFrameId = useRef<number | null>(null);
 
-  // Natural Blinking Loop (every 3 to 6 seconds)
+  // Natural Blinking Loop (every 3–6 s)
   useEffect(() => {
-    let blinkTimeout: NodeJS.Timeout;
+    let blinkTimeout: ReturnType<typeof setTimeout>;
 
     const scheduleBlink = () => {
-      const nextInterval = 3000 + Math.random() * 3200; // 3.0s - 6.2s
+      const nextInterval = 3000 + Math.random() * 3200;
       blinkTimeout = setTimeout(() => {
         setIsBlinking(true);
-
-        // Standard eye blink is ~130ms
         setTimeout(() => {
           setIsBlinking(false);
-
-          // 20% chance of an immediate quick double blink
           if (Math.random() < 0.22) {
             setTimeout(() => {
               setIsBlinking(true);
@@ -55,16 +54,31 @@ export default function InteractiveAnimeCharacter({
     return () => clearTimeout(blinkTimeout);
   }, []);
 
-  // Smooth Eye Tracking Animation Loop
+  // Combined animation loop — lerp pupils + head together at 60fps
   const animate = useCallback(() => {
-    // Smooth lerp (0.12 factor)
-    const factor = 0.12;
-    currentPos.current.x += (targetPos.current.x - currentPos.current.x) * factor;
-    currentPos.current.y += (targetPos.current.y - currentPos.current.y) * factor;
+    const f = 0.12;
+
+    // Pupils lerp
+    currentPupil.current.x += (targetPupil.current.x - currentPupil.current.x) * f;
+    currentPupil.current.y += (targetPupil.current.y - currentPupil.current.y) * f;
+
+    // Head 3D lerp
+    currentHead.current.rotX += (targetHead.current.rotX - currentHead.current.rotX) * f;
+    currentHead.current.rotY += (targetHead.current.rotY - currentHead.current.rotY) * f;
+    currentHead.current.rotZ += (targetHead.current.rotZ - currentHead.current.rotZ) * f;
+    currentHead.current.x += (targetHead.current.x - currentHead.current.x) * f;
+    currentHead.current.y += (targetHead.current.y - currentHead.current.y) * f;
 
     setPupilOffset({
-      x: Number(currentPos.current.x.toFixed(2)),
-      y: Number(currentPos.current.y.toFixed(2)),
+      x: Number(currentPupil.current.x.toFixed(2)),
+      y: Number(currentPupil.current.y.toFixed(2)),
+    });
+    setHeadTransform({
+      rotX: Number(currentHead.current.rotX.toFixed(3)),
+      rotY: Number(currentHead.current.rotY.toFixed(3)),
+      rotZ: Number(currentHead.current.rotZ.toFixed(3)),
+      x: Number(currentHead.current.x.toFixed(2)),
+      y: Number(currentHead.current.y.toFixed(2)),
     });
 
     animFrameId.current = requestAnimationFrame(animate);
@@ -77,15 +91,15 @@ export default function InteractiveAnimeCharacter({
     };
   }, [animate]);
 
-  // Mouse tracking logic
+  // Mouse tracking — drives both pupils & full head tilt
   useEffect(() => {
-    // Check reduced motion preference or mobile/touch device
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const isMobileScreen = window.innerWidth < 768;
 
     if (prefersReducedMotion || (isTouchDevice && isMobileScreen)) {
-      targetPos.current = { x: 0, y: 0 };
+      targetPupil.current = { x: 0, y: 0 };
+      targetHead.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
       return;
     }
 
@@ -94,50 +108,58 @@ export default function InteractiveAnimeCharacter({
 
       const rect = containerRef.current.getBoundingClientRect();
 
-      // Original character eye center in 936 x 1024 coordinates:
-      // X = 479 / 936 = ~0.5118
-      // Y = 363.5 / 1024 = ~0.3550
+      // ── 1. Pupil tracking ────────────────────────────────────
       const eyeCenterX = rect.left + rect.width * 0.512;
       const eyeCenterY = rect.top + rect.height * 0.355;
 
       const deltaX = e.clientX - eyeCenterX;
       const deltaY = e.clientY - eyeCenterY;
-
-      // Distance from eye center
       const distance = Math.hypot(deltaX, deltaY);
 
-      if (distance < 1) {
-        targetPos.current = { x: 0, y: 0 };
-        return;
+      if (distance >= 1) {
+        const scaleRatio = rect.width / 936;
+        const maxRangeX = Math.max(3.5, 8.5 * scaleRatio);
+        const maxRangeY = Math.max(2.2, 4.8 * scaleRatio);
+        const maxDistScreen = Math.max(window.innerWidth, window.innerHeight) * 0.65;
+        const easeFactor = Math.pow(Math.min(distance / maxDistScreen, 1), 0.82);
+        const angle = Math.atan2(deltaY, deltaX);
+        targetPupil.current = {
+          x: Math.cos(angle) * maxRangeX * easeFactor,
+          y: Math.sin(angle) * maxRangeY * easeFactor,
+        };
       }
 
-      // Max movement boundaries:
-      // In 936px width, max pupil travel is ~8px horizontally and ~4.5px vertically
-      const scaleRatio = rect.width / 936;
-      const maxRangeX = Math.max(3.5, 8.5 * scaleRatio);
-      const maxRangeY = Math.max(2.2, 4.8 * scaleRatio);
+      // ── 2. Full head & neck rotation toward cursor ───────────
+      const charCenterX = rect.left + rect.width / 2;
+      const charCenterY = rect.top + rect.height * 0.45; // Neck / eye level
 
-      // Nonlinear response: gentle when mouse is close, capped smoothly at edge of screen
-      const maxDistScreen = Math.max(window.innerWidth, window.innerHeight) * 0.65;
-      const normalizedDist = Math.min(distance / maxDistScreen, 1);
-      // Smooth power curve for natural anime gaze
-      const easeFactor = Math.pow(normalizedDist, 0.82);
+      const nx = (e.clientX - charCenterX) / (window.innerWidth / 2);
+      const ny = (e.clientY - charCenterY) / (window.innerHeight / 2);
 
-      const angle = Math.atan2(deltaY, deltaX);
-      targetPos.current = {
-        x: Math.cos(angle) * maxRangeX * easeFactor,
-        y: Math.sin(angle) * maxRangeY * easeFactor,
+      const cx = Math.max(-1, Math.min(1, nx));
+      const cy = Math.max(-1, Math.min(1, ny));
+
+      // Noticeable, natural head turning:
+      // Yaw (rotY): up to ±18° left/right
+      // Pitch (rotX): up to ±12° up/down
+      // Roll (rotZ): up to ±3.5° subtle head cant
+      // Translation: up to ±10px lateral / ±6px vertical
+      targetHead.current = {
+        rotX: -cy * 12,
+        rotY: cx * 18,
+        rotZ: cx * 3.5,
+        x: cx * 10,
+        y: cy * 6,
       };
     };
 
     const handleMouseLeave = () => {
-      // Smoothly return eyes to neutral when cursor exits viewport
-      targetPos.current = { x: 0, y: 0 };
+      targetPupil.current = { x: 0, y: 0 };
+      targetHead.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
     };
 
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
-
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
@@ -147,26 +169,39 @@ export default function InteractiveAnimeCharacter({
   return (
     <div
       ref={containerRef}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => {
-        setIsHovered(false);
-        targetPos.current = { x: 0, y: 0 };
-      }}
       className={`relative select-none ${className}`}
       style={{
-        // Maintain exact 936 : 1024 aspect ratio
         aspectRatio: '936 / 1024',
+        perspective: '1000px',
       }}
     >
-      {/* ── Floating Character Container ── */}
+      {/* Soft orange ambient back-glow */}
       <div
-        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#303030] shadow-xl bg-[#090204]"
+        className="absolute inset-0 rounded-2xl pointer-events-none"
         style={{
+          background: 'radial-gradient(ellipse at 50% 55%, rgba(254,128,64,0.12) 0%, transparent 70%)',
+          zIndex: 0,
+        }}
+      />
+
+      {/* ── Character container with full 3D head pivot ── */}
+      <div
+        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#303030] shadow-2xl bg-[#090204]"
+        style={{
+          boxShadow: '0 0 50px rgba(254,128,64,0.1), 0 25px 50px rgba(0,0,0,0.7)',
+          transformOrigin: '50% 75%', // Pivots naturally around the neck/collar
+          transform: `
+            rotateX(${headTransform.rotX}deg)
+            rotateY(${headTransform.rotY}deg)
+            rotateZ(${headTransform.rotZ}deg)
+            translate3d(${headTransform.x}px, ${headTransform.y}px, 0)
+          `,
           animation: 'gentleFloat 5.2s ease-in-out infinite',
-          boxShadow: '0 0 40px rgba(254,128,64,0.08), 0 20px 40px rgba(0,0,0,0.6)',
+          willChange: 'transform',
+          zIndex: 1,
         }}
       >
-        {/* Layer 1: Base Character (Hair, face, glasses, clothing, and inpainted eye whites) */}
+        {/* Layer 1: Base Character */}
         <Image
           src="/character-base.png"
           alt="Aman Patel Anime Character"
@@ -194,7 +229,7 @@ export default function InteractiveAnimeCharacter({
           />
         </div>
 
-        {/* Layer 3: Eyelashes & Glasses Overlay (Ensures pupils slide BEHIND upper lashes and frames) */}
+        {/* Layer 3: Glasses / Eyelid Overlay */}
         <Image
           src="/eyelid-overlay.png"
           alt=""
@@ -204,7 +239,7 @@ export default function InteractiveAnimeCharacter({
           className="object-cover object-center pointer-events-none"
         />
 
-        {/* Layer 4: Natural Anime Blinking (Closed eyelids) */}
+        {/* Layer 4: Natural Anime Blink */}
         <div
           className="absolute inset-0 pointer-events-none transition-opacity"
           style={{
@@ -225,12 +260,8 @@ export default function InteractiveAnimeCharacter({
       {/* Floating animation keyframes */}
       <style jsx>{`
         @keyframes gentleFloat {
-          0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-6px) rotate(0.25deg);
-          }
+          0%, 100% { margin-top: 0px; }
+          50% { margin-top: -6px; }
         }
       `}</style>
     </div>

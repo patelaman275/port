@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -12,9 +12,6 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
-  Moon,
-  Sun,
-  Code2,
 } from 'lucide-react';
 
 function GithubIcon({ className = 'w-4 h-4' }: { className?: string }) {
@@ -98,71 +95,72 @@ const PROJECTS: Project[] = [
     githubUrl: 'https://github.com/patelaman275/easytrip',
     architectureImg: '/architecture/easytrip-arch.png',
     architectureDetails: [
-      'Rider Client (React + Vite): createRide/joinRide, live location transmission, checkpoints, route changes, SOS button, Leaflet map',
-      'Node + Express Server with Socket.io: Room manager (invite codes), Location relay, Checkpoint synchronization, Route sync',
-      'Real-Time SOS Broadcast: Sub-500ms distress alert dispatch broadcasting to all active riders in the group',
-      'In-Memory Room Store: Ultra-fast state management with zero database latency overhead',
+      'React (Vite) Single Page App on Vercel with Leaflet.js real-time polyline & pin renderer',
+      'Express & Node.js backend hosted on Render running Socket.io room orchestration',
+      'In-memory Room State holding member coordinates, roles, active distress pings, and waypoint lists',
+      'Instant broadcast mesh delivering geolocation coordinate deltas to all room peers simultaneously',
     ],
   },
   {
     id: 3,
     slideNum: '03',
     appName: 'CareerPath_AI.app',
-    title: 'AI-Powered Career Roadmap & Resume Analyzer',
-    subtitle: 'Intelligent Career Acceleration Platform · React SPA & LLM Agents',
-    category: 'Generative AI & SaaS Platform',
-    badge: '70% Research Time Reduction · 15+ ATS Skill Signals Extracted',
-    icon: '🚀',
+    title: 'CareerPath — Generative AI Career Navigation Platform',
+    subtitle: 'Production GenAI SaaS · Gemini 1.5 Pro · Personalized Roadmaps',
+    category: 'Generative AI & LLM Systems',
+    badge: '100+ Roadmaps Generated · Context-Aware Quiz Engine · 9-Skill Assessments',
+    icon: '🎯',
     description:
-      'Built a production AI SaaS platform that dynamically generates personalized career roadmaps and provides real-time ATS resume scoring with targeted skill gap recommendations.',
+      'Engineered an AI-driven career advisor providing interactive diagnostic quizzes and custom multi-phase roadmaps synthesized via Gemini 1.5 Pro with role-aligned milestones.',
     highlights: [
-      'Integrated GPT-4 & Gemini API to formulate milestone-based career trajectories',
-      'Extracted 15+ actionable skill signals from uploaded resumes for ATS score optimization',
-      'Aggregated live job listings via JSearch API with smart location & compensation filters',
+      'Orchestrated multi-turn structured prompting with Google Gemini 1.5 Pro API',
+      'Built 9 comprehensive technical domain assessment tracks with weighted scoring',
+      'Rendered milestone progression paths with PDF export and progress checkpoints',
     ],
-    stack: ['React SPA', 'Vite', 'Tailwind CSS', 'Firebase', 'Gemini API', 'YouTube API', 'JSearch API', 'Sarvam AI'],
-    demoUrl: 'https://ascend-career.vercel.app/',
-    githubUrl: 'https://github.com/KunalBishwal/Ascend-Career',
+    stack: ['Next.js 14', 'React.js', 'Gemini 1.5 Pro', 'Tailwind CSS', 'Framer Motion', 'Lucide Icons'],
+    demoUrl: 'https://careerpath-delta.vercel.app/',
+    githubUrl: 'https://github.com/patelaman275/CareerPath',
     architectureImg: '/architecture/careerpath-arch.png',
     architectureDetails: [
-      'React SPA on Vite: Career Galaxy interactive roadmap, Course picks from resume, Job matches, AI mentor chat & voice',
-      'Gemini API Multi-Agent Suite: Dynamic roadmap generator, deep resume analysis, and mentor conversational agent',
-      'External Aggregators: YouTube API v3 for targeted video courses, JSearch & Active Jobs DB via RapidAPI for live job listings',
-      'Firebase Backend: Authentication (session management), Firestore (chat history sync), and Storage (resume file uploads)',
+      'Next.js 14 App Router UI with dynamic assessment wizard & animated timeline views',
+      'API Route /api/generate-roadmap with prompt engineering & JSON schema enforcement',
+      'Gemini 1.5 Pro Model parsing candidate strengths, weaknesses, and target roles',
+      'Synthesized structured roadmap with phases, timeline estimates, courses, and resource links',
     ],
   },
   {
     id: 4,
     slideNum: '04',
     appName: 'CampusConnect.app',
-    title: 'CampusConnect — University Networking & Collaboration Hub',
-    subtitle: 'Award-Winning Student Platform · 3rd Prize MOZO-HACK Hackathon',
-    category: 'Real-Time Web & Peer-to-Peer Systems',
-    badge: 'MOZO-HACK 3rd Prize · WebRTC Video Mesh · AI Resume Matching',
+    title: 'CampusConnect — University Community Network',
+    subtitle: 'Full-Stack Social Platform · Real-Time Chat & Resource Exchange',
+    category: 'Full-Stack Web Engineering',
+    badge: 'MongoDB Scalable Schema · JWT Auth · Real-Time Campus Feeds',
     icon: '🎓',
     description:
-      'Award-winning university networking platform featuring real-time peer messaging, WebRTC video calling rooms, verified student profiles, and automated resume analysis powered by Gemini API.',
+      'Created a comprehensive digital campus network connecting students, clubs, and faculty for academic collaboration, peer messaging, event discovery, and study material sharing.',
     highlights: [
-      'Won 3rd Prize at MOZO-HACK hackathon for real-time collaboration architecture',
-      'Integrated WebRTC peer connection mesh with custom signaling server',
-      'Engineered instant student community matching by shared courses & tech interests',
+      'Engineered RESTful API with Express.js handling posts, comments, clubs, and notifications',
+      'Designed normalized MongoDB schemas with Mongoose indexing for high-speed queries',
+      'Built responsive dashboard with feed filters, event registration, and peer messaging',
     ],
-    stack: ['Next.js 14', 'Node.js', 'Express', 'MongoDB Atlas', 'WebRTC', 'Socket.io', 'Tailwind CSS'],
-    demoUrl: 'https://campusconnect-mu-six.vercel.app/',
-    githubUrl: 'https://github.com/patelaman275/campusconnect',
+    stack: ['React.js', 'Node.js', 'Express.js', 'MongoDB', 'Mongoose', 'JWT', 'Tailwind CSS'],
+    demoUrl: 'https://campus-connect-ochre.vercel.app/',
+    githubUrl: 'https://github.com/patelaman275/CampusConnect',
     architectureImg: '/architecture/campusconnect-arch.png',
     architectureDetails: [
-      'Next.js 14 App Router: Real-time discussion forum, course chat channels, video room UI, and member discovery',
-      'Signaling & Real-time Layer: Socket.io room orchestration with WebRTC mesh for direct P2P audio/video communication',
-      'Integrations: Nodemailer OTP email verification, Gemini API for ATS resume analysis, MongoDB Atlas cloud cluster',
+      'React frontend client with token storage, protected routes, and modular view controllers',
+      'Express.js server with JWT auth middleware, bcrypt password hashing, and input validation',
+      'MongoDB Atlas cluster with collections for Users, Posts, Events, Resources, and Messages',
+      'REST endpoints serving paginated feeds, real-time message exchange, and event participation',
     ],
   },
 ];
 
 export default function ProjectCarousel3D() {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isGithubDark, setIsGithubDark] = useState(false);
   const [activeArchProject, setActiveArchProject] = useState<Project | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
   const currentProject = PROJECTS[currentIndex];
 
@@ -174,48 +172,55 @@ export default function ProjectCarousel3D() {
     setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
   };
 
+  // Auto-slide every 4.5 seconds (paused on hover or when modal is open)
+  useEffect(() => {
+    if (isPaused || activeArchProject) return;
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
+    }, 4500);
+
+    return () => clearInterval(interval);
+  }, [isPaused, activeArchProject]);
+
   return (
     <section
       id="projects"
-      className="relative bg-transparent text-[#3a0f34] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-full overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      className="relative bg-transparent text-[#CCCCCC] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-full overflow-hidden"
     >
       <div className="w-full max-w-5xl mx-auto">
-        {/* Section Header with GitHub Theme Switch */}
+        {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#3a0f34] text-[#eaaa00] text-xs font-bold tracking-wider uppercase shadow-sm mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#191919] border border-[#303030] text-[#FE8040] text-xs font-bold tracking-wider uppercase shadow-sm mb-3 font-mono">
               <span>Selected Projects · 4 Featured Systems</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#3a0f34]">
-              Engineering &amp; <span className="text-[#eaaa00]">AI Systems</span>
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-[#F5F5F5]"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              Engineering &amp; <span className="text-[#FE8040]">AI Systems</span>
             </h2>
 
-            <p className="text-sm sm:text-base text-[#5e3b58] mt-1 max-w-xl font-medium leading-relaxed">
-              Use arrow buttons to slide across all 4 production systems. Toggle GitHub dark theme for developer mode.
+            <p className="text-sm sm:text-base text-[#999999] mt-1.5 max-w-xl font-normal leading-relaxed">
+              Auto-sliding showcase of production systems. Hover to pause, click architecture for full system diagrams.
             </p>
           </div>
 
           {/* Carousel Navigation Controls */}
-          <div className="flex items-center gap-1.5 self-start sm:self-auto">
+          <div className="flex items-center gap-2 self-start sm:self-auto">
             <button
               onClick={handlePrev}
-              className={`p-2.5 rounded-xl border transition-all cursor-pointer shadow-sm ${
-                isGithubDark
-                  ? 'bg-[#161b22] border-[#30363d] text-[#c9d1d9] hover:bg-[#21262d] hover:border-[#58a6ff]'
-                  : 'bg-white/80 border-[#3a0f34]/20 text-[#3a0f34] hover:bg-white hover:border-[#eaaa00]'
-              }`}
+              className="p-2.5 rounded-lg border border-[#303030] bg-[#191919] text-[#CCCCCC] hover:text-[#FE8040] hover:border-[#FE8040] hover:bg-[#222222] transition-all cursor-pointer shadow-sm"
               aria-label="Previous Project"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={handleNext}
-              className={`p-2.5 rounded-xl border transition-all cursor-pointer shadow-sm ${
-                isGithubDark
-                  ? 'bg-[#161b22] border-[#30363d] text-[#c9d1d9] hover:bg-[#21262d] hover:border-[#58a6ff]'
-                  : 'bg-white/80 border-[#3a0f34]/20 text-[#3a0f34] hover:bg-white hover:border-[#eaaa00]'
-              }`}
+              className="p-2.5 rounded-lg border border-[#303030] bg-[#191919] text-[#CCCCCC] hover:text-[#FE8040] hover:border-[#FE8040] hover:bg-[#222222] transition-all cursor-pointer shadow-sm"
               aria-label="Next Project"
             >
               <ChevronRight className="w-4 h-4" />
@@ -223,20 +228,16 @@ export default function ProjectCarousel3D() {
           </div>
         </div>
 
-        {/* ── Slide Dots Selector ── */}
+        {/* ── Slide Progress Bar / Indicator Dots ── */}
         <div className="flex items-center gap-2 mb-6">
           {PROJECTS.map((p, idx) => (
             <button
               key={p.id}
               onClick={() => setCurrentIndex(idx)}
-              className={`h-2 rounded-full transition-all cursor-pointer ${
+              className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                 currentIndex === idx
-                  ? isGithubDark
-                    ? 'w-10 bg-[#58a6ff]'
-                    : 'w-10 bg-[#eaaa00]'
-                  : isGithubDark
-                  ? 'w-2.5 bg-[#30363d] hover:bg-[#8b949e]'
-                  : 'w-2.5 bg-[#3a0f34]/25 hover:bg-[#3a0f34]/50'
+                  ? 'w-10 bg-[#FE8040]'
+                  : 'w-2.5 bg-[#303030] hover:bg-[#999999]'
               }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
@@ -244,89 +245,47 @@ export default function ProjectCarousel3D() {
         </div>
 
         {/* ── Sliding Project Card ── */}
-        <div className="relative overflow-hidden rounded-3xl">
+        <div className="relative overflow-hidden rounded-2xl border border-[#303030] shadow-2xl bg-[#191919]">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentProject.id}
-              initial={{ opacity: 0, x: 40 }}
+              initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
+              exit={{ opacity: 0, x: -30 }}
               transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-              className={`rounded-3xl border overflow-hidden shadow-2xl transition-colors duration-300 ${
-                isGithubDark
-                  ? 'bg-[#0d1117] border-[#30363d] text-[#c9d1d9]'
-                  : 'border-[#eaaa00]/30 text-[#3a0f34]'
-              }`}
-              style={{
-                background: isGithubDark ? '#0d1117' : 'rgba(221,227,232,0.92)',
-                backdropFilter: 'blur(10px)',
-              }}
+              className="w-full"
             >
               {/* Card Window Titlebar */}
-              <div
-                className={`px-5 py-3.5 border-b flex items-center justify-between ${
-                  isGithubDark
-                    ? 'bg-[#161b22] border-[#30363d]'
-                    : 'bg-[#3a0f34] border-[#eaaa00]/20'
-                }`}
-              >
+              <div className="px-5 py-3.5 border-b border-[#303030] bg-[#121212] flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-[#f85149] inline-block shadow-sm" />
                   <span className="w-3 h-3 rounded-full bg-[#d29922] inline-block shadow-sm" />
                   <span className="w-3 h-3 rounded-full bg-[#2ea043] inline-block shadow-sm" />
-                  <span
-                    className={`text-xs font-mono font-medium ml-2 tracking-tight ${
-                      isGithubDark ? 'text-[#8b949e]' : 'text-[#dde3e8]/80'
-                    }`}
-                  >
+                  <span className="text-xs font-mono font-medium ml-2 tracking-tight text-[#999999]">
                     {currentProject.appName}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span
-                    className={`text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full ${
-                      isGithubDark
-                        ? 'bg-[#21262d] text-[#8b949e] border border-[#30363d]'
-                        : 'bg-white/15 text-[#dde3e8]/80'
-                    }`}
-                  >
+                  <span className="text-[10px] font-mono font-bold px-2.5 py-0.5 rounded-full bg-[#222222] text-[#999999] border border-[#303030]">
                     SLIDE {currentProject.slideNum} / 04
                   </span>
-                  <span
-                    className={`text-xs px-2.5 py-0.5 rounded-full font-semibold border hidden sm:inline-block ${
-                      isGithubDark
-                        ? 'bg-[#1f6feb]/15 text-[#58a6ff] border-[#1f6feb]/30'
-                        : 'bg-[#eaaa00]/20 text-[#eaaa00] border-[#eaaa00]/30'
-                    }`}
-                  >
+                  <span className="text-xs px-2.5 py-0.5 rounded-full font-semibold border border-[#FE8040]/30 bg-[#FE8040]/10 text-[#FE8040] hidden sm:inline-block">
                     {currentProject.category}
                   </span>
                 </div>
               </div>
 
               {/* Project Card Content */}
-              <div className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start justify-between">
+              <div className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start justify-between bg-[#191919]">
                 {/* Left Column: Details */}
                 <div className="flex-1 space-y-4">
                   {/* Category & Badge */}
                   <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className={`text-xs font-bold px-3 py-1 rounded-full border ${
-                        isGithubDark
-                          ? 'bg-[#161b22] text-[#c9d1d9] border-[#30363d]'
-                          : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/20'
-                      }`}
-                    >
+                    <span className="text-xs font-semibold px-3 py-1 rounded-lg border border-[#303030] bg-[#121212] text-[#CCCCCC]">
                       {currentProject.icon} {currentProject.category}
                     </span>
-                    <span
-                      className={`text-xs font-semibold px-3 py-1 rounded-full border ${
-                        isGithubDark
-                          ? 'bg-[#238636]/15 text-[#3fb950] border-[#238636]/40'
-                          : 'bg-[#eaaa00]/20 text-[#3a0f34] border-[#eaaa00]/40'
-                      }`}
-                    >
+                    <span className="text-xs font-semibold px-3 py-1 rounded-lg border border-[#FE8040]/30 bg-[#FE8040]/10 text-[#FE8040]">
                       {currentProject.badge}
                     </span>
                   </div>
@@ -334,44 +293,26 @@ export default function ProjectCarousel3D() {
                   {/* Title & Subtitle */}
                   <div>
                     <h3
-                      className={`text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight leading-tight ${
-                        isGithubDark ? 'text-white' : 'text-[#3a0f34]'
-                      }`}
+                      className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-[#F5F5F5] leading-tight"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
                     >
                       {currentProject.title}
                     </h3>
-                    <p
-                      className={`text-xs sm:text-sm font-semibold mt-1 tracking-tight ${
-                        isGithubDark ? 'text-[#58a6ff]' : 'text-[#eaaa00]'
-                      }`}
-                    >
+                    <p className="text-xs sm:text-sm font-semibold mt-1 tracking-tight text-[#FE8040]">
                       {currentProject.subtitle}
                     </p>
                   </div>
 
                   {/* Description */}
-                  <p
-                    className={`text-xs sm:text-sm leading-relaxed font-normal ${
-                      isGithubDark ? 'text-[#8b949e]' : 'text-[#3a0f34]/75'
-                    }`}
-                  >
+                  <p className="text-xs sm:text-sm leading-relaxed font-normal text-[#CCCCCC]">
                     {currentProject.description}
                   </p>
 
                   {/* Highlights Bullet List */}
                   <div className="space-y-1.5 pt-1">
                     {currentProject.highlights.map((h, i) => (
-                      <div
-                        key={i}
-                        className={`flex items-start gap-2 text-xs sm:text-[13px] ${
-                          isGithubDark ? 'text-[#c9d1d9]' : 'text-[#3a0f34]/85'
-                        }`}
-                      >
-                        <span
-                          className={`w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 ${
-                            isGithubDark ? 'bg-[#3fb950]' : 'bg-[#eaaa00]'
-                          }`}
-                        />
+                      <div key={i} className="flex items-start gap-2 text-xs sm:text-[13px] text-[#CCCCCC]">
+                        <span className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0 bg-[#FE8040]" />
                         <span>{h}</span>
                       </div>
                     ))}
@@ -379,22 +320,14 @@ export default function ProjectCarousel3D() {
 
                   {/* Tech Stack Pills */}
                   <div className="pt-2">
-                    <span
-                      className={`text-[10px] font-mono uppercase tracking-wider block mb-2 ${
-                        isGithubDark ? 'text-[#8b949e]' : 'text-[#3a0f34]/50'
-                      }`}
-                    >
+                    <span className="text-[10px] font-mono uppercase tracking-wider block mb-2 text-[#777777]">
                       Core Technologies
                     </span>
                     <div className="flex flex-wrap gap-1.5">
                       {currentProject.stack.map((tech) => (
                         <span
                           key={tech}
-                          className={`px-2.5 py-1 rounded-lg text-xs font-medium border transition-colors ${
-                            isGithubDark
-                              ? 'bg-[#161b22] text-[#58a6ff] border-[#30363d] hover:border-[#58a6ff]'
-                              : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/15 hover:bg-[#eaaa00] hover:text-[#3a0f34]'
-                          }`}
+                          className="px-2.5 py-1 rounded-md text-xs font-mono font-medium border border-[#303030] bg-[#121212] text-[#FE8040] hover:border-[#FE8040] transition-colors"
                         >
                           {tech}
                         </span>
@@ -403,18 +336,14 @@ export default function ProjectCarousel3D() {
                   </div>
                 </div>
 
-                {/* Right Column: Action Buttons, Architecture & AI Trigger */}
+                {/* Right Column: Action Buttons & Architecture */}
                 <div className="w-full md:w-64 flex flex-col gap-2.5 shrink-0 pt-2 md:pt-0">
                   {/* View Architecture Button */}
                   <button
                     onClick={() => setActiveArchProject(currentProject)}
-                    className={`w-full py-3 px-4 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer ${
-                      isGithubDark
-                        ? 'bg-[#238636] hover:bg-[#2ea043] text-white'
-                        : 'bg-[#eaaa00] hover:bg-[#3a0f34] hover:text-[#eaaa00] text-[#3a0f34]'
-                    }`}
+                    className="w-full py-3 px-4 rounded-lg text-xs sm:text-sm font-bold bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
                   >
-                    <Network className="w-4 h-4" />
+                    <Network className="w-4 h-4 text-[#0F0F0F]" />
                     <span>View Architecture</span>
                   </button>
 
@@ -423,11 +352,7 @@ export default function ProjectCarousel3D() {
                     href={currentProject.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-all flex items-center justify-center gap-2 cursor-pointer border ${
-                      isGithubDark
-                        ? 'bg-[#21262d] text-[#c9d1d9] border-[#30363d] hover:bg-[#30363d] hover:text-white'
-                        : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/20 hover:bg-[#3a0f34]/20'
-                    }`}
+                    className="w-full py-2.5 px-4 rounded-lg text-xs font-semibold bg-[#121212] hover:bg-[#222222] text-[#F5F5F5] hover:text-[#FE8040] border border-[#303030] hover:border-[#FE8040] transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Launch Live Demo</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -439,28 +364,20 @@ export default function ProjectCarousel3D() {
                       href={currentProject.paperUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer border ${
-                        isGithubDark
-                          ? 'bg-[#161b22] text-[#f0883e] border-[#f0883e]/30 hover:bg-[#21262d]'
-                          : 'bg-[#3a0f34]/10 text-[#eaaa00] border-[#eaaa00]/40 hover:bg-[#3a0f34]/20'
-                      }`}
+                      className="w-full py-2.5 px-4 rounded-lg text-xs font-semibold bg-[#121212] hover:bg-[#222222] text-[#FE8040] border border-[#FE8040]/40 hover:border-[#FE8040] transition-colors flex items-center justify-center gap-2 cursor-pointer"
                     >
-                      <FileText className="w-3.5 h-3.5" />
+                      <FileText className="w-3.5 h-3.5 text-[#FE8040]" />
                       <span>ICCCNet Research Paper</span>
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </a>
                   )}
 
-                  {/* View Source Code (Verified GitHub Link) */}
+                  {/* View on GitHub */}
                   <a
                     href={currentProject.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-full py-2.5 px-4 rounded-xl text-xs font-semibold transition-colors flex items-center justify-center gap-2 cursor-pointer border ${
-                      isGithubDark
-                        ? 'bg-[#1f6feb]/15 text-[#58a6ff] border-[#1f6feb]/30 hover:bg-[#1f6feb]/25'
-                        : 'bg-[#3a0f34]/10 text-[#3a0f34] border-[#3a0f34]/15 hover:bg-[#3a0f34]/20'
-                    }`}
+                    className="w-full py-2.5 px-4 rounded-lg text-xs font-semibold bg-[#121212] hover:bg-[#222222] text-[#CCCCCC] hover:text-[#F5F5F5] border border-[#303030] hover:border-[#FE8040] transition-colors flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <GithubIcon className="w-3.5 h-3.5" />
                     <span>View on GitHub</span>
@@ -473,14 +390,10 @@ export default function ProjectCarousel3D() {
                         window.dispatchEvent(new CustomEvent('open-aman-chat'));
                       }
                     }}
-                    className={`w-full py-2 px-3 rounded-xl text-[11px] font-medium transition-colors flex items-center justify-center gap-1.5 cursor-pointer mt-1 ${
-                      isGithubDark
-                        ? 'text-[#8b949e] hover:text-[#58a6ff] hover:bg-[#161b22]'
-                        : 'text-[#3a0f34]/50 hover:text-[#eaaa00] hover:bg-[#3a0f34]/5'
-                    }`}
+                    className="w-full py-2 px-3 rounded-lg text-[11px] font-medium text-[#777777] hover:text-[#FE8040] hover:bg-[#121212] transition-colors flex items-center justify-center gap-1.5 cursor-pointer mt-1"
                   >
-                    <Bot className="w-3.5 h-3.5" />
-                    <span>Ask AI about this architecture</span>
+                    <Bot className="w-3.5 h-3.5 text-[#FE8040]" />
+                    <span>Ask AI about this project</span>
                   </button>
                 </div>
               </div>
@@ -495,7 +408,7 @@ export default function ProjectCarousel3D() {
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/85 backdrop-blur-md"
             onClick={() => setActiveArchProject(null)}
           >
             <motion.div
@@ -503,30 +416,23 @@ export default function ProjectCarousel3D() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.94, y: 16 }}
               transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              className={`relative w-full max-w-4xl max-h-[92vh] rounded-3xl border shadow-2xl flex flex-col overflow-hidden ${
-                isGithubDark
-                  ? 'bg-[#0d1117] border-[#30363d] text-[#c9d1d9]'
-                  : 'bg-[#3a0f34] border-[#eaaa00]/30 text-white'
-              }`}
+              className="relative w-full max-w-4xl max-h-[92vh] rounded-2xl border border-[#303030] shadow-2xl flex flex-col overflow-hidden bg-[#0F0F0F] text-[#CCCCCC]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Titlebar */}
-              <div
-                className={`px-5 py-4 border-b flex items-center justify-between ${
-                  isGithubDark
-                    ? 'bg-[#161b22] border-[#30363d]'
-                    : 'bg-[#2b0a26] border-[#eaaa00]/20'
-                }`}
-              >
+              <div className="px-5 py-4 border-b border-[#303030] bg-[#121212] flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#eaaa00] text-[#3a0f34] flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-lg bg-[#FE8040] text-[#0F0F0F] flex items-center justify-center font-bold">
                     <Network className="w-4 h-4" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold tracking-tight">
+                    <h3
+                      className="text-sm font-bold tracking-tight text-[#F5F5F5]"
+                      style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                    >
                       System Architecture · {activeArchProject.title}
                     </h3>
-                    <p className="text-[11px] opacity-75 font-mono">
+                    <p className="text-[11px] text-[#777777] font-mono">
                       {activeArchProject.appName} &middot; Verified Design Diagram
                     </p>
                   </div>
@@ -534,67 +440,49 @@ export default function ProjectCarousel3D() {
 
                 <button
                   onClick={() => setActiveArchProject(null)}
-                  className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center cursor-pointer"
+                  className="w-8 h-8 rounded-full bg-[#191919] hover:bg-[#222222] text-[#999999] hover:text-[#FE8040] border border-[#303030] transition-colors flex items-center justify-center cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
               {/* Modal Body */}
-              <div className="p-6 overflow-y-auto space-y-6">
-                <div
-                  className={`relative w-full rounded-2xl overflow-hidden border p-3 flex items-center justify-center ${
-                    isGithubDark
-                      ? 'bg-[#161b22] border-[#30363d]'
-                      : 'bg-white/5 border-white/10'
-                  }`}
-                >
+              <div className="p-5 sm:p-7 overflow-y-auto space-y-6">
+                <div className="rounded-xl border border-[#303030] overflow-hidden bg-[#121212] p-4 flex items-center justify-center">
                   <Image
                     src={activeArchProject.architectureImg}
                     alt={`${activeArchProject.title} Architecture Diagram`}
                     width={900}
                     height={520}
-                    className="w-full h-auto object-contain rounded-xl"
+                    className="w-full h-auto object-contain rounded-lg"
                   />
                 </div>
 
-                {/* Key Architecture Specifications */}
+                {/* Specifications */}
                 <div>
-                  <h4
-                    className={`text-xs font-mono uppercase tracking-wider font-bold mb-3 ${
-                      isGithubDark ? 'text-[#58a6ff]' : 'text-[#eaaa00]'
-                    }`}
-                  >
+                  <h4 className="text-xs font-mono uppercase tracking-wider font-bold mb-3 text-[#FE8040]">
                     System Pipeline &amp; Component Breakdown:
                   </h4>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {activeArchProject.architectureDetails.map((spec, i) => (
                       <div
                         key={i}
-                        className={`p-3.5 rounded-xl border text-xs leading-relaxed flex items-start gap-2.5 ${
-                          isGithubDark
-                            ? 'bg-[#161b22] border-[#30363d] text-[#c9d1d9]'
-                            : 'bg-white/5 border-white/10 text-white/90'
-                        }`}
+                        className="p-3.5 rounded-lg border border-[#303030] bg-[#121212] text-xs leading-relaxed flex items-start gap-2.5 text-[#CCCCCC]"
                       >
-                        <span
-                          className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${
-                            isGithubDark ? 'bg-[#58a6ff]' : 'bg-[#eaaa00]'
-                          }`}
-                        />
+                        <span className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-[#FE8040]" />
                         <span>{spec}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* External links in modal */}
+                {/* External Links */}
                 <div className="flex items-center gap-3 pt-2">
                   <a
                     href={activeArchProject.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-xl text-xs font-bold bg-[#eaaa00] text-[#3a0f34] hover:bg-white transition-colors flex items-center gap-1.5"
+                    className="px-4 py-2 rounded-lg text-xs font-bold bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-colors flex items-center gap-1.5"
                   >
                     <span>Open Live Project</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -603,11 +491,7 @@ export default function ProjectCarousel3D() {
                     href={activeArchProject.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-colors flex items-center gap-1.5 ${
-                      isGithubDark
-                        ? 'bg-[#161b22] text-[#c9d1d9] border-[#30363d] hover:text-white'
-                        : 'bg-white/10 text-white border-white/20 hover:bg-white/20'
-                    }`}
+                    className="px-4 py-2 rounded-lg text-xs font-semibold bg-[#191919] hover:bg-[#222222] text-[#F5F5F5] hover:text-[#FE8040] border border-[#303030] transition-colors flex items-center gap-1.5"
                   >
                     <GithubIcon className="w-3.5 h-3.5" />
                     <span>View Repository</span>
