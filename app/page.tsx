@@ -51,8 +51,8 @@ export default function Home() {
       {/* Loading Intro Experience */}
       <LoadingExperience progress={preloadProgress} />
 
-      {/* AI Assistant Modal Listener */}
-      <RecruiterChatModal hideTrigger={true} />
+      {/* Floating Bottom-Right AI Assistant Icon & Modal */}
+      <RecruiterChatModal hideTrigger={false} />
 
       <main className="relative z-10 bg-transparent min-h-screen overflow-x-hidden text-[#CCCCCC]">
         {/* ══ HERO SECTION ══════════════════════════════════════════ */}

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, CheckCircle2, AlertCircle, Mail, Phone, MapPin, Download, FileText } from 'lucide-react';
+import LucknowEarthModal from '@/components/LucknowEarthModal';
 
 const SOCIALS = [
   {
@@ -58,6 +59,9 @@ export default function Footer() {
     mailtoUrl?: string;
   } | null>(null);
 
+  // Earth Zoom Animation Modal state
+  const [showEarthModal, setShowEarthModal] = useState(false);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -89,7 +93,7 @@ export default function Footer() {
 
       const data = await res.json();
 
-      // Also log to local server (silent fail)
+      // Silent logging to API route
       fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -98,7 +102,7 @@ export default function Footer() {
 
       if (res.ok && data.success) {
         setStatusMessage({
-          text: `Message sent! Thank you ${formData.name} — I'll reply to ${formData.email} shortly.`,
+          text: `Message sent! Thank you ${formData.name} — I will reply to ${formData.email} shortly.`,
           type: 'success',
         });
         setFormData({ name: '', email: '', subject: 'Full-Time / Internship Opportunity', message: '' });
@@ -122,52 +126,52 @@ export default function Footer() {
 
   return (
     <footer id="contact" className="relative border-t border-[#252525] bg-transparent">
-      <div className="max-w-4xl mx-auto px-6 py-20">
+      {/* 3D Lucknow Earth Zoom Animation Modal */}
+      <LucknowEarthModal isOpen={showEarthModal} onClose={() => setShowEarthModal(false)} />
 
+      <div className="max-w-4xl mx-auto px-6 py-16 sm:py-20">
         {/* Section Heading */}
-        <div className="text-center mb-12">
-          <span className="inline-block px-3.5 py-1 rounded-full bg-[#191919] text-[#FE8040] text-xs font-semibold tracking-wider uppercase mb-3 border border-[#303030]">
-            Get In Touch
-          </span>
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#191919] border border-[#303030] text-[#FE8040] text-xs font-bold tracking-wider uppercase shadow-sm mb-3 font-mono">
+            <span>Direct Inquiry</span>
+          </div>
           <h2
             className="font-bold tracking-tight mb-2 text-[#F5F5F5]"
             style={{ fontFamily: "'Space Grotesk', sans-serif", fontSize: 'clamp(2rem, 5vw, 3rem)' }}
           >
-            Let&apos;s Build{' '}
-            <span className="text-[#FE8040]">Something Great</span>
+            Get In <span className="text-[#FE8040]">Touch</span>
           </h2>
-          <p className="text-sm text-[#999999] font-medium max-w-lg mx-auto">
-            Actively exploring Software Engineer, Backend, and AI/ML opportunities. Send me a direct message below!
+          <p className="text-xs sm:text-sm text-[#999999] font-normal max-w-md mx-auto">
+            Open for Software Engineer, Backend, and AI/ML opportunities.
           </p>
         </div>
 
         {/* Contact Form */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.7 }}
-          className="max-w-2xl mx-auto mb-16 rounded-2xl overflow-hidden border border-[#303030] shadow-2xl bg-[#191919]"
+          transition={{ duration: 0.5 }}
+          className="max-w-2xl mx-auto mb-14 rounded-2xl overflow-hidden border border-[#303030] shadow-2xl bg-[#191919]"
         >
           {/* Form Header */}
-          <div className="px-6 py-4 border-b border-[#303030] bg-[#121212] flex items-center justify-between">
-            <div className="flex items-center gap-2.5">
+          <div className="px-6 py-3.5 border-b border-[#303030] bg-[#121212] flex items-center justify-between">
+            <div className="flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#FE8040] animate-pulse" />
-              <span className="text-xs font-bold tracking-wide text-[#F5F5F5]">
+              <span className="text-xs font-bold text-[#F5F5F5] font-mono">
                 Direct Message to Aman Patel
               </span>
             </div>
-            <span className="text-[11px] text-[#777777] font-medium hidden sm:inline-block">
-              Delivered straight to inbox
+            <span className="text-[11px] text-[#777777] font-mono hidden sm:inline-block">
+              Delivered to inbox
             </span>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-5">
+          <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {/* Name */}
               <div>
                 <label className="block text-xs font-semibold text-[#F5F5F5] mb-1.5">
-                  Your Name <span className="text-[#FE8040]">*</span>
+                  Name <span className="text-[#FE8040]">*</span>
                 </label>
                 <input
                   type="text"
@@ -179,10 +183,9 @@ export default function Footer() {
                 />
               </div>
 
-              {/* Email */}
               <div>
                 <label className="block text-xs font-semibold text-[#F5F5F5] mb-1.5">
-                  Your Email <span className="text-[#FE8040]">*</span>
+                  Email <span className="text-[#FE8040]">*</span>
                 </label>
                 <input
                   type="email"
@@ -195,10 +198,9 @@ export default function Footer() {
               </div>
             </div>
 
-            {/* Subject */}
             <div>
               <label className="block text-xs font-semibold text-[#F5F5F5] mb-1.5">
-                Subject / Role
+                Role / Subject
               </label>
               <select
                 value={formData.subject}
@@ -209,12 +211,11 @@ export default function Footer() {
                 <option value="Software Engineer Role">Software Engineer Role</option>
                 <option value="Backend Developer Opportunity">Backend Developer Opportunity</option>
                 <option value="AI / Machine Learning Role">AI / Machine Learning Role</option>
-                <option value="Research / Project Collaboration">Research / Project Collaboration</option>
+                <option value="Research Collaboration">Research Collaboration</option>
                 <option value="General Conversation">General Conversation</option>
               </select>
             </div>
 
-            {/* Message */}
             <div>
               <label className="block text-xs font-semibold text-[#F5F5F5] mb-1.5">
                 Message <span className="text-[#FE8040]">*</span>
@@ -233,22 +234,20 @@ export default function Footer() {
             <AnimatePresence>
               {statusMessage && (
                 <motion.div
-                  initial={{ opacity: 0, y: -8 }}
+                  initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  className={`p-3.5 rounded-lg text-xs flex flex-col gap-2 border ${
+                  className={`p-3 rounded-lg text-xs flex flex-col gap-2 border ${
                     statusMessage.type === 'success'
                       ? 'bg-[#FE8040]/10 border-[#FE8040]/30 text-[#FE8040]'
-                      : statusMessage.type === 'warning'
-                      ? 'bg-amber-500/10 border-amber-500/30 text-amber-300'
-                      : 'bg-red-500/10 border-red-500/30 text-red-400'
+                      : 'bg-amber-500/10 border-amber-500/30 text-amber-300'
                   }`}
                 >
                   <div className="flex items-center gap-2">
                     {statusMessage.type === 'success' ? (
-                      <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                      <CheckCircle2 className="w-4 h-4 shrink-0" />
                     ) : (
-                      <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                      <AlertCircle className="w-4 h-4 shrink-0" />
                     )}
                     <span className="font-medium">{statusMessage.text}</span>
                   </div>
@@ -260,7 +259,7 @@ export default function Footer() {
                         className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] font-bold text-[11px] transition-colors shadow-sm"
                       >
                         <Mail className="w-3.5 h-3.5" />
-                        <span>Send via Email App (Pre-filled)</span>
+                        <span>Send via Email App</span>
                       </a>
                     </div>
                   )}
@@ -268,14 +267,10 @@ export default function Footer() {
               )}
             </AnimatePresence>
 
-            {/* Submit */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
               <span className="text-[11px] text-[#777777]">
-                Direct email:{' '}
-                <a
-                  href="mailto:amanpatelsrm@gmail.com"
-                  className="text-[#FE8040] hover:underline font-medium"
-                >
+                Email:{' '}
+                <a href="mailto:amanpatelsrm@gmail.com" className="text-[#FE8040] hover:underline font-medium">
                   amanpatelsrm@gmail.com
                 </a>
               </span>
@@ -283,7 +278,7 @@ export default function Footer() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-lg bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-6 py-2.5 rounded-lg bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md disabled:opacity-50"
               >
                 <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
                 <Send className="w-3.5 h-3.5" />
@@ -292,16 +287,25 @@ export default function Footer() {
           </form>
         </motion.div>
 
-        {/* Profile Card */}
-        <div className="text-center mb-10">
+        {/* Profile Card with Interactive Earth Click */}
+        <div className="text-center mb-8">
           <h3 className="font-bold text-xl text-[#F5F5F5] mb-1">Aman Patel</h3>
-          <p className="text-xs text-[#999999] font-semibold mb-2">
+          <p className="text-xs text-[#999999] font-medium mb-2.5">
             B.Tech CSE (Data Science) @ SRM IST &middot; CGPA: 8.83/10
           </p>
-          <p className="text-xs flex items-center justify-center gap-1.5 mb-6 text-[#999999] font-medium">
-            <MapPin className="w-3.5 h-3.5 text-[#FE8040]" />
-            Lucknow, Uttar Pradesh, India
-          </p>
+
+          {/* Interactive Earth Zoom Button for Lucknow */}
+          <button
+            onClick={() => setShowEarthModal(true)}
+            className="inline-flex items-center justify-center gap-1.5 mb-6 text-xs text-[#999999] hover:text-[#FE8040] transition-all cursor-pointer group px-3.5 py-1.5 rounded-full border border-[#303030] hover:border-[#FE8040] bg-[#191919] hover:bg-[#222222]"
+            title="Click to view 3D Earth Zoom to Lucknow, India"
+          >
+            <MapPin className="w-3.5 h-3.5 text-[#FE8040] group-hover:scale-110 transition-transform" />
+            <span className="font-medium">Lucknow, Uttar Pradesh, India</span>
+            <span className="text-[10px] text-[#FE8040] font-mono px-2 py-0.5 rounded bg-[#FE8040]/10 border border-[#FE8040]/30 ml-1">
+              View on Earth 🌍
+            </span>
+          </button>
 
           <div className="flex items-center justify-center gap-3 mb-8 flex-wrap">
             <a
@@ -325,7 +329,7 @@ export default function Footer() {
         </div>
 
         {/* Social Links */}
-        <div className="flex items-center justify-center flex-wrap gap-2.5 mb-12">
+        <div className="flex items-center justify-center flex-wrap gap-2.5 mb-10">
           {SOCIALS.map((s) => (
             <a
               key={s.label}
@@ -341,7 +345,7 @@ export default function Footer() {
         </div>
 
         {/* Divider & Copyright */}
-        <div className="mx-auto mb-6 h-px max-w-xs rounded-full bg-[#252525]" />
+        <div className="mx-auto mb-5 h-px max-w-xs rounded-full bg-[#252525]" />
         <p className="text-xs font-medium text-[#777777] tracking-tight text-center">
           &copy; {new Date().getFullYear()} Aman Patel. All rights reserved.
         </p>

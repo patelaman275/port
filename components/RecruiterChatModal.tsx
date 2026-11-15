@@ -209,12 +209,17 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
       {!hideTrigger && (
         <motion.button
           onClick={() => setIsOpen(true)}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-          className="fixed bottom-6 right-6 z-[9990] flex items-center gap-2 px-4 py-2.5 rounded-full bg-[#FE8040] text-[#0F0F0F] font-bold text-xs shadow-xl cursor-pointer hover:bg-[#FF995F] transition-all"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.92 }}
+          className="fixed bottom-6 right-6 z-[9990] w-12 h-12 rounded-full bg-[#191919] text-[#FE8040] border border-[#303030] hover:border-[#FE8040] shadow-2xl flex items-center justify-center cursor-pointer transition-colors group"
+          title="Chat with AI Assistant (Cmd+K)"
+          aria-label="Open AI Assistant"
         >
-          <Bot className="w-4 h-4" />
-          <span>Ask AI Assistant</span>
+          <Bot className="w-5 h-5 text-[#FE8040] group-hover:scale-110 transition-transform" />
+          <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FE8040] opacity-75" />
+            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FE8040]" />
+          </span>
         </motion.button>
       )}
 
