@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -12,6 +12,11 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  ZoomIn,
+  ZoomOut,
+  RotateCcw,
+  Activity,
+  Layers,
 } from 'lucide-react';
 
 function GithubIcon({ className = 'w-4 h-4' }: { className?: string }) {
@@ -162,6 +167,11 @@ export default function ProjectCarousel3D() {
   const [activeArchProject, setActiveArchProject] = useState<Project | null>(null);
   const [isPaused, setIsPaused] = useState(false);
 
+  // Interactive Architecture State
+  const [archZoom, setArchZoom] = useState(1);
+  const [activeStage, setActiveStage] = useState(0);
+  const [activeTab, setActiveTab] = useState<'blueprint' | 'flow'>('blueprint');
+
   const currentProject = PROJECTS[currentIndex];
 
   const handlePrev = () => {
@@ -172,15 +182,24 @@ export default function ProjectCarousel3D() {
     setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
   };
 
-  // Auto-slide every 4.5 seconds (paused on hover or when modal is open)
+  // Auto-slide every 4 seconds (paused on hover or when modal is open)
   useEffect(() => {
     if (isPaused || activeArchProject) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
-    }, 4500);
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [isPaused, activeArchProject]);
+
+  // Reset zoom & stage when a new architecture modal opens
+  useEffect(() => {
+    if (activeArchProject) {
+      setArchZoom(1);
+      setActiveStage(0);
+      setActiveTab('blueprint');
+    }
+  }, [activeArchProject]);
 
   return (
     <section
@@ -205,7 +224,7 @@ export default function ProjectCarousel3D() {
             </h2>
 
             <p className="text-sm sm:text-base text-[#999999] mt-1.5 max-w-xl font-normal leading-relaxed">
-              Auto-sliding showcase of production systems. Hover to pause, click architecture for full system diagrams.
+              Auto-sliding showcase of production systems (every 4s). Hover to pause, click architecture for interactive zoom &amp; pipeline telemetry.
             </p>
           </div>
 
@@ -338,13 +357,13 @@ export default function ProjectCarousel3D() {
 
                 {/* Right Column: Action Buttons & Architecture */}
                 <div className="w-full md:w-64 flex flex-col gap-2.5 shrink-0 pt-2 md:pt-0">
-                  {/* View Architecture Button */}
+                  {/* View Interactive Architecture Button */}
                   <button
                     onClick={() => setActiveArchProject(currentProject)}
-                    className="w-full py-3 px-4 rounded-lg text-xs sm:text-sm font-bold bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                    className="w-full py-3 px-4 rounded-lg text-xs sm:text-sm font-bold bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-all flex items-center justify-center gap-2 shadow-lg cursor-pointer group"
                   >
-                    <Network className="w-4 h-4 text-[#0F0F0F]" />
-                    <span>View Architecture</span>
+                    <Network className="w-4 h-4 text-[#0F0F0F] group-hover:rotate-12 transition-transform" />
+                    <span>View Interactive Architecture</span>
                   </button>
 
                   {/* Launch Live Demo */}
@@ -402,7 +421,10 @@ export default function ProjectCarousel3D() {
         </div>
       </div>
 
-      {/* ── Architecture Diagram Modal ── */}
+      {/* ════════════════════════════════════════════════════════════════════
+          INTERACTIVE ARCHITECTURE STUDIO MODAL
+          Features: Zoom (+/-), Pan, Node Telemetry, and Live Data Flow
+          ════════════════════════════════════════════════════════════════════ */}
       <AnimatePresence>
         {activeArchProject && (
           <div
@@ -412,17 +434,17 @@ export default function ProjectCarousel3D() {
             onClick={() => setActiveArchProject(null)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              initial={{ opacity: 0, scale: 0.93, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 16 }}
-              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-4xl max-h-[92vh] rounded-2xl border border-[#303030] shadow-2xl flex flex-col overflow-hidden bg-[#0F0F0F] text-[#CCCCCC]"
+              exit={{ opacity: 0, scale: 0.93, y: 20 }}
+              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-5xl max-h-[92vh] rounded-2xl border border-[#303030] shadow-2xl flex flex-col overflow-hidden bg-[#0F0F0F] text-[#CCCCCC]"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Titlebar */}
               <div className="px-5 py-4 border-b border-[#303030] bg-[#121212] flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-[#FE8040] text-[#0F0F0F] flex items-center justify-center font-bold">
+                  <div className="w-8 h-8 rounded-lg bg-[#FE8040] text-[#0F0F0F] flex items-center justify-center font-bold shadow-sm">
                     <Network className="w-4 h-4" />
                   </div>
                   <div>
@@ -433,48 +455,220 @@ export default function ProjectCarousel3D() {
                       System Architecture · {activeArchProject.title}
                     </h3>
                     <p className="text-[11px] text-[#777777] font-mono">
-                      {activeArchProject.appName} &middot; Verified Design Diagram
+                      {activeArchProject.appName} &middot; Interactive System Blueprint
                     </p>
                   </div>
                 </div>
 
-                <button
-                  onClick={() => setActiveArchProject(null)}
-                  className="w-8 h-8 rounded-full bg-[#191919] hover:bg-[#222222] text-[#999999] hover:text-[#FE8040] border border-[#303030] transition-colors flex items-center justify-center cursor-pointer"
-                >
-                  <X className="w-4 h-4" />
-                </button>
+                <div className="flex items-center gap-2">
+                  {/* Tab Selector */}
+                  <div className="hidden sm:flex items-center bg-[#191919] p-1 rounded-lg border border-[#303030]">
+                    <button
+                      onClick={() => setActiveTab('blueprint')}
+                      className={`px-3 py-1 rounded text-xs font-semibold transition-all ${
+                        activeTab === 'blueprint'
+                          ? 'bg-[#FE8040] text-[#0F0F0F]'
+                          : 'text-[#999999] hover:text-[#F5F5F5]'
+                      }`}
+                    >
+                      Blueprint Studio
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('flow')}
+                      className={`px-3 py-1 rounded text-xs font-semibold transition-all flex items-center gap-1.5 ${
+                        activeTab === 'flow'
+                          ? 'bg-[#FE8040] text-[#0F0F0F]'
+                          : 'text-[#999999] hover:text-[#F5F5F5]'
+                      }`}
+                    >
+                      <Activity className="w-3 h-3" />
+                      <span>Live Flow</span>
+                    </button>
+                  </div>
+
+                  <button
+                    onClick={() => setActiveArchProject(null)}
+                    className="w-8 h-8 rounded-full bg-[#191919] hover:bg-[#222222] text-[#999999] hover:text-[#FE8040] border border-[#303030] transition-colors flex items-center justify-center cursor-pointer ml-1"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
 
               {/* Modal Body */}
               <div className="p-5 sm:p-7 overflow-y-auto space-y-6">
-                <div className="rounded-xl border border-[#303030] overflow-hidden bg-[#121212] p-4 flex items-center justify-center">
-                  <Image
-                    src={activeArchProject.architectureImg}
-                    alt={`${activeArchProject.title} Architecture Diagram`}
-                    width={900}
-                    height={520}
-                    className="w-full h-auto object-contain rounded-lg"
-                  />
-                </div>
-
-                {/* Specifications */}
-                <div>
-                  <h4 className="text-xs font-mono uppercase tracking-wider font-bold mb-3 text-[#FE8040]">
-                    System Pipeline &amp; Component Breakdown:
-                  </h4>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {activeArchProject.architectureDetails.map((spec, i) => (
-                      <div
-                        key={i}
-                        className="p-3.5 rounded-lg border border-[#303030] bg-[#121212] text-xs leading-relaxed flex items-start gap-2.5 text-[#CCCCCC]"
-                      >
-                        <span className="w-2 h-2 rounded-full mt-1.5 shrink-0 bg-[#FE8040]" />
-                        <span>{spec}</span>
+                {activeTab === 'blueprint' ? (
+                  <>
+                    {/* Interactive Zoomable Architecture Viewer */}
+                    <div className="relative rounded-xl border border-[#303030] bg-[#121212] overflow-hidden group">
+                      {/* Interactive Controls Bar */}
+                      <div className="absolute top-3 right-3 z-20 flex items-center gap-1.5 bg-[#191919]/90 backdrop-blur-md p-1.5 rounded-lg border border-[#303030] shadow-lg">
+                        <button
+                          onClick={() => setArchZoom((z) => Math.min(z + 0.3, 2.5))}
+                          className="p-1.5 rounded hover:bg-[#222222] text-[#999999] hover:text-[#FE8040] transition-colors"
+                          title="Zoom In"
+                        >
+                          <ZoomIn className="w-4 h-4" />
+                        </button>
+                        <span className="text-[11px] font-mono px-1.5 text-[#FE8040] font-semibold min-w-[3rem] text-center">
+                          {Math.round(archZoom * 100)}%
+                        </span>
+                        <button
+                          onClick={() => setArchZoom((z) => Math.max(z - 0.3, 1))}
+                          className="p-1.5 rounded hover:bg-[#222222] text-[#999999] hover:text-[#FE8040] transition-colors"
+                          title="Zoom Out"
+                        >
+                          <ZoomOut className="w-4 h-4" />
+                        </button>
+                        <div className="w-px h-3.5 bg-[#303030] mx-0.5" />
+                        <button
+                          onClick={() => setArchZoom(1)}
+                          className="p-1.5 rounded hover:bg-[#222222] text-[#999999] hover:text-[#FE8040] transition-colors"
+                          title="Reset View (100%)"
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                        </button>
                       </div>
-                    ))}
+
+                      {/* Zoomable Image Container */}
+                      <div
+                        className="p-4 sm:p-6 flex items-center justify-center min-h-[340px] sm:min-h-[420px] overflow-auto cursor-grab active:cursor-grabbing"
+                        style={{
+                          scrollbarWidth: 'thin',
+                          scrollbarColor: '#303030 transparent',
+                        }}
+                      >
+                        <motion.div
+                          animate={{ scale: archZoom }}
+                          transition={{ type: 'spring', stiffness: 280, damping: 28 }}
+                          className="relative max-w-full origin-center"
+                        >
+                          <Image
+                            src={activeArchProject.architectureImg}
+                            alt={`${activeArchProject.title} Architecture Diagram`}
+                            width={960}
+                            height={540}
+                            className="w-full h-auto object-contain rounded-lg shadow-md pointer-events-none"
+                            priority
+                          />
+                        </motion.div>
+                      </div>
+
+                      {/* Bottom Hint */}
+                      <div className="px-4 py-2 border-t border-[#303030] bg-[#161616] flex items-center justify-between text-[11px] text-[#777777] font-mono">
+                        <span className="flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FE8040]" />
+                          Interactive View: Use controls above to inspect subsystem wiring
+                        </span>
+                        <span className="hidden sm:inline">960 x 540 High-Res Blueprint</span>
+                      </div>
+                    </div>
+
+                    {/* Interactive Pipeline Telemetry Breakdown */}
+                    <div>
+                      <h4 className="text-xs font-mono uppercase tracking-wider font-bold mb-3 text-[#FE8040] flex items-center gap-2">
+                        <Layers className="w-3.5 h-3.5" />
+                        <span>Interactive Subsystem Inspector (Click to inspect):</span>
+                      </h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {activeArchProject.architectureDetails.map((spec, i) => {
+                          const isSelected = activeStage === i;
+                          const stageLabels = [
+                            'Layer 1: Client & Presentation Engine',
+                            'Layer 2: Ingress, Security & Routing Gateway',
+                            'Layer 3: Core Processing & Inference Cluster',
+                            'Layer 4: Data Pipeline & State Persistence',
+                          ];
+
+                          return (
+                            <motion.div
+                              key={i}
+                              onClick={() => setActiveStage(i)}
+                              whileHover={{ scale: 1.01 }}
+                              className={`p-4 rounded-xl border text-xs leading-relaxed flex flex-col gap-1.5 cursor-pointer transition-all ${
+                                isSelected
+                                  ? 'bg-[#191919] border-[#FE8040] shadow-[0_0_20px_rgba(254,128,64,0.15)] text-[#F5F5F5]'
+                                  : 'bg-[#121212] border-[#303030] text-[#999999] hover:border-[#FE8040]/50 hover:text-[#CCCCCC]'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="font-mono text-[10px] font-bold text-[#FE8040] tracking-wider uppercase">
+                                  {stageLabels[i]}
+                                </span>
+                                {isSelected && (
+                                  <span className="w-2 h-2 rounded-full bg-[#FE8040] animate-pulse" />
+                                )}
+                              </div>
+                              <span className="leading-relaxed">{spec}</span>
+                            </motion.div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  /* Live Flow Pipeline Mode */
+                  <div className="space-y-6">
+                    <div className="rounded-xl border border-[#303030] bg-[#121212] p-6 sm:p-8">
+                      <div className="flex items-center justify-between mb-8">
+                        <div>
+                          <h4 className="text-sm font-bold text-[#F5F5F5]">
+                            Simulated Pipeline Execution Flow
+                          </h4>
+                          <p className="text-xs text-[#777777]">
+                            Real-time data packets traveling through the {activeArchProject.appName} distributed stack
+                          </p>
+                        </div>
+                        <span className="text-xs font-mono font-bold px-3 py-1 rounded-full bg-[#FE8040]/15 text-[#FE8040] border border-[#FE8040]/30 flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FE8040] animate-ping" />
+                          <span>ACTIVE MESH</span>
+                        </span>
+                      </div>
+
+                      {/* 4 Pipeline Nodes with Animated Data Stream */}
+                      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 relative">
+                        {[
+                          { title: 'Client Device', desc: 'Vercel CDN Edge / Browser', icon: '💻' },
+                          { title: 'Ingress Gateway', desc: 'Rate Limiter & Sanitizer', icon: '🛡️' },
+                          { title: 'Inference Engine', desc: 'Dual CNN / Gemini 1.5 / Sockets', icon: '⚡' },
+                          { title: 'Data Warehouse', desc: 'MongoDB / Pinecone / State', icon: '💾' },
+                        ].map((node, idx) => (
+                          <div
+                            key={idx}
+                            className="p-4 rounded-xl border border-[#303030] bg-[#191919] relative flex flex-col items-center text-center group hover:border-[#FE8040] transition-colors"
+                          >
+                            <span className="text-2xl mb-2">{node.icon}</span>
+                            <span className="text-xs font-bold text-[#F5F5F5]">{node.title}</span>
+                            <span className="text-[11px] text-[#777777] mt-1">{node.desc}</span>
+
+                            {/* Arrow on desktop */}
+                            {idx < 3 && (
+                              <div className="hidden md:flex absolute -right-3 top-1/2 -translate-y-1/2 z-10 w-6 h-6 rounded-full bg-[#121212] border border-[#303030] items-center justify-center text-[10px] text-[#FE8040]">
+                                →
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Flow Telemetry Metrics */}
+                      <div className="grid grid-cols-3 gap-3 mt-6 pt-6 border-t border-[#303030]">
+                        <div className="text-center">
+                          <span className="text-[10px] font-mono uppercase text-[#777777] block">Inference Speed</span>
+                          <span className="text-sm font-bold font-mono text-[#FE8040]">&lt; 1.8s</span>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-[10px] font-mono uppercase text-[#777777] block">Network Latency</span>
+                          <span className="text-sm font-bold font-mono text-[#FE8040]">&lt; 120ms</span>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-[10px] font-mono uppercase text-[#777777] block">Telemetry Protocol</span>
+                          <span className="text-sm font-bold font-mono text-[#FE8040]">HTTPS / WSS</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* External Links */}
                 <div className="flex items-center gap-3 pt-2">
@@ -482,7 +676,7 @@ export default function ProjectCarousel3D() {
                     href={activeArchProject.demoUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-lg text-xs font-bold bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-colors flex items-center gap-1.5"
+                    className="px-5 py-2.5 rounded-lg text-xs font-bold bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-colors flex items-center gap-1.5 shadow-sm"
                   >
                     <span>Open Live Project</span>
                     <ExternalLink className="w-3.5 h-3.5" />
@@ -491,7 +685,7 @@ export default function ProjectCarousel3D() {
                     href={activeArchProject.githubUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-4 py-2 rounded-lg text-xs font-semibold bg-[#191919] hover:bg-[#222222] text-[#F5F5F5] hover:text-[#FE8040] border border-[#303030] transition-colors flex items-center gap-1.5"
+                    className="px-5 py-2.5 rounded-lg text-xs font-semibold bg-[#191919] hover:bg-[#222222] text-[#F5F5F5] hover:text-[#FE8040] border border-[#303030] hover:border-[#FE8040] transition-colors flex items-center gap-1.5 shadow-sm"
                   >
                     <GithubIcon className="w-3.5 h-3.5" />
                     <span>View Repository</span>

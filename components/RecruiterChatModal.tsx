@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Send, Bot, User, FileText, Mail, ExternalLink, ChevronRight, Sparkles } from 'lucide-react';
+import { X, Send, Bot, User, FileText, Mail, ExternalLink, ChevronRight, Sparkles, Zap } from 'lucide-react';
 
 interface ChatMessage {
   id: string;
@@ -28,6 +28,7 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
   const [isOpen, setIsOpen] = useState(false);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isSendingAnim, setIsSendingAnim] = useState(false);
 
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -65,11 +66,15 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
       setTimeout(() => inputRef.current?.focus(), 150);
     }
-  }, [isOpen, messages]);
+  }, [isOpen, messages, isLoading]);
 
   const handleSendMessage = async (queryText?: string) => {
     const textToSend = queryText || input.trim();
     if (!textToSend || isLoading) return;
+
+    // Trigger sending flight animation
+    setIsSendingAnim(true);
+    setTimeout(() => setIsSendingAnim(false), 600);
 
     const userMessage: ChatMessage = {
       id: `user-${Date.now()}`,
@@ -218,20 +223,21 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 md:p-6 bg-black/80 backdrop-blur-md"
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 md:p-6 bg-black/85 backdrop-blur-md"
             onClick={() => setIsOpen(false)}
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.94, y: 20 }}
+              initial={{ opacity: 0, scale: 0.92, y: 24 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.94, y: 20 }}
-              transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-2xl h-[85vh] max-h-[750px] flex flex-col overflow-hidden rounded-2xl border border-[#303030] shadow-2xl bg-[#0F0F0F] text-[#CCCCCC]"
+              exit={{ opacity: 0, scale: 0.92, y: 24 }}
+              transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+              className="relative w-full max-w-2xl h-[86vh] max-h-[760px] flex flex-col overflow-hidden rounded-2xl border border-[#303030] shadow-2xl bg-[#0F0F0F] text-[#CCCCCC]"
               onClick={(e) => e.stopPropagation()}
-              style={{ boxShadow: '0 0 60px rgba(254,128,64,0.08), 0 25px 50px rgba(0,0,0,0.6)' }}
+              style={{
+                boxShadow: '0 0 60px rgba(254,128,64,0.1), 0 25px 60px rgba(0,0,0,0.85)',
+              }}
             >
-
-              {/* ── Header ── */}
+              {/* ── Header with Live Pulsing Radar Animation ── */}
               <div className="flex items-center justify-between px-5 py-3.5 border-b border-[#303030] bg-[#121212]">
                 <div className="flex items-center gap-3">
                   {/* macOS dots */}
@@ -248,17 +254,23 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
                   <div className="h-4 w-px bg-[#303030] mx-1" />
 
                   <div className="flex items-center gap-2.5">
-                    {/* Orange bot icon */}
-                    <div className="w-8 h-8 rounded-lg bg-[#FE8040] text-[#0F0F0F] flex items-center justify-center shadow-sm">
+                    {/* Orange bot icon with subtle animated ping */}
+                    <div className="relative w-8 h-8 rounded-lg bg-[#FE8040] text-[#0F0F0F] flex items-center justify-center shadow-sm">
                       <Bot className="w-4 h-4" />
+                      <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#FE8040] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#FE8040]" />
+                      </span>
                     </div>
+
                     <div>
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-xs tracking-tight text-[#F5F5F5]">
                           AI Portfolio Assistant
                         </h3>
-                        <span className="text-[10px] bg-[#FE8040]/15 border border-[#FE8040]/40 text-[#FE8040] px-2 py-0.5 rounded-full font-mono font-medium">
-                          RAG
+                        <span className="text-[10px] bg-[#FE8040]/15 border border-[#FE8040]/40 text-[#FE8040] px-2 py-0.5 rounded-full font-mono font-medium flex items-center gap-1">
+                          <Zap className="w-2.5 h-2.5" />
+                          <span>RAG ONLINE</span>
                         </span>
                       </div>
                       <p className="text-[10px] text-[#777777] font-normal">
@@ -295,15 +307,26 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
                 </div>
               </div>
 
-              {/* ── Messages Container ── */}
-              <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-[#0F0F0F]"
-                style={{ scrollbarWidth: 'thin', scrollbarColor: '#303030 transparent' }}>
+              {/* ── Messages Container with Ambient Breathing Background ── */}
+              <div
+                className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-[#0F0F0F] relative"
+                style={{
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: '#303030 transparent',
+                  backgroundImage: 'radial-gradient(circle at 50% 15%, rgba(254, 128, 64, 0.035) 0%, transparent 60%)',
+                }}
+              >
                 {messages.map((m, idx) => (
                   <motion.div
                     key={m.id}
-                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 16, scale: 0.94 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ duration: 0.25, delay: idx === 0 ? 0 : 0.05 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 380,
+                      damping: 26,
+                      delay: idx === 0 ? 0 : 0.04,
+                    }}
                     className={`flex gap-3 ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {m.role === 'assistant' && (
@@ -322,7 +345,7 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
                       <div className="space-y-1">{renderFormattedText(m.content)}</div>
                       <span
                         className={`block text-[10px] mt-1.5 text-right ${
-                          m.role === 'user' ? 'text-[#0F0F0F]/60' : 'text-[#777777]'
+                          m.role === 'user' ? 'text-[#0F0F0F]/65' : 'text-[#777777]'
                         }`}
                       >
                         {m.timestamp}
@@ -337,19 +360,36 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
                   </motion.div>
                 ))}
 
-                {/* Thinking indicator */}
+                {/* Animated Neural Thinking Waveform */}
                 {isLoading && (
                   <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
                     className="flex gap-3 items-center"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#FE8040] text-[#0F0F0F] flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-[#FE8040] text-[#0F0F0F] flex items-center justify-center flex-shrink-0 shadow-sm">
                       <Sparkles className="w-4 h-4 animate-spin" />
                     </div>
-                    <div className="rounded-2xl px-4 py-2.5 text-xs flex items-center gap-2 border bg-[#191919] border-[#303030] text-[#999999] rounded-tl-sm">
-                      <span className="w-2 h-2 rounded-full bg-[#FE8040] animate-ping" />
-                      <span>Thinking...</span>
+                    <div className="rounded-2xl px-4 py-2.5 text-xs flex items-center gap-3 border bg-[#191919] border-[#303030] text-[#999999] rounded-tl-sm shadow-md">
+                      {/* Animated audio/neural frequency bars */}
+                      <div className="flex items-center gap-1 h-3">
+                        <motion.span
+                          animate={{ height: ['4px', '14px', '4px'] }}
+                          transition={{ repeat: Infinity, duration: 0.7, ease: 'easeInOut' }}
+                          className="w-1 bg-[#FE8040] rounded-full inline-block"
+                        />
+                        <motion.span
+                          animate={{ height: ['6px', '16px', '6px'] }}
+                          transition={{ repeat: Infinity, duration: 0.7, delay: 0.15, ease: 'easeInOut' }}
+                          className="w-1 bg-[#FE8040] rounded-full inline-block"
+                        />
+                        <motion.span
+                          animate={{ height: ['4px', '12px', '4px'] }}
+                          transition={{ repeat: Infinity, duration: 0.7, delay: 0.3, ease: 'easeInOut' }}
+                          className="w-1 bg-[#FE8040] rounded-full inline-block"
+                        />
+                      </div>
+                      <span className="text-[#FE8040] font-mono font-medium">Synthesizing answer...</span>
                     </div>
                   </motion.div>
                 )}
@@ -357,31 +397,48 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
                 <div ref={messagesEndRef} />
               </div>
 
-              {/* ── Suggested Prompts ── */}
-              <div className="px-4 py-2.5 border-t border-[#252525] overflow-x-auto flex items-center gap-2 bg-[#121212]"
-                style={{ scrollbarWidth: 'none' }}>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-[#FE8040] whitespace-nowrap flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FE8040]" />
+              {/* ── Suggested Prompts with Hover Spring Micro-Animations ── */}
+              <div
+                className="px-4 py-2.5 border-t border-[#252525] overflow-x-auto flex items-center gap-2 bg-[#121212]"
+                style={{ scrollbarWidth: 'none' }}
+              >
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#FE8040] whitespace-nowrap flex items-center gap-1.5 font-mono">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#FE8040] animate-ping" />
                   Suggestions:
                 </span>
                 {SUGGESTED_PROMPTS.map((prompt) => (
-                  <button
+                  <motion.button
                     key={prompt}
                     onClick={() => handleSendMessage(prompt)}
                     disabled={isLoading}
+                    whileHover={{ scale: 1.04, y: -1 }}
+                    whileTap={{ scale: 0.96 }}
                     className="text-[11px] px-3 py-1 rounded-full border border-[#303030] bg-[#191919] text-[#CCCCCC] hover:bg-[#222222] hover:text-[#FE8040] hover:border-[#FE8040] whitespace-nowrap transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
                   >
                     <span>{prompt}</span>
                     <ChevronRight className="w-3 h-3 text-[#FE8040]" />
-                  </button>
+                  </motion.button>
                 ))}
               </div>
 
-              {/* ── Chat Input ── */}
+              {/* ── Chat Input with Flying Swoosh Animation ── */}
               <form
-                onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }}
-                className="p-4 border-t border-[#303030] flex items-center gap-3 bg-[#121212]"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  handleSendMessage();
+                }}
+                className="p-4 border-t border-[#303030] flex items-center gap-3 bg-[#121212] relative overflow-hidden"
               >
+                {/* Sending wave flash */}
+                {isSendingAnim && (
+                  <motion.div
+                    initial={{ x: '-100%', opacity: 0.5 }}
+                    animate={{ x: '200%', opacity: 0 }}
+                    transition={{ duration: 0.6, ease: 'easeOut' }}
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FE8040]/20 to-transparent pointer-events-none"
+                  />
+                )}
+
                 <input
                   ref={inputRef}
                   type="text"
@@ -389,18 +446,32 @@ export default function RecruiterChatModal({ hideTrigger = false }: RecruiterCha
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask a question about Aman..."
                   disabled={isLoading}
-                  className="flex-1 rounded-xl px-4 py-2.5 text-xs md:text-sm border transition-colors focus:outline-none bg-[#0F0F0F] border-[#303030] text-[#F5F5F5] placeholder-[#777777] focus:border-[#FE8040]"
-                  style={{ boxShadow: 'none' }}
+                  className="flex-1 rounded-xl px-4 py-2.5 text-xs md:text-sm border transition-all focus:outline-none bg-[#0F0F0F] border-[#303030] text-[#F5F5F5] placeholder-[#777777] focus:border-[#FE8040] focus:ring-1 focus:ring-[#FE8040]/30"
                 />
+
                 <motion.button
                   type="submit"
                   disabled={!input.trim() || isLoading}
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className="px-5 py-2.5 rounded-xl bg-[#FE8040] text-[#0F0F0F] font-bold text-xs md:text-sm flex items-center gap-1.5 hover:bg-[#FF995F] transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative px-5 py-2.5 rounded-xl bg-[#FE8040] text-[#0F0F0F] font-bold text-xs md:text-sm flex items-center gap-1.5 hover:bg-[#FF995F] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md overflow-hidden"
                 >
                   <span>Send</span>
-                  <Send className="w-4 h-4" />
+                  <motion.div
+                    animate={
+                      isSendingAnim
+                        ? {
+                            x: [0, 20, -20, 0],
+                            y: [0, -15, 10, 0],
+                            scale: [1, 1.3, 0.7, 1],
+                            rotate: [0, 30, -10, 0],
+                          }
+                        : {}
+                    }
+                    transition={{ duration: 0.5 }}
+                  >
+                    <Send className="w-4 h-4" />
+                  </motion.div>
                 </motion.button>
               </form>
             </motion.div>
