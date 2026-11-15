@@ -23,6 +23,13 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const saved = localStorage.getItem('aman-portfolio-theme') as Theme | null;
     if (saved) {
       setTheme(saved);
+      document.documentElement.classList.remove('theme-light', 'github-dark', 'dark');
+      document.documentElement.classList.add(saved === 'github-dark' ? 'github-dark' : 'theme-light');
+      if (saved === 'github-dark') {
+        document.documentElement.classList.add('dark');
+      }
+    } else {
+      document.documentElement.classList.add('github-dark', 'dark');
     }
   }, []);
 
@@ -30,6 +37,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     setTheme((prev) => {
       const next = prev === 'github-dark' ? 'light' : 'github-dark';
       localStorage.setItem('aman-portfolio-theme', next);
+      document.documentElement.classList.remove('theme-light', 'github-dark', 'dark');
+      document.documentElement.classList.add(next === 'github-dark' ? 'github-dark' : 'theme-light');
+      if (next === 'github-dark') {
+        document.documentElement.classList.add('dark');
+      }
       return next;
     });
   };
@@ -38,7 +50,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme, isDark }}>
-      <div className={isDark ? 'github-dark' : 'theme-light'}>{children}</div>
+      <div className={isDark ? 'github-dark dark' : 'theme-light'}>{children}</div>
     </ThemeContext.Provider>
   );
 }

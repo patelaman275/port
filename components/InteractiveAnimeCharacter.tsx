@@ -158,19 +158,9 @@ export default function InteractiveAnimeCharacter({
         aspectRatio: '936 / 1024',
       }}
     >
-      {/* ── Outer Crimson Ambient Halo Glow ── */}
-      <div
-        className="absolute -inset-4 md:-inset-6 rounded-3xl opacity-60 md:opacity-75 blur-2xl pointer-events-none transition-all duration-700 -z-10"
-        style={{
-          background: isHovered
-            ? 'radial-gradient(circle at 50% 40%, rgba(225, 29, 72, 0.45), rgba(159, 18, 57, 0.2) 60%, transparent 80%)'
-            : 'radial-gradient(circle at 50% 40%, rgba(225, 29, 72, 0.3), rgba(136, 19, 55, 0.12) 60%, transparent 80%)',
-        }}
-      />
-
       {/* ── Floating Character Container ── */}
       <div
-        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-red-500/25 shadow-[0_25px_60px_rgba(0,0,0,0.85)] bg-[#090204]"
+        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#d0d7de] dark:border-[#30363d] shadow-xl bg-[#090204]"
         style={{
           animation: 'gentleFloat 5.2s ease-in-out infinite',
         }}
@@ -229,21 +219,6 @@ export default function InteractiveAnimeCharacter({
             className="object-cover object-center pointer-events-none"
           />
         </div>
-
-        {/* Subtle Cinematic Vignette / Glass Reflection Overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#090204]/60 via-transparent to-transparent"
-          aria-hidden="true"
-        />
-
-        {/* Subtle Online / Interactive Indicator Badge */}
-        <div
-          className="absolute bottom-3 right-3 sm:bottom-4 sm:right-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#120407]/90 text-red-200 border border-red-500/40 text-[11px] font-semibold tracking-wide backdrop-blur-md shadow-lg"
-          title="Interactive Eye-Tracking Active"
-        >
-          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-          <span>Interactive</span>
-        </div>
       </div>
 
       {/* Floating animation keyframes */}
@@ -253,7 +228,7 @@ export default function InteractiveAnimeCharacter({
             transform: translateY(0px) rotate(0deg);
           }
           50% {
-            transform: translateY(-7px) rotate(0.35deg);
+            transform: translateY(-6px) rotate(0.25deg);
           }
         }
       `}</style>

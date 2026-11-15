@@ -116,48 +116,42 @@ export default function Footer() {
   };
 
   return (
-    <footer id="contact" className="relative border-t border-[#eaaa00]/30 bg-transparent">
-      {/* Top glow line */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-1/2 h-1 rounded-full"
-        style={{ background: 'linear-gradient(90deg, transparent, #eaaa00, transparent)' }}
-      />
-
+    <footer id="contact" className="relative border-t border-[#d0d7de] dark:border-[#30363d] bg-transparent">
       <div className="max-w-4xl mx-auto px-6 py-20">
         {/* Section Heading */}
         <div className="text-center mb-12">
-          <span className="inline-block px-3.5 py-1 rounded-full bg-[#3a0f34] text-[#eaaa00] text-xs font-semibold tracking-wider uppercase mb-3 shadow-sm border border-[#eaaa00]/30">
+          <span className="inline-block px-3.5 py-1 rounded-full bg-[#f6f8fa] dark:bg-[#21262d] text-[#0969da] dark:text-[#58a6ff] text-xs font-semibold tracking-wider uppercase mb-3 shadow-sm border border-[#d0d7de] dark:border-[#30363d]">
             Get In Touch
           </span>
           <h2
-            className="font-black tracking-tight mb-2 text-[#3a0f34]"
+            className="font-black tracking-tight mb-2 text-[#1f2328] dark:text-[#f0f6fc]"
             style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)' }}
           >
-            Let&apos;s Build <span className="text-[#eaaa00]">Something Great</span>
+            Let&apos;s Build <span className="text-[#0969da] dark:text-[#58a6ff]">Something Great</span>
           </h2>
-          <p className="text-sm text-[#5e3b58] font-medium max-w-lg mx-auto">
+          <p className="text-sm text-[#57606a] dark:text-[#8b949e] font-medium max-w-lg mx-auto">
             Actively exploring Software Engineer, Backend, and AI/ML opportunities. Send me a direct message below!
           </p>
         </div>
 
-        {/* ── Modern Professional Contact Form ── */}
+        {/* ── Modern High-Contrast Contact Form ── */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-2xl mx-auto mb-16 rounded-3xl overflow-hidden border border-rose-500/20 shadow-2xl backdrop-blur-md bg-[#161b22]/90 text-[#e6edf3]"
+          className="max-w-2xl mx-auto mb-16 rounded-2xl overflow-hidden border border-[#d0d7de] dark:border-[#30363d] shadow-xl bg-white dark:bg-[#161b22] text-[#1f2328] dark:text-[#f0f6fc]"
         >
           {/* Form Header */}
-          <div className="px-6 py-4 border-b border-[#30363d] bg-[#0d1117]/80 flex items-center justify-between">
+          <div className="px-6 py-4 border-b border-[#d0d7de] dark:border-[#30363d] bg-[#f6f8fa] dark:bg-[#0d1117] flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
-              <span className="text-xs font-semibold tracking-wide text-[#f0f6fc]">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-xs font-bold tracking-wide text-[#1f2328] dark:text-[#f0f6fc]">
                 Direct Message to Aman Patel
               </span>
             </div>
-            <span className="text-[11px] text-[#8b949e] font-medium hidden sm:inline-block">
-              Usually replies within 24h
+            <span className="text-[11px] text-[#57606a] dark:text-[#8b949e] font-medium hidden sm:inline-block">
+              Delivered straight to inbox
             </span>
           </div>
 
@@ -165,8 +159,8 @@ export default function Footer() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Name */}
               <div>
-                <label className="block text-xs font-medium text-[#3a0f34] mb-1.5">
-                  Your Name <span className="text-[#eaaa00]">*</span>
+                <label className="block text-xs font-bold text-[#1f2328] dark:text-[#f0f6fc] mb-1.5">
+                  Your Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -174,14 +168,14 @@ export default function Footer() {
                   placeholder="e.g. Sarah Connor"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/70 border border-[#3a0f34]/15 text-[#3a0f34] placeholder-[#5e3b58]/50 text-xs focus:outline-none focus:border-[#eaaa00] focus:bg-white transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#ffffff] dark:bg-[#0d1117] border border-[#d0d7de] dark:border-[#30363d] text-[#1f2328] dark:text-[#f0f6fc] placeholder-[#8c959f] dark:placeholder-[#6e7681] text-xs focus:outline-none focus:border-[#0969da] dark:focus:border-[#58a6ff] transition-all"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="block text-xs font-medium text-[#3a0f34] mb-1.5">
-                  Your Email <span className="text-[#eaaa00]">*</span>
+                <label className="block text-xs font-bold text-[#1f2328] dark:text-[#f0f6fc] mb-1.5">
+                  Your Email <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="email"
@@ -189,20 +183,20 @@ export default function Footer() {
                   placeholder="e.g. sarah@company.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl bg-white/70 border border-[#3a0f34]/15 text-[#3a0f34] placeholder-[#5e3b58]/50 text-xs focus:outline-none focus:border-[#eaaa00] focus:bg-white transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#ffffff] dark:bg-[#0d1117] border border-[#d0d7de] dark:border-[#30363d] text-[#1f2328] dark:text-[#f0f6fc] placeholder-[#8c959f] dark:placeholder-[#6e7681] text-xs focus:outline-none focus:border-[#0969da] dark:focus:border-[#58a6ff] transition-all"
                 />
               </div>
             </div>
 
             {/* Subject */}
             <div>
-              <label className="block text-xs font-medium text-[#3a0f34] mb-1.5">
+              <label className="block text-xs font-bold text-[#1f2328] dark:text-[#f0f6fc] mb-1.5">
                 Subject / Role
               </label>
               <select
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-xl bg-white/70 border border-[#3a0f34]/15 text-[#3a0f34] text-xs focus:outline-none focus:border-[#eaaa00] transition-all cursor-pointer"
+                className="w-full px-4 py-2.5 rounded-xl bg-[#ffffff] dark:bg-[#0d1117] border border-[#d0d7de] dark:border-[#30363d] text-[#1f2328] dark:text-[#f0f6fc] text-xs focus:outline-none focus:border-[#0969da] dark:focus:border-[#58a6ff] transition-all cursor-pointer"
               >
                 <option value="Full-Time / Internship Opportunity">Full-Time / Internship Opportunity</option>
                 <option value="Software Engineer Role">Software Engineer Role</option>
@@ -215,8 +209,8 @@ export default function Footer() {
 
             {/* Message */}
             <div>
-              <label className="block text-xs font-medium text-[#3a0f34] mb-1.5">
-                Message <span className="text-[#eaaa00]">*</span>
+              <label className="block text-xs font-bold text-[#1f2328] dark:text-[#f0f6fc] mb-1.5">
+                Message <span className="text-red-500">*</span>
               </label>
               <textarea
                 required
@@ -224,7 +218,7 @@ export default function Footer() {
                 placeholder="Tell me about the role, project, or what you'd like to collaborate on..."
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-xl bg-white/70 border border-[#3a0f34]/15 text-[#3a0f34] placeholder-[#5e3b58]/50 text-xs focus:outline-none focus:border-[#eaaa00] focus:bg-white transition-all resize-none"
+                className="w-full px-4 py-3 rounded-xl bg-[#ffffff] dark:bg-[#0d1117] border border-[#d0d7de] dark:border-[#30363d] text-[#1f2328] dark:text-[#f0f6fc] placeholder-[#8c959f] dark:placeholder-[#6e7681] text-xs focus:outline-none focus:border-[#0969da] dark:focus:border-[#58a6ff] transition-all resize-none"
               />
             </div>
 
@@ -269,14 +263,14 @@ export default function Footer() {
 
             {/* Submit Button */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-              <span className="text-[11px] text-[#5e3b58]">
-                Direct email: <a href="mailto:amanpatelsrm@gmail.com" className="text-[#eaaa00] underline hover:text-[#3a0f34] font-medium">amanpatelsrm@gmail.com</a>
+              <span className="text-[11px] text-[#57606a] dark:text-[#8b949e]">
+                Direct email: <a href="mailto:amanpatelsrm@gmail.com" className="text-[#0969da] dark:text-[#58a6ff] underline hover:underline font-medium">amanpatelsrm@gmail.com</a>
               </span>
 
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-full bg-[#eaaa00] text-[#3a0f34] font-bold text-xs flex items-center justify-center gap-2 hover:bg-[#3a0f34] hover:text-[#eaaa00] transition-all duration-200 cursor-pointer shadow-md disabled:opacity-50"
+                className="px-6 py-2.5 rounded-xl bg-[#238636] hover:bg-[#2ea043] text-white font-bold text-xs flex items-center justify-center gap-2 transition-all duration-200 cursor-pointer shadow-md disabled:opacity-50"
               >
                 <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
                 <Send className="w-3.5 h-3.5" />
@@ -287,12 +281,12 @@ export default function Footer() {
 
         {/* Profile Card & Resume Quick Actions */}
         <div className="text-center mb-10">
-          <h3 className="font-bold text-xl text-[#3a0f34] mb-1">Aman Patel</h3>
-          <p className="text-xs text-[#5e3b58] font-semibold mb-2">
+          <h3 className="font-bold text-xl text-[#1f2328] dark:text-[#f0f6fc] mb-1">Aman Patel</h3>
+          <p className="text-xs text-[#57606a] dark:text-[#8b949e] font-semibold mb-2">
             B.Tech CSE (Data Science) @ SRM IST &middot; CGPA: 8.83/10
           </p>
-          <p className="text-xs flex items-center justify-center gap-1.5 mb-6 text-[#7d5977] font-medium">
-            <MapPin className="w-3.5 h-3.5 text-[#eaaa00]" />
+          <p className="text-xs flex items-center justify-center gap-1.5 mb-6 text-[#57606a] dark:text-[#8b949e] font-medium">
+            <MapPin className="w-3.5 h-3.5 text-[#0969da] dark:text-[#58a6ff]" />
             Lucknow, Uttar Pradesh, India
           </p>
 
@@ -300,16 +294,16 @@ export default function Footer() {
             <a
               href="/resume.pdf"
               download="Aman_Patel_Resume.pdf"
-              className="apple-dock-pill px-6 py-2.5 rounded-full text-xs font-semibold text-[#eaaa00] flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-white dark:bg-[#21262d] text-[#1f2328] dark:text-[#f0f6fc] border border-[#d0d7de] dark:border-[#30363d] hover:bg-[#f6f8fa] dark:hover:bg-[#30363d] flex items-center gap-2 transition-colors shadow-sm"
             >
-              <Download className="w-3.5 h-3.5" />
+              <Download className="w-3.5 h-3.5 text-[#0969da] dark:text-[#58a6ff]" />
               <span>Download Official Resume (PDF)</span>
             </a>
             <a
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="apple-dock-pill px-5 py-2.5 rounded-full text-xs font-semibold text-[#e34234] flex items-center gap-2"
+              className="px-5 py-2.5 rounded-xl text-xs font-semibold bg-[#238636] hover:bg-[#2ea043] text-white flex items-center gap-2 transition-colors shadow-sm"
             >
               <FileText className="w-3.5 h-3.5" />
               <span>View Resume</span>
@@ -325,7 +319,7 @@ export default function Footer() {
               href={s.href}
               target={s.href.startsWith('http') ? '_blank' : undefined}
               rel={s.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              className="apple-dock-pill flex items-center gap-2 px-4 py-2 rounded-full text-xs font-medium text-white/90 hover:text-[#D4ff3f]"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-medium bg-white dark:bg-[#21262d] text-[#1f2328] dark:text-[#f0f6fc] hover:text-[#0969da] dark:hover:text-[#58a6ff] border border-[#d0d7de] dark:border-[#30363d] transition-colors shadow-sm"
             >
               {s.icon}
               <span>{s.label}</span>
@@ -334,13 +328,10 @@ export default function Footer() {
         </div>
 
         {/* Divider */}
-        <div
-          className="mx-auto mb-8 h-px max-w-xs rounded-full"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(58, 15, 52, 0.2), transparent)' }}
-        />
+        <div className="mx-auto mb-8 h-px max-w-xs rounded-full bg-[#d0d7de] dark:bg-[#30363d]" />
 
         {/* Credit */}
-        <p className="text-xs font-medium text-[#5e3b58] tracking-tight text-center">
+        <p className="text-xs font-medium text-[#57606a] dark:text-[#8b949e] tracking-tight text-center">
           &copy; {new Date().getFullYear()} Aman Patel. All rights reserved.
         </p>
       </div>

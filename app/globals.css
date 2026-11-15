@@ -253,3 +253,55 @@
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
 }
+
+/* Hide Next.js development indicator badge */
+nextjs-portal,
+[data-nextjs-dev-tools],
+#nextjs-dev-tools,
+div[data-nextjs-toast] {
+  display: none !important;
+  visibility: hidden !important;
+}
+
+/* =========================================================
+   CRISP GITHUB LIGHT THEME (Clean High Contrast)
+   ========================================================= */
+.theme-light {
+  background-color: #ffffff !important;
+  color: #1f2328 !important;
+  min-height: 100vh;
+}
+
+.theme-light h1,
+.theme-light h2,
+.theme-light h3,
+.theme-light h4,
+.theme-light h5,
+.theme-light h6 {
+  color: #1f2328 !important;
+}
+
+.theme-light p {
+  color: #57606a !important;
+}
+
+.theme-light .text-\[\#e6edf3\],
+.theme-light .text-\[\#f0f6fc\] {
+  color: #1f2328 !important;
+}
+
+.theme-light .text-\[\#8b949e\] {
+  color: #57606a !important;
+}
+
+.theme-light input,
+.theme-light textarea,
+.theme-light select {
+  background-color: #ffffff !important;
+  border-color: #d0d7de !important;
+  color: #1f2328 !important;
+}
+
+.theme-light label {
+  color: #1f2328 !important;
+}
