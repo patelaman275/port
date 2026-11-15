@@ -140,26 +140,25 @@ export default function Footer() {
           </p>
         </div>
 
-        {/* ── Working macOS Styled Contact Form ── */}
+        {/* ── Modern Professional Contact Form ── */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-2xl mx-auto mb-16 rounded-3xl overflow-hidden border border-[#eaaa00]/30 shadow-xl text-[#3a0f34] backdrop-blur-md"
-          style={{ background: 'rgba(221, 227, 232, 0.92)' }}
+          className="max-w-2xl mx-auto mb-16 rounded-3xl overflow-hidden border border-rose-500/20 shadow-2xl backdrop-blur-md bg-[#161b22]/90 text-[#e6edf3]"
         >
-          {/* macOS Window Titlebar */}
-          <div className="px-5 py-3 border-b border-[#3a0f34]/15 bg-[#3a0f34]/10 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#e34234]" />
-              <span className="w-3 h-3 rounded-full bg-[#eaaa00]" />
-              <span className="w-3 h-3 rounded-full bg-[#3a0f34]/20" />
+          {/* Form Header */}
+          <div className="px-6 py-4 border-b border-[#30363d] bg-[#0d1117]/80 flex items-center justify-between">
+            <div className="flex items-center gap-2.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+              <span className="text-xs font-semibold tracking-wide text-[#f0f6fc]">
+                Direct Message to Aman Patel
+              </span>
             </div>
-            <span className="text-xs font-medium tracking-tight text-[#3a0f34]/80">
-              New Message to Aman Patel
+            <span className="text-[11px] text-[#8b949e] font-medium hidden sm:inline-block">
+              Usually replies within 24h
             </span>
-            <div className="w-12" />
           </div>
 
           <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-5">

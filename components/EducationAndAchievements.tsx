@@ -54,15 +54,16 @@ export default function EducationAndAchievements() {
             {/* Top gradient highlight */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#eaaa00] via-[#3a0f34] to-[#eaaa00]" />
 
-            {/* macOS Window Controls */}
+            {/* Card Header Status */}
             <div className="flex items-center justify-between pb-3 mb-6 border-b border-[#3a0f34]/15">
-              <div className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#e34234]" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#eaaa00]" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#3a0f34]/20" />
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="text-[11px] font-semibold text-[#3a0f34]/80 tracking-wide">
+                  Academic Record Verified
+                </span>
               </div>
-              <span className="text-[10px] font-mono text-[#3a0f34]/60 tracking-wider">
-                Academics_SRM_IST.app
+              <span className="text-[11px] font-mono text-[#3a0f34]/60 tracking-wider">
+                B.Tech CSE &middot; 2022 - 2026
               </span>
             </div>
 

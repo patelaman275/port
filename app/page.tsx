@@ -22,7 +22,7 @@ export default function Home() {
   // Smooth startup timer (2.2s)
   useEffect(() => {
     const heroImg = new window.Image();
-    heroImg.src = '/portrait.png';
+    heroImg.src = '/character-base.png';
 
     const startTime = performance.now();
     const duration = 2200;

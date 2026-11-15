@@ -64,32 +64,39 @@ export default function LiveLavenderBackground() {
       const isGithubDark = document.querySelector('.github-dark') !== null;
 
       if (isGithubDark) {
-        // GitHub Dark canvas
-        ctx.fillStyle = '#0d1117';
+        // Deep Obsidian Noir Canvas
+        ctx.fillStyle = '#0a0406';
         ctx.fillRect(0, 0, width, height);
 
-        // Subtle dark ambient mesh
+        // Rich Ruby Crimson Ambient Mesh Glow (Blends with Anime Character)
         const t = frame * 0.003;
-        const x1 = width * 0.3 + Math.sin(t) * 120;
-        const y1 = height * 0.3 + Math.cos(t * 0.9) * 80;
-        const g1 = ctx.createRadialGradient(x1, y1, 10, x1, y1, width * 0.45);
-        g1.addColorStop(0, 'rgba(31, 111, 235, 0.08)');
-        g1.addColorStop(0.5, 'rgba(13, 17, 23, 0.4)');
+        const x1 = width * 0.35 + Math.sin(t) * 120;
+        const y1 = height * 0.35 + Math.cos(t * 0.9) * 80;
+        const g1 = ctx.createRadialGradient(x1, y1, 10, x1, y1, width * 0.55);
+        g1.addColorStop(0, 'rgba(225, 29, 72, 0.09)');
+        g1.addColorStop(0.5, 'rgba(136, 19, 55, 0.04)');
         g1.addColorStop(1, 'transparent');
         ctx.fillStyle = g1;
         ctx.fillRect(0, 0, width, height);
 
-        // GitHub green shimmer
+        // Subtle Deep Wine Red secondary shimmer
         const x2 = width * 0.75 + Math.cos(t * 0.7) * 100;
         const y2 = height * 0.65 + Math.sin(t * 1.1) * 90;
-        const g2 = ctx.createRadialGradient(x2, y2, 10, x2, y2, width * 0.45);
-        g2.addColorStop(0, 'rgba(35, 134, 54, 0.06)');
-        g2.addColorStop(0.5, 'rgba(13, 17, 23, 0.3)');
+        const g2 = ctx.createRadialGradient(x2, y2, 10, x2, y2, width * 0.5);
+        g2.addColorStop(0, 'rgba(159, 18, 57, 0.07)');
+        g2.addColorStop(0.5, 'rgba(10, 4, 6, 0.3)');
         g2.addColorStop(1, 'transparent');
         ctx.fillStyle = g2;
         ctx.fillRect(0, 0, width, height);
 
-        // Update & draw particles in GitHub blue/green
+        // Mouse Interactive Ambient Crimson Glow
+        const mouseGlow = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, mouse.radius * 1.4);
+        mouseGlow.addColorStop(0, 'rgba(225, 29, 72, 0.07)');
+        mouseGlow.addColorStop(1, 'transparent');
+        ctx.fillStyle = mouseGlow;
+        ctx.fillRect(0, 0, width, height);
+
+        // Update & draw particles in Ruby Ember dust
         particles.forEach((p) => {
           p.x += p.vx;
           p.y += p.vy;
@@ -99,7 +106,7 @@ export default function LiveLavenderBackground() {
           if (p.y < 0) p.y = height;
           if (p.y > height) p.y = 0;
 
-          ctx.fillStyle = `rgba(88, 166, 255, ${p.alpha * 0.35})`;
+          ctx.fillStyle = `rgba(244, 63, 94, ${p.alpha * 0.4})`;
           ctx.beginPath();
           ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
           ctx.fill();
