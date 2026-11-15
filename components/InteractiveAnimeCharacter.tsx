@@ -12,46 +12,42 @@ export default function InteractiveAnimeCharacter({
 }: InteractiveAnimeCharacterProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Pupil offset (px) for eye gaze tracking
-  const [pupilOffset, setPupilOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   // Head / face 3D rotation and translation
   const [faceTransform, setFaceTransform] = useState({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
-  // Dynamic lens reflection glint position (percent)
-  const [glintPos, setGlintPos] = useState({ x: 50, y: 40, opacity: 0.25 });
+  // Dynamic glasses lens reflection glint position
+  const [lensGlint, setLensGlint] = useState({ x: 50, y: 38, opacity: 0.2 });
   const [isBlinking, setIsBlinking] = useState(false);
 
   // Smooth lerp targets for 60fps animation
-  const targetPupil = useRef({ x: 0, y: 0 });
-  const currentPupil = useRef({ x: 0, y: 0 });
   const targetFace = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
   const currentFace = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
   const animFrameId = useRef<number | null>(null);
 
-  // Natural Blinking Loop (every 2.8 to 5.5 seconds with occasional double blink)
+  // Natural Blinking Loop (every 3 to 6 seconds with occasional double blink)
   useEffect(() => {
     let blinkTimeout: ReturnType<typeof setTimeout>;
 
     const scheduleBlink = () => {
-      const nextInterval = 2800 + Math.random() * 2700;
+      const nextInterval = 3000 + Math.random() * 2800;
       blinkTimeout = setTimeout(() => {
         setIsBlinking(true);
 
         setTimeout(() => {
           setIsBlinking(false);
 
-          // 22% chance of a quick double blink
-          if (Math.random() < 0.22) {
+          // 20% chance of a quick double blink
+          if (Math.random() < 0.2) {
             setTimeout(() => {
               setIsBlinking(true);
               setTimeout(() => {
                 setIsBlinking(false);
                 scheduleBlink();
-              }, 95);
+              }, 90);
             }, 120);
           } else {
             scheduleBlink();
           }
-        }, 125);
+        }, 130);
       }, nextInterval);
     };
 
@@ -63,21 +59,12 @@ export default function InteractiveAnimeCharacter({
   const animate = useCallback(() => {
     const factor = 0.11;
 
-    // Smooth pupils lerp
-    currentPupil.current.x += (targetPupil.current.x - currentPupil.current.x) * factor;
-    currentPupil.current.y += (targetPupil.current.y - currentPupil.current.y) * factor;
-
     // Smooth face 3D rotation & translation lerp
     currentFace.current.rotX += (targetFace.current.rotX - currentFace.current.rotX) * factor;
     currentFace.current.rotY += (targetFace.current.rotY - currentFace.current.rotY) * factor;
     currentFace.current.rotZ += (targetFace.current.rotZ - currentFace.current.rotZ) * factor;
     currentFace.current.x += (targetFace.current.x - currentFace.current.x) * factor;
     currentFace.current.y += (targetFace.current.y - currentFace.current.y) * factor;
-
-    setPupilOffset({
-      x: Number(currentPupil.current.x.toFixed(2)),
-      y: Number(currentPupil.current.y.toFixed(2)),
-    });
 
     setFaceTransform({
       rotX: Number(currentFace.current.rotX.toFixed(3)),
@@ -87,13 +74,11 @@ export default function InteractiveAnimeCharacter({
       y: Number(currentFace.current.y.toFixed(2)),
     });
 
-    // Dynamic lens glint tracks opposite angle
-    const glintX = 50 + currentFace.current.rotY * 1.5;
-    const glintY = 38 - currentFace.current.rotX * 1.2;
-    setGlintPos({
-      x: Math.max(20, Math.min(80, glintX)),
-      y: Math.max(20, Math.min(65, glintY)),
-      opacity: 0.18 + Math.abs(currentFace.current.rotY) * 0.012,
+    // Dynamic lens light sheen follows head angle
+    setLensGlint({
+      x: 50 + currentFace.current.rotY * 1.8,
+      y: 36 - currentFace.current.rotX * 1.2,
+      opacity: 0.15 + Math.abs(currentFace.current.rotY) * 0.015,
     });
 
     animFrameId.current = requestAnimationFrame(animate);
@@ -113,7 +98,6 @@ export default function InteractiveAnimeCharacter({
     const isMobileScreen = window.innerWidth < 768;
 
     if (prefersReducedMotion || (isTouchDevice && isMobileScreen)) {
-      targetPupil.current = { x: 0, y: 0 };
       targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
       return;
     }
@@ -124,8 +108,8 @@ export default function InteractiveAnimeCharacter({
       const rect = containerRef.current.getBoundingClientRect();
 
       // Eye & face center in viewport coordinates
-      const faceCenterX = rect.left + rect.width * 0.51;
-      const faceCenterY = rect.top + rect.height * 0.38;
+      const faceCenterX = rect.left + rect.width * 0.5;
+      const faceCenterY = rect.top + rect.height * 0.42;
 
       const deltaX = e.clientX - faceCenterX;
       const deltaY = e.clientY - faceCenterY;
@@ -148,25 +132,18 @@ export default function InteractiveAnimeCharacter({
       // ── Face 3D Head Turn ─────────────────────────────────
       // Yaw (rotY): up to ±20° left/right
       // Pitch (rotX): up to ±14° up/down
-      // Roll (rotZ): up to ±3° natural micro-tilt
+      // Roll (rotZ): up to ±2.8° natural micro-tilt
       // Lateral/Vertical shift: up to ±16px X, ±10px Y
       targetFace.current = {
         rotX: -easedY * 14,
         rotY: easedX * 20,
-        rotZ: easedX * 3,
+        rotZ: easedX * 2.8,
         x: easedX * 16,
         y: easedY * 10,
-      };
-
-      // ── Pupil Offset (eyes move inside the face) ──────────
-      targetPupil.current = {
-        x: easedX * 7.0,
-        y: easedY * 4.5,
       };
     };
 
     const handleMouseLeave = () => {
-      targetPupil.current = { x: 0, y: 0 };
       targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
     };
 
@@ -189,7 +166,7 @@ export default function InteractiveAnimeCharacter({
       <div
         className="absolute inset-0 rounded-3xl pointer-events-none -z-10"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(254,128,64,0.16) 0%, rgba(100,50,20,0.05) 55%, transparent 75%)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(254,128,64,0.18) 0%, rgba(100,50,20,0.06) 55%, transparent 75%)',
         }}
       />
 
@@ -204,33 +181,33 @@ export default function InteractiveAnimeCharacter({
           perspective: '1200px',
         }}
       >
-        {/* Ambient subtle background dust particles in 3D */}
+        {/* Subtle obsidian ambient particles in background */}
         <div className="absolute inset-0 pointer-events-none opacity-40">
           <div
             className="absolute w-2 h-2 rounded-full bg-[#FE8040]/30 blur-xs"
-            style={{ top: '20%', left: '15%' }}
+            style={{ top: '18%', left: '12%' }}
           />
           <div
-            className="absolute w-1.5 h-1.5 rounded-full bg-[#FE8040]/40 blur-xs"
-            style={{ top: '65%', right: '18%' }}
+            className="absolute w-1.5 h-1.5 rounded-full bg-[#FE8040]/35 blur-xs"
+            style={{ top: '68%', right: '15%' }}
           />
           <div
             className="absolute w-1 h-1 rounded-full bg-white/40"
-            style={{ top: '35%', right: '25%' }}
+            style={{ top: '32%', right: '22%' }}
           />
         </div>
 
         {/* ══════════════════════════════════════════════════════════
-            2. 3D MOVING CHARACTER RIG (Nested 3D parallax layers)
-            Scaled (1.15) so 3D rotation & translation never clip
+            2. 3D MOVING CHARACTER RIG (Head moves with mouse)
+            Scaled (1.14) so 3D rotation never reveals frame edges
             ══════════════════════════════════════════════════════════ */}
         <div
           className="relative w-full h-full will-change-transform"
           style={{
             transformStyle: 'preserve-3d',
-            transformOrigin: '50% 72%', // Neck pivot
+            transformOrigin: '50% 72%', // Neck pivot point
             transform: `
-              scale(1.15)
+              scale(1.14)
               rotateX(${faceTransform.rotX}deg)
               rotateY(${faceTransform.rotY}deg)
               rotateZ(${faceTransform.rotZ}deg)
@@ -239,11 +216,8 @@ export default function InteractiveAnimeCharacter({
             transition: 'transform 0.04s linear',
           }}
         >
-          {/* Layer 1: Base Character Portrait (Face, hair, body) at Z: 0px */}
-          <div
-            className="absolute inset-0 pointer-events-none"
-            style={{ transform: 'translateZ(0px)' }}
-          >
+          {/* Unified High-Resolution Character Portrait */}
+          <div className="absolute inset-0 pointer-events-none">
             <Image
               src="/character-base.png"
               alt="Aman Patel Character Portrait"
@@ -254,29 +228,10 @@ export default function InteractiveAnimeCharacter({
             />
           </div>
 
-          {/* Layer 2: Interactive Mouse-Tracking Pupils at Z: 10px in 3D depth */}
-          <div
-            className="absolute inset-0 pointer-events-none will-change-transform"
-            style={{
-              transform: `translate3d(${pupilOffset.x}px, ${pupilOffset.y}px, 10px)`,
-              transition: 'transform 0.04s linear',
-            }}
-          >
-            <Image
-              src="/pupils.png"
-              alt=""
-              fill
-              priority
-              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
-              className="object-cover object-center pointer-events-none"
-            />
-          </div>
-
-          {/* Layer 3: Natural Anime Blink at Z: 16px */}
+          {/* Natural Anime Eyelid Blink (Only appears during 120ms blink) */}
           <div
             className="absolute inset-0 pointer-events-none transition-opacity"
             style={{
-              transform: 'translateZ(16px)',
               opacity: isBlinking ? 1 : 0,
               transitionDuration: isBlinking ? '60ms' : '110ms',
             }}
@@ -290,49 +245,29 @@ export default function InteractiveAnimeCharacter({
             />
           </div>
 
-          {/* Layer 4: Glasses Frames & Eyelash Overlay at Z: 26px (True 3D Parallax!)
-              Because this layer sits in FRONT of the eyes, when his head turns,
-              the glasses frames shift realistically across the pupils! */}
-          <div
-            className="absolute inset-0 pointer-events-none will-change-transform"
-            style={{
-              transform: `translate3d(${pupilOffset.x * 0.2}px, ${pupilOffset.y * 0.2}px, 26px)`,
-              transition: 'transform 0.04s linear',
-            }}
-          >
-            <Image
-              src="/eyelid-overlay.png"
-              alt=""
-              fill
-              priority
-              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
-              className="object-cover object-center pointer-events-none"
-            />
-          </div>
-
-          {/* Layer 5: Dynamic 3D Glasses Lens Sheen Glint at Z: 32px */}
+          {/* Dynamic 3D Glasses Lens Specular Glint (Light sheen moves across lenses) */}
           <div
             className="absolute inset-0 pointer-events-none overflow-hidden"
-            style={{ transform: 'translateZ(32px)' }}
+            style={{ transform: 'translateZ(15px)' }}
           >
-            <div
-              className="absolute w-24 h-16 rounded-full blur-md transition-all duration-75"
-              style={{
-                top: `${glintPos.y}%`,
-                left: `${glintPos.x - 10}%`,
-                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.35) 0%, rgba(254,128,64,0.15) 50%, transparent 80%)',
-                opacity: glintPos.opacity,
-                transform: `rotate(${faceTransform.rotY * 1.5 - 20}deg)`,
-              }}
-            />
             <div
               className="absolute w-20 h-14 rounded-full blur-md transition-all duration-75"
               style={{
-                top: `${glintPos.y}%`,
-                left: `${glintPos.x + 16}%`,
-                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.3) 0%, rgba(254,128,64,0.12) 50%, transparent 80%)',
-                opacity: glintPos.opacity,
-                transform: `rotate(${faceTransform.rotY * 1.5 - 20}deg)`,
+                top: `${lensGlint.y}%`,
+                left: `${lensGlint.x - 12}%`,
+                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, rgba(254,128,64,0.18) 50%, transparent 80%)',
+                opacity: lensGlint.opacity,
+                transform: `rotate(${faceTransform.rotY * 1.5 - 18}deg)`,
+              }}
+            />
+            <div
+              className="absolute w-18 h-12 rounded-full blur-md transition-all duration-75"
+              style={{
+                top: `${lensGlint.y}%`,
+                left: `${lensGlint.x + 14}%`,
+                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.35) 0%, rgba(254,128,64,0.15) 50%, transparent 80%)',
+                opacity: lensGlint.opacity,
+                transform: `rotate(${faceTransform.rotY * 1.5 - 18}deg)`,
               }}
             />
           </div>
