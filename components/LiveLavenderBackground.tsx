@@ -29,7 +29,6 @@ export default function LiveLavenderBackground() {
       y: height / 2,
       targetX: width / 2,
       targetY: height / 2,
-      radius: 200,
     };
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -45,13 +44,13 @@ export default function LiveLavenderBackground() {
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
     window.addEventListener('resize', handleResize);
 
-    const particles: Particle[] = Array.from({ length: 30 }, () => ({
+    const particles: Particle[] = Array.from({ length: 32 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      size: Math.random() * 2 + 1,
-      alpha: Math.random() * 0.3 + 0.15,
+      vx: (Math.random() - 0.5) * 0.25,
+      vy: (Math.random() - 0.5) * 0.25,
+      size: Math.random() * 1.8 + 0.8,
+      alpha: Math.random() * 0.25 + 0.1,
     }));
 
     let frame = 0;
@@ -61,71 +60,37 @@ export default function LiveLavenderBackground() {
       mouse.x += (mouse.targetX - mouse.x) * 0.05;
       mouse.y += (mouse.targetY - mouse.y) * 0.05;
 
-      const isDark = document.documentElement.classList.contains('dark') || 
-                     document.documentElement.classList.contains('github-dark') || 
-                     document.querySelector('.github-dark') !== null;
+      // Obsidian Orange canvas - permanent dark #0F0F0F
+      ctx.fillStyle = '#0F0F0F';
+      ctx.fillRect(0, 0, width, height);
 
-      if (isDark) {
-        // Crisp GitHub Dark Canvas
-        ctx.fillStyle = '#0d1117';
-        ctx.fillRect(0, 0, width, height);
+      // Subtle ambient warm glow centered around mouse / hero area
+      const t = frame * 0.0015;
+      const x1 = width * 0.65 + Math.sin(t) * 60;
+      const y1 = height * 0.35 + Math.cos(t * 0.8) * 40;
+      const g1 = ctx.createRadialGradient(x1, y1, 20, x1, y1, width * 0.45);
+      g1.addColorStop(0, 'rgba(254, 128, 64, 0.035)'); // Very soft orange ambient
+      g1.addColorStop(1, 'transparent');
+      ctx.fillStyle = g1;
+      ctx.fillRect(0, 0, width, height);
 
-        // Subtle ambient mesh
-        const t = frame * 0.002;
-        const x1 = width * 0.35 + Math.sin(t) * 100;
-        const y1 = height * 0.35 + Math.cos(t * 0.8) * 60;
-        const g1 = ctx.createRadialGradient(x1, y1, 10, x1, y1, width * 0.5);
-        g1.addColorStop(0, 'rgba(88, 166, 255, 0.04)');
-        g1.addColorStop(1, 'transparent');
-        ctx.fillStyle = g1;
-        ctx.fillRect(0, 0, width, height);
+      // Subtle micro dust in charcoal and soft orange
+      particles.forEach((p, idx) => {
+        p.x += p.vx * 0.6;
+        p.y += p.vy * 0.6;
 
-        // Subtle particle dust
-        particles.forEach((p) => {
-          p.x += p.vx * 0.7;
-          p.y += p.vy * 0.7;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
 
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
-
-          ctx.fillStyle = `rgba(139, 148, 158, ${p.alpha * 0.25})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-        });
-      } else {
-        // Crisp Clean GitHub Light Canvas
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, width, height);
-
-        // Soft, clean subtle tint (no blinding white spots that hide text!)
-        const t = frame * 0.002;
-        const x1 = width * 0.35 + Math.sin(t) * 100;
-        const y1 = height * 0.35 + Math.cos(t * 0.8) * 60;
-        const g1 = ctx.createRadialGradient(x1, y1, 10, x1, y1, width * 0.5);
-        g1.addColorStop(0, 'rgba(9, 105, 218, 0.03)');
-        g1.addColorStop(1, 'transparent');
-        ctx.fillStyle = g1;
-        ctx.fillRect(0, 0, width, height);
-
-        // Particles in subtle light slate
-        particles.forEach((p) => {
-          p.x += p.vx * 0.7;
-          p.y += p.vy * 0.7;
-
-          if (p.x < 0) p.x = width;
-          if (p.x > width) p.x = 0;
-          if (p.y < 0) p.y = height;
-          if (p.y > height) p.y = 0;
-
-          ctx.fillStyle = `rgba(101, 109, 118, ${p.alpha * 0.2})`;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-          ctx.fill();
-        });
-      }
+        ctx.fillStyle = idx % 3 === 0
+          ? `rgba(254, 128, 64, ${p.alpha * 0.25})`
+          : `rgba(153, 153, 153, ${p.alpha * 0.15})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      });
 
       animId = requestAnimationFrame(render);
     };
@@ -143,7 +108,7 @@ export default function LiveLavenderBackground() {
     <canvas
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none z-0"
-      style={{ width: '100vw', height: '100vh', backgroundColor: '#dde3e8' }}
+      style={{ width: '100vw', height: '100vh', backgroundColor: '#0F0F0F' }}
       aria-hidden="true"
     />
   );

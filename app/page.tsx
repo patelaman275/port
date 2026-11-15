@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import { ThemeProvider } from '@/components/ThemeContext';
-import ThemeSwitcher from '@/components/ThemeSwitcher';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
 import LoadingExperience from '@/components/LoadingExperience';
 import LiveLavenderBackground from '@/components/LiveLavenderBackground';
@@ -21,11 +20,8 @@ export default function Home() {
 
   // Smooth startup timer (2.2s)
   useEffect(() => {
-    const heroImg = new window.Image();
-    heroImg.src = '/character-base.png';
-
     const startTime = performance.now();
-    const duration = 2200;
+    const duration = 1800;
 
     let frameId: number;
     const updateProgress = (now: number) => {
@@ -46,13 +42,10 @@ export default function Home() {
 
   return (
     <ThemeProvider>
-      {/* Theme Toggle Switch (Icon-only) */}
-      <ThemeSwitcher />
-
       {/* Top Scroll Progress Indicator */}
       <ScrollProgressBar />
 
-      {/* Ambient Canvas Background */}
+      {/* Obsidian Ambient Background Canvas */}
       <LiveLavenderBackground />
 
       {/* Loading Intro Experience */}
@@ -61,7 +54,7 @@ export default function Home() {
       {/* AI Assistant Modal Listener */}
       <RecruiterChatModal hideTrigger={true} />
 
-      <main className="relative z-10 bg-transparent min-h-screen overflow-x-hidden text-[#3a0f34]">
+      <main className="relative z-10 bg-transparent min-h-screen overflow-x-hidden text-[#CCCCCC]">
         {/* ══ HERO SECTION ══════════════════════════════════════════ */}
         <OverlayText />
 

@@ -1,23 +1,25 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
-  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, 'Liberation Mono', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
 }
 
 @layer base {
   :root {
-    --font-sf: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-    --font-sf-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
-    --bg-base: #dde3e8;
-    --bg-surface: #ffffff;
-    --bg-elevated: #f2f5f8;
-    --color-silver: #dde3e8;
-    --color-aubergine: #3a0f34;
-    --color-marigold: #eaaa00;
-    --text-primary: #3a0f34;
-    --text-muted: #5e3b58;
-    --text-dim: #7d5977;
+    --bg-main: #0F0F0F;
+    --bg-secondary: #121212;
+    --bg-card: #191919;
+    --bg-elevated: #222222;
+    --accent-orange: #FE8040;
+    --accent-orange-hover: #FF995F;
+    --accent-orange-muted: #492A1D;
+    --text-heading: #F5F5F5;
+    --text-body: #CCCCCC;
+    --text-secondary: #999999;
+    --text-muted: #777777;
+    --border-primary: #303030;
+    --border-divider: #252525;
   }
 
   *, *::before, *::after {
@@ -29,6 +31,9 @@
     overflow-x: hidden;
     max-width: 100%;
     width: 100%;
+    background-color: #0F0F0F;
+    color: #CCCCCC;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
@@ -39,222 +44,46 @@
     max-width: 100%;
     width: 100%;
     position: relative;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+    background-color: #0F0F0F;
+    color: #CCCCCC;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     letter-spacing: -0.01em;
   }
 
+  /* Headings: Space Grotesk */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+    color: #F5F5F5;
+    letter-spacing: -0.03em;
+  }
+
+  /* Code & Technical metadata: JetBrains Mono */
+  code, pre, kbd, samp, .font-mono, [class*="font-mono"] {
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Scrollbar */
   ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0d1117;
+    background: #0F0F0F;
   }
   ::-webkit-scrollbar-thumb {
-    background: #30363d;
-    border-radius: 4px;
+    background: #303030;
+    border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #8b949e;
+    background: #FE8040;
   }
 }
 
 /* =========================================================
-   AUTHENTIC GITHUB DARK THEME (Primer Design System)
+   MINIMAL PREMIUM SDE — OBSIDIAN ORANGE THEME
    ========================================================= */
 
-.github-dark {
-  background-color: #0d1117 !important;
-  color: #e6edf3 !important;
-  min-height: 100vh;
-}
-
-.github-dark main {
-  background-color: transparent !important;
-  color: #e6edf3 !important;
-}
-
-.github-dark section {
-  background-color: transparent !important;
-}
-
-/* 1. All Headings & Titles in Dark Mode (Pure GitHub White) */
-.github-dark h1,
-.github-dark h2,
-.github-dark h3,
-.github-dark h4,
-.github-dark h5,
-.github-dark h6,
-.github-dark h1 *,
-.github-dark h2 *,
-.github-dark h3 * {
-  color: #f0f6fc !important;
-  font-weight: 700 !important;
-}
-
-/* 2. Highlight spans & Accent links (GitHub Blue) */
-.github-dark h2 span,
-.github-dark h3 span,
-.github-dark .text-\[\#eaaa00\],
-.github-dark .text-\[\#eaaa00\] * {
-  color: #58a6ff !important;
-}
-
-/* 3. Overriding All Hardcoded Purple/Aubergine Text to Clean GitHub Text */
-.github-dark [class*="text-[#3a0f34]"],
-.github-dark [class*="text-[#5e3b58]"],
-.github-dark [class*="text-[#7d5977]"],
-.github-dark .text-\[\#3a0f34\],
-.github-dark .text-\[\#5e3b58\],
-.github-dark .text-\[\#7d5977\] {
-  color: #e6edf3 !important;
-}
-
-/* Paragraphs & Muted Descriptions in GitHub Neutral Gray */
-.github-dark p,
-.github-dark p [class*="text-[#5e3b58]"],
-.github-dark p [class*="text-[#3a0f34]"],
-.github-dark span[class*="text-[#5e3b58]"] {
-  color: #8b949e !important;
-}
-
-/* Icons in GitHub Blue */
-.github-dark svg[class*="text-[#3a0f34]"],
-.github-dark .text-\[\#3a0f34\] svg {
-  color: #58a6ff !important;
-}
-
-/* 4. Badges, Eyebrows & Tags (GitHub Pill Style) */
-.github-dark .bg-\[\#3a0f34\]\/8,
-.github-dark .bg-\[\#3a0f34\]\/10,
-.github-dark .bg-\[\#3a0f34\],
-.github-dark span[class*="bg-[#3a0f34]"] {
-  background-color: #21262d !important;
-  border-color: #30363d !important;
-  color: #58a6ff !important;
-}
-
-/* 5. Section Divider */
-.github-dark .section-divider {
-  height: 1px !important;
-  background: #30363d !important;
-  opacity: 0.8 !important;
-}
-
-/* 6. Cards & Containers (GitHub Dark Box Container #161b22) */
-.github-dark [style*="rgba(221, 227, 232"],
-.github-dark [style*="rgba(221,227,232"],
-.github-dark .glass-card,
-.github-dark .apple-window {
-  background-color: #161b22 !important;
-  border: 1px solid #30363d !important;
-  box-shadow: 0 8px 24px rgba(1, 4, 9, 0.6) !important;
-  color: #e6edf3 !important;
-}
-
-/* Titlebars on cards (GitHub Box Header #161b22) */
-.github-dark .bg-\[\#3a0f34\],
-.github-dark .bg-\[\#2b0a26\],
-.github-dark .bg-\[\#250821\] {
-  background-color: #161b22 !important;
-  border-color: #30363d !important;
-  color: #f0f6fc !important;
-}
-
-/* Inner nested sub-cards */
-.github-dark .bg-white\/60,
-.github-dark .bg-white\/70,
-.github-dark .bg-white\/80,
-.github-dark .bg-white\/90,
-.github-dark .bg-white\/5,
-.github-dark .bg-white\/10 {
-  background-color: #0d1117 !important;
-  border-color: #30363d !important;
-  color: #e6edf3 !important;
-}
-
-/* 7. Action Buttons */
-/* Primary CTA button (GitHub Green) */
-.github-dark .bg-\[\#eaaa00\],
-.github-dark button.bg-\[\#eaaa00\],
-.github-dark a.bg-\[\#eaaa00\] {
-  background-color: #238636 !important;
-  color: #ffffff !important;
-  border: 1px solid rgba(240, 246, 252, 0.1) !important;
-}
-.github-dark .bg-\[\#eaaa00\]:hover,
-.github-dark button.bg-\[\#eaaa00\]:hover,
-.github-dark a.bg-\[\#eaaa00\]:hover {
-  background-color: #2ea043 !important;
-  color: #ffffff !important;
-}
-
-/* Secondary Action Button (GitHub Gray Button #21262d) */
-.github-dark a.bg-white,
-.github-dark button.bg-white,
-.github-dark a.bg-\[\#3a0f34\],
-.github-dark button.bg-\[\#3a0f34\] {
-  background-color: #21262d !important;
-  border: 1px solid #30363d !important;
-  color: #e6edf3 !important;
-}
-.github-dark a.bg-white:hover,
-.github-dark button.bg-white:hover,
-.github-dark a.bg-\[\#3a0f34\]:hover,
-.github-dark button.bg-\[\#3a0f34\]:hover {
-  background-color: #30363d !important;
-  border-color: #8b949e !important;
-  color: #ffffff !important;
-}
-
-/* 8. Form Inputs in Dark Mode */
-.github-dark input,
-.github-dark textarea,
-.github-dark select {
-  background-color: #0d1117 !important;
-  border: 1px solid #30363d !important;
-  color: #e6edf3 !important;
-}
-.github-dark input::placeholder,
-.github-dark textarea::placeholder {
-  color: #6e7681 !important;
-}
-.github-dark input:focus,
-.github-dark textarea:focus,
-.github-dark select:focus {
-  border-color: #58a6ff !important;
-  box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3) !important;
-  outline: none !important;
-}
-
-/* 9. Tech Pills & Labels (GitHub Topics Style) */
-.github-dark span.bg-\[\#3a0f34\]\/10,
-.github-dark span.bg-white\/10,
-.github-dark span.bg-white\/5,
-.github-dark div.bg-\[\#3a0f34\]\/10 {
-  background-color: rgba(56, 139, 253, 0.12) !important;
-  border: 1px solid rgba(56, 139, 253, 0.35) !important;
-  color: #58a6ff !important;
-}
-
-/* 10. Avatar Profile Ring in GitHub Dev Gradient */
-.github-dark .bg-gradient-to-tr.from-\[\#3a0f34\] {
-  background: linear-gradient(135deg, #238636, #1f6feb, #8957e5) !important;
-  box-shadow: 0 0 35px rgba(31, 111, 235, 0.25) !important;
-}
-
-.noise-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  pointer-events: none;
-  opacity: 0.02;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-size: 256px 256px;
-}
-
-/* Hide Next.js development indicator badge */
+/* Hide Next.js dev indicator */
 nextjs-portal,
 [data-nextjs-dev-tools],
 #nextjs-dev-tools,
@@ -263,45 +92,150 @@ div[data-nextjs-toast] {
   visibility: hidden !important;
 }
 
-/* =========================================================
-   CRISP GITHUB LIGHT THEME (Clean High Contrast)
-   ========================================================= */
-.theme-light {
-  background-color: #ffffff !important;
-  color: #1f2328 !important;
-  min-height: 100vh;
+/* Force dark canvas across whole site */
+main, section, div, header, footer {
+  color: #CCCCCC;
 }
 
-.theme-light h1,
-.theme-light h2,
-.theme-light h3,
-.theme-light h4,
-.theme-light h5,
-.theme-light h6 {
-  color: #1f2328 !important;
+/* Headings in bold off-white with selective orange accents */
+h1, h2, h3, h4, h5, h6 {
+  color: #F5F5F5 !important;
 }
 
-.theme-light p {
-  color: #57606a !important;
+.text-orange-accent,
+.text-accent,
+.highlight-orange {
+  color: #FE8040 !important;
 }
 
-.theme-light .text-\[\#e6edf3\],
-.theme-light .text-\[\#f0f6fc\] {
-  color: #1f2328 !important;
+/* Section Dividers */
+.section-divider {
+  height: 1px !important;
+  background-color: #252525 !important;
+  opacity: 1 !important;
 }
 
-.theme-light .text-\[\#8b949e\] {
-  color: #57606a !important;
+/* Cards & Surfaces: #191919 with #303030 border */
+.glass-card,
+.apple-window,
+[style*="rgba(221, 227, 232"],
+[style*="rgba(221,227,232"],
+div[class*="rounded-3xl border"],
+div[class*="rounded-2xl border"] {
+  background-color: #191919 !important;
+  border-color: #303030 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+  color: #CCCCCC !important;
 }
 
-.theme-light input,
-.theme-light textarea,
-.theme-light select {
-  background-color: #ffffff !important;
-  border-color: #d0d7de !important;
-  color: #1f2328 !important;
+/* Elevated Surfaces: #222222 */
+.bg-elevated,
+div[class*="bg-white/70"],
+div[class*="bg-white/80"],
+div[class*="bg-white/60"] {
+  background-color: #222222 !important;
+  border-color: #303030 !important;
+  color: #CCCCCC !important;
 }
 
-.theme-light label {
-  color: #1f2328 !important;
+/* Badges & Pills */
+span[class*="px-3.5 py-1"],
+span[class*="px-3 py-1"],
+span[class*="px-2.5 py-1"],
+.tech-pill {
+  background-color: #191919 !important;
+  border: 1px solid #303030 !important;
+  color: #FE8040 !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* Primary Action Buttons: Solid Vibrant Orange #FE8040 */
+button.bg-primary,
+a.bg-primary,
+button[type="submit"],
+.btn-orange-primary {
+  background-color: #FE8040 !important;
+  color: #0F0F0F !important;
+  font-weight: 700 !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+}
+
+button.bg-primary:hover,
+a.bg-primary:hover,
+button[type="submit"]:hover,
+.btn-orange-primary:hover {
+  background-color: #FF995F !important;
+  color: #0F0F0F !important;
+}
+
+/* Secondary Action Buttons: Elevated Charcoal #191919 with #303030 border */
+.btn-secondary {
+  background-color: #191919 !important;
+  border: 1px solid #303030 !important;
+  color: #F5F5F5 !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-secondary:hover {
+  background-color: #222222 !important;
+  border-color: #FE8040 !important;
+  color: #FE8040 !important;
+}
+
+/* Inputs & Forms: #121212 with #303030 border */
+input, textarea, select {
+  background-color: #121212 !important;
+  border: 1px solid #303030 !important;
+  color: #F5F5F5 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #FE8040 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(254, 128, 64, 0.2) !important;
+}
+
+input::placeholder, textarea::placeholder {
+  color: #777777 !important;
+}
+
+label {
+  color: #F5F5F5 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Overwrite legacy color classes from older themes */
+[class*="text-[#3a0f34]"],
+[class*="text-[#5e3b58]"],
+[class*="text-[#7d5977]"] {
+  color: #CCCCCC !important;
+}
+
+[class*="bg-[#3a0f34]"],
+[class*="bg-[#501748]"] {
+  background-color: #191919 !important;
+  border-color: #303030 !important;
+  color: #CCCCCC !important;
+}
+
+[class*="text-[#eaaa00]"],
+[class*="text-[#D4ff3f]"],
+[class*="text-[#e34234]"] {
+  color: #FE8040 !important;
+}
+
+[class*="border-[#eaaa00]"],
+[class*="border-[#e34234]"] {
+  border-color: #303030 !important;
+}
+
+/* Links hover transition */
+a {
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+a:hover {
+  color: #FE8040;
 }

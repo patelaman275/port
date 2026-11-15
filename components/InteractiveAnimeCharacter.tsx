@@ -160,9 +160,10 @@ export default function InteractiveAnimeCharacter({
     >
       {/* ── Floating Character Container ── */}
       <div
-        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#d0d7de] dark:border-[#30363d] shadow-xl bg-[#090204]"
+        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#303030] shadow-xl bg-[#090204]"
         style={{
           animation: 'gentleFloat 5.2s ease-in-out infinite',
+          boxShadow: '0 0 40px rgba(254,128,64,0.08), 0 20px 40px rgba(0,0,0,0.6)',
         }}
       >
         {/* Layer 1: Base Character (Hair, face, glasses, clothing, and inpainted eye whites) */}

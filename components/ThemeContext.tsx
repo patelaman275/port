@@ -1,56 +1,34 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-type Theme = 'light' | 'github-dark';
+import React, { createContext, useContext, useEffect } from 'react';
 
 interface ThemeContextType {
-  theme: Theme;
+  theme: 'obsidian-dark';
   toggleTheme: () => void;
-  isDark: boolean;
+  isDark: true;
 }
 
 const ThemeContext = createContext<ThemeContextType>({
-  theme: 'light',
+  theme: 'obsidian-dark',
   toggleTheme: () => {},
-  isDark: false,
+  isDark: true,
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setTheme] = useState<Theme>('github-dark');
-
   useEffect(() => {
-    const saved = localStorage.getItem('aman-portfolio-theme') as Theme | null;
-    if (saved) {
-      setTheme(saved);
-      document.documentElement.classList.remove('theme-light', 'github-dark', 'dark');
-      document.documentElement.classList.add(saved === 'github-dark' ? 'github-dark' : 'theme-light');
-      if (saved === 'github-dark') {
-        document.documentElement.classList.add('dark');
-      }
-    } else {
-      document.documentElement.classList.add('github-dark', 'dark');
+    // Permanent Obsidian Dark theme: enforce dark class and purge legacy light settings
+    try {
+      localStorage.removeItem('aman-portfolio-theme');
+    } catch {
+      // ignore
     }
+    document.documentElement.classList.remove('theme-light', 'github-light', 'light');
+    document.documentElement.classList.add('dark', 'obsidian-dark');
   }, []);
 
-  const toggleTheme = () => {
-    setTheme((prev) => {
-      const next = prev === 'github-dark' ? 'light' : 'github-dark';
-      localStorage.setItem('aman-portfolio-theme', next);
-      document.documentElement.classList.remove('theme-light', 'github-dark', 'dark');
-      document.documentElement.classList.add(next === 'github-dark' ? 'github-dark' : 'theme-light');
-      if (next === 'github-dark') {
-        document.documentElement.classList.add('dark');
-      }
-      return next;
-    });
-  };
-
-  const isDark = theme === 'github-dark';
-
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme, isDark }}>
-      <div className={isDark ? 'github-dark dark' : 'theme-light'}>{children}</div>
+    <ThemeContext.Provider value={{ theme: 'obsidian-dark', toggleTheme: () => {}, isDark: true }}>
+      {children}
     </ThemeContext.Provider>
   );
 }
