@@ -9,8 +9,8 @@
   :root {
     --bg-main: #0F0F0F;
     --bg-secondary: #121212;
-    --bg-card: #191919;
-    --bg-elevated: #222222;
+    --bg-card: rgba(22, 22, 24, 0.75);
+    --bg-elevated: rgba(30, 30, 34, 0.8);
     --accent-orange: #FE8040;
     --accent-orange-hover: #FF995F;
     --accent-orange-muted: #492A1D;
@@ -18,7 +18,7 @@
     --text-body: #CCCCCC;
     --text-secondary: #999999;
     --text-muted: #777777;
-    --border-primary: #303030;
+    --border-primary: rgba(255, 255, 255, 0.09);
     --border-divider: #252525;
   }
 
@@ -80,7 +80,7 @@
 }
 
 /* =========================================================
-   MINIMAL PREMIUM SDE — OBSIDIAN ORANGE THEME
+   FROSTED GLASS, SHADOW & BLUR — OBSIDIAN ORANGE THEME
    ========================================================= */
 
 /* Hide Next.js dev indicator */
@@ -108,48 +108,77 @@ h1, h2, h3, h4, h5, h6 {
   color: #FE8040 !important;
 }
 
-/* Section Dividers */
+/* Section Dividers with subtle orange blur flare */
 .section-divider {
   height: 1px !important;
-  background-color: #252525 !important;
+  background: linear-gradient(90deg, transparent, rgba(254, 128, 64, 0.25), rgba(48, 48, 48, 0.6), transparent) !important;
   opacity: 1 !important;
 }
 
-/* Cards & Surfaces: #191919 with #303030 border */
+/* ══════════════════════════════════════════════════════════
+   FROSTED GLASS CARDS WITH DEEP MULTI-TIER SHADOW & BLUR
+   ══════════════════════════════════════════════════════════ */
 .glass-card,
 .apple-window,
 [style*="rgba(221, 227, 232"],
 [style*="rgba(221,227,232"],
 div[class*="rounded-3xl border"],
-div[class*="rounded-2xl border"] {
-  background-color: #191919 !important;
-  border-color: #303030 !important;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+div[class*="rounded-2xl border"],
+div[class*="rounded-xl border"] {
+  background: rgba(20, 20, 23, 0.74) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  box-shadow:
+    0 16px 38px -6px rgba(0, 0, 0, 0.8),
+    0 4px 16px -2px rgba(0, 0, 0, 0.5),
+    0 0 45px -8px rgba(254, 128, 64, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
   color: #CCCCCC !important;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Elevated Surfaces: #222222 */
+div[class*="rounded-3xl border"]:hover,
+div[class*="rounded-2xl border"]:hover,
+div[class*="rounded-xl border"]:hover {
+  box-shadow:
+    0 24px 52px -6px rgba(0, 0, 0, 0.9),
+    0 0 50px rgba(254, 128, 64, 0.16),
+    inset 0 1px 0 rgba(254, 128, 64, 0.3) !important;
+  border-color: rgba(254, 128, 64, 0.45) !important;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ELEVATED SURFACES & FROSTED SUB-PANELS
+   ══════════════════════════════════════════════════════════ */
 .bg-elevated,
 div[class*="bg-white/70"],
 div[class*="bg-white/80"],
-div[class*="bg-white/60"] {
-  background-color: #222222 !important;
-  border-color: #303030 !important;
-  color: #CCCCCC !important;
+div[class*="bg-white/60"],
+div[class*="bg-[#121212]"] {
+  background: rgba(16, 16, 18, 0.82) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-color: rgba(255, 255, 255, 0.07) !important;
 }
 
-/* Badges & Pills */
+/* Badges & Tech Pills with Frosted Blur */
 span[class*="px-3.5 py-1"],
 span[class*="px-3 py-1"],
 span[class*="px-2.5 py-1"],
 .tech-pill {
-  background-color: #191919 !important;
-  border: 1px solid #303030 !important;
+  background: rgba(24, 24, 28, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   color: #FE8040 !important;
   font-family: 'JetBrains Mono', monospace !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Primary Action Buttons: Solid Vibrant Orange #FE8040 */
+/* ══════════════════════════════════════════════════════════
+   BUTTONS: VIBRANT ORANGE SHADOW GLOW & BLUR
+   ══════════════════════════════════════════════════════════ */
 button.bg-primary,
 a.bg-primary,
 button[type="submit"],
@@ -158,7 +187,8 @@ button[type="submit"],
   color: #0F0F0F !important;
   font-weight: 700 !important;
   border: 1px solid transparent !important;
-  transition: all 0.2s ease !important;
+  box-shadow: 0 4px 22px rgba(254, 128, 64, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 button.bg-primary:hover,
@@ -167,34 +197,47 @@ button[type="submit"]:hover,
 .btn-orange-primary:hover {
   background-color: #FF995F !important;
   color: #0F0F0F !important;
+  box-shadow: 0 6px 30px rgba(254, 128, 64, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.4) !important;
+  transform: translateY(-1px) !important;
 }
 
-/* Secondary Action Buttons: Elevated Charcoal #191919 with #303030 border */
-.btn-secondary {
-  background-color: #191919 !important;
-  border: 1px solid #303030 !important;
-  color: #F5F5F5 !important;
+/* Secondary Action Buttons & Interactive Pills */
+.btn-secondary,
+a[class*="border border-[#303030]"],
+button[class*="border border-[#303030]"] {
+  background: rgba(24, 24, 28, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.06) !important;
   transition: all 0.2s ease !important;
 }
 
-.btn-secondary:hover {
-  background-color: #222222 !important;
-  border-color: #FE8040 !important;
+.btn-secondary:hover,
+a[class*="border border-[#303030]"]:hover,
+button[class*="border border-[#303030]"]:hover {
+  background: rgba(34, 34, 40, 0.85) !important;
+  border-color: rgba(254, 128, 64, 0.5) !important;
   color: #FE8040 !important;
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.6), 0 0 24px rgba(254, 128, 64, 0.22), inset 0 1px 0 rgba(254, 128, 64, 0.3) !important;
+  transform: translateY(-1px) !important;
 }
 
-/* Inputs & Forms: #121212 with #303030 border */
+/* Inputs & Forms with Frosted Blur & Soft Inner Shadow */
 input, textarea, select {
-  background-color: #121212 !important;
-  border: 1px solid #303030 !important;
+  background: rgba(16, 16, 18, 0.85) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
   color: #F5F5F5 !important;
   font-family: 'Inter', sans-serif !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4) !important;
 }
 
 input:focus, textarea:focus, select:focus {
   border-color: #FE8040 !important;
   outline: none !important;
-  box-shadow: 0 0 0 2px rgba(254, 128, 64, 0.2) !important;
+  box-shadow: 0 0 0 3px rgba(254, 128, 64, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.3) !important;
 }
 
 input::placeholder, textarea::placeholder {
@@ -215,8 +258,8 @@ label {
 
 [class*="bg-[#3a0f34]"],
 [class*="bg-[#501748]"] {
-  background-color: #191919 !important;
-  border-color: #303030 !important;
+  background: rgba(22, 22, 24, 0.75) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
   color: #CCCCCC !important;
 }
 
@@ -228,7 +271,7 @@ label {
 
 [class*="border-[#eaaa00]"],
 [class*="border-[#e34234]"] {
-  border-color: #303030 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* Links hover transition */

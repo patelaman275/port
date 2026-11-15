@@ -18,7 +18,7 @@ import Footer from '@/components/Footer';
 export default function Home() {
   const [preloadProgress, setPreloadProgress] = useState(0);
 
-  // Smooth startup timer (2.2s)
+  // Smooth startup timer (1.8s)
   useEffect(() => {
     const startTime = performance.now();
     const duration = 1800;
@@ -47,6 +47,45 @@ export default function Home() {
 
       {/* Obsidian Ambient Background Canvas */}
       <LiveLavenderBackground />
+
+      {/* Atmospheric Soft Blur Lighting Orbs in Background (Frosted Glass Refraction) */}
+      <div className="fixed inset-0 pointer-events-none -z-5 overflow-hidden">
+        {/* Top-Right Hero Ambient Blur */}
+        <div
+          className="absolute -top-20 -right-20 w-[550px] h-[550px] rounded-full opacity-35"
+          style={{
+            background: 'radial-gradient(circle, rgba(254, 128, 64, 0.16) 0%, rgba(120, 50, 20, 0.05) 55%, transparent 75%)',
+            filter: 'blur(120px)',
+          }}
+        />
+
+        {/* Mid-Left Projects Ambient Blur */}
+        <div
+          className="absolute top-[35%] -left-32 w-[600px] h-[600px] rounded-full opacity-25"
+          style={{
+            background: 'radial-gradient(circle, rgba(254, 128, 64, 0.14) 0%, rgba(90, 40, 15, 0.04) 60%, transparent 80%)',
+            filter: 'blur(140px)',
+          }}
+        />
+
+        {/* Lower-Right Experience Ambient Blur */}
+        <div
+          className="absolute top-[68%] -right-24 w-[550px] h-[550px] rounded-full opacity-30"
+          style={{
+            background: 'radial-gradient(circle, rgba(254, 128, 64, 0.15) 0%, rgba(140, 60, 25, 0.04) 55%, transparent 75%)',
+            filter: 'blur(130px)',
+          }}
+        />
+
+        {/* Footer Ambient Warmth Blur */}
+        <div
+          className="absolute bottom-0 left-[25%] w-[650px] h-[350px] rounded-full opacity-25"
+          style={{
+            background: 'radial-gradient(ellipse at bottom, rgba(254, 128, 64, 0.16) 0%, transparent 70%)',
+            filter: 'blur(110px)',
+          }}
+        />
+      </div>
 
       {/* Loading Intro Experience */}
       <LoadingExperience progress={preloadProgress} />

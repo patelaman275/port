@@ -1,43 +1,41 @@
 'use client';
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, FileText, Bot } from 'lucide-react';
 import InteractiveAnimeCharacter from '@/components/InteractiveAnimeCharacter';
 import Hero3DElement from '@/components/Hero3DElement';
 
+// Animated Hero Name: Starts with "Aman PaXXX", then the 3 letters reveal into "Aman Patel", then stops completely.
 function AnimatedHeroName() {
   const [suffix, setSuffix] = useState('XXX');
   const [isDecoded, setIsDecoded] = useState(false);
   const glyphs = 'XYZ0123456789!@#$%&*?';
 
-  const runDecodeAnimation = useCallback(() => {
-    setIsDecoded(false);
-    setSuffix('XXX');
-
-    // Step 1: Brief start delay
+  useEffect(() => {
+    // Starts with "Aman PaXXX", then after brief initial load timer, decodes into "Aman Patel" and stops completely
     const startTimer = setTimeout(() => {
       let step = 0;
       const interval = setInterval(() => {
         step++;
 
         if (step < 6) {
-          // Scramble all 3 letters
+          // Rapid scramble of the 3 letters
           const c1 = glyphs[Math.floor(Math.random() * glyphs.length)];
           const c2 = glyphs[Math.floor(Math.random() * glyphs.length)];
           const c3 = glyphs[Math.floor(Math.random() * glyphs.length)];
           setSuffix(c1 + c2 + c3);
         } else if (step < 10) {
-          // Letter 1 resolves: 't'
+          // 1st letter resolves to 't'
           const c2 = glyphs[Math.floor(Math.random() * glyphs.length)];
           const c3 = glyphs[Math.floor(Math.random() * glyphs.length)];
           setSuffix('t' + c2 + c3);
         } else if (step < 14) {
-          // Letter 2 resolves: 'te'
+          // 2nd letter resolves to 'te'
           const c3 = glyphs[Math.floor(Math.random() * glyphs.length)];
           setSuffix('te' + c3);
         } else {
-          // Full resolution: 'tel' -> Aman Patel
+          // Final letter resolves to 'tel' -> Aman Patel (stops completely, no further change)
           setSuffix('tel');
           setIsDecoded(true);
           clearInterval(interval);
@@ -45,24 +43,14 @@ function AnimatedHeroName() {
       }, 50);
 
       return () => clearInterval(interval);
-    }, 450);
+    }, 400);
 
     return () => clearTimeout(startTimer);
   }, []);
 
-  useEffect(() => {
-    const cleanup = runDecodeAnimation();
-    return () => {
-      if (cleanup) cleanup();
-    };
-  }, [runDecodeAnimation]);
-
   return (
     <h1
-      onMouseEnter={() => {
-        if (isDecoded) runDecodeAnimation();
-      }}
-      className="font-bold tracking-[-0.03em] leading-none text-[#F5F5F5] cursor-default select-none group"
+      className="font-bold tracking-[-0.03em] leading-none text-[#F5F5F5] select-none"
       style={{
         fontFamily: "var(--font-space-grotesk), 'Space Grotesk', sans-serif",
         fontSize: 'clamp(3.5rem, 8vw, 6.5rem)',
@@ -110,7 +98,7 @@ export default function OverlayText() {
             <Hero3DElement />
           </motion.div>
 
-          {/* Animated Name: Starts as Aman PaXXX -> decodes into Aman Patel */}
+          {/* Animated Name: Starts as Aman PaXXX -> decodes into Aman Patel and stops */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -149,7 +137,7 @@ export default function OverlayText() {
             </p>
           </motion.div>
 
-          {/* Action Buttons — Obsidian Orange */}
+          {/* Action Buttons — Obsidian Orange with Glass Blur & Shadow */}
           <motion.div
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
@@ -158,7 +146,10 @@ export default function OverlayText() {
           >
             <a
               href="#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-xs md:text-sm bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-all shadow-md hover:-translate-y-0.5 cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-xs md:text-sm bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-all cursor-pointer shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5"
+              style={{
+                boxShadow: '0 4px 20px rgba(254, 128, 64, 0.35)',
+              }}
             >
               <span>View Projects</span>
               <ArrowRight className="w-4 h-4 text-[#0F0F0F]" />
@@ -168,7 +159,7 @@ export default function OverlayText() {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919] text-[#F5F5F5] hover:bg-[#222222] hover:text-[#FE8040] border border-[#303030] hover:border-[#FE8040] transition-all shadow-sm hover:-translate-y-0.5 cursor-pointer"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919]/80 backdrop-blur-md text-[#F5F5F5] hover:bg-[#222222] hover:text-[#FE8040] border border-[#303030] hover:border-[#FE8040] transition-all shadow-md hover:-translate-y-0.5 cursor-pointer"
             >
               <FileText className="w-4 h-4 text-[#999999]" />
               <span>Resume</span>
@@ -176,7 +167,7 @@ export default function OverlayText() {
 
             <button
               onClick={handleOpenChat}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919] hover:bg-[#222222] text-[#FE8040] border border-[#303030] hover:border-[#FE8040] transition-all cursor-pointer shadow-sm hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919]/80 backdrop-blur-md text-[#FE8040] border border-[#303030] hover:border-[#FE8040] hover:bg-[#222222] transition-all cursor-pointer shadow-md hover:-translate-y-0.5"
               title="Open AI Assistant"
             >
               <Bot className="w-4 h-4 text-[#FE8040]" />

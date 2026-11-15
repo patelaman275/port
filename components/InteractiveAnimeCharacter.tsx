@@ -12,23 +12,25 @@ export default function InteractiveAnimeCharacter({
 }: InteractiveAnimeCharacterProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
+  // Pupil offset (px) for dynamic eye gaze tracking
+  const [pupilOffset, setPupilOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   // Head / face 3D rotation and translation
   const [faceTransform, setFaceTransform] = useState({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
-  // Dynamic glasses lens reflection glint position
-  const [lensGlint, setLensGlint] = useState({ x: 50, y: 38, opacity: 0.2 });
   const [isBlinking, setIsBlinking] = useState(false);
 
   // Smooth lerp targets for 60fps animation
+  const targetPupil = useRef({ x: 0, y: 0 });
+  const currentPupil = useRef({ x: 0, y: 0 });
   const targetFace = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
   const currentFace = useRef({ rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 });
   const animFrameId = useRef<number | null>(null);
 
-  // Natural Blinking Loop (every 3 to 6 seconds with occasional double blink)
+  // Natural Blinking Loop (every 3.0 to 5.5 seconds with occasional double blink)
   useEffect(() => {
     let blinkTimeout: ReturnType<typeof setTimeout>;
 
     const scheduleBlink = () => {
-      const nextInterval = 3000 + Math.random() * 2800;
+      const nextInterval = 3000 + Math.random() * 2500;
       blinkTimeout = setTimeout(() => {
         setIsBlinking(true);
 
@@ -47,7 +49,7 @@ export default function InteractiveAnimeCharacter({
           } else {
             scheduleBlink();
           }
-        }, 130);
+        }, 125);
       }, nextInterval);
     };
 
@@ -55,9 +57,13 @@ export default function InteractiveAnimeCharacter({
     return () => clearTimeout(blinkTimeout);
   }, []);
 
-  // Smooth 60fps lerp animation loop for head 3D rotation
+  // Smooth 60fps lerp animation loop for both pupil tracking and head 3D rotation
   const animate = useCallback(() => {
-    const factor = 0.11;
+    const factor = 0.12;
+
+    // Smooth pupils gaze tracking lerp
+    currentPupil.current.x += (targetPupil.current.x - currentPupil.current.x) * factor;
+    currentPupil.current.y += (targetPupil.current.y - currentPupil.current.y) * factor;
 
     // Smooth face 3D rotation & translation lerp
     currentFace.current.rotX += (targetFace.current.rotX - currentFace.current.rotX) * factor;
@@ -66,19 +72,17 @@ export default function InteractiveAnimeCharacter({
     currentFace.current.x += (targetFace.current.x - currentFace.current.x) * factor;
     currentFace.current.y += (targetFace.current.y - currentFace.current.y) * factor;
 
+    setPupilOffset({
+      x: Number(currentPupil.current.x.toFixed(2)),
+      y: Number(currentPupil.current.y.toFixed(2)),
+    });
+
     setFaceTransform({
       rotX: Number(currentFace.current.rotX.toFixed(3)),
       rotY: Number(currentFace.current.rotY.toFixed(3)),
       rotZ: Number(currentFace.current.rotZ.toFixed(3)),
       x: Number(currentFace.current.x.toFixed(2)),
       y: Number(currentFace.current.y.toFixed(2)),
-    });
-
-    // Dynamic lens light sheen follows head angle
-    setLensGlint({
-      x: 50 + currentFace.current.rotY * 1.8,
-      y: 36 - currentFace.current.rotX * 1.2,
-      opacity: 0.15 + Math.abs(currentFace.current.rotY) * 0.015,
     });
 
     animFrameId.current = requestAnimationFrame(animate);
@@ -98,6 +102,7 @@ export default function InteractiveAnimeCharacter({
     const isMobileScreen = window.innerWidth < 768;
 
     if (prefersReducedMotion || (isTouchDevice && isMobileScreen)) {
+      targetPupil.current = { x: 0, y: 0 };
       targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
       return;
     }
@@ -107,12 +112,12 @@ export default function InteractiveAnimeCharacter({
 
       const rect = containerRef.current.getBoundingClientRect();
 
-      // Eye & face center in viewport coordinates
-      const faceCenterX = rect.left + rect.width * 0.5;
-      const faceCenterY = rect.top + rect.height * 0.42;
+      // Eye center in viewport coordinates
+      const eyeCenterX = rect.left + rect.width * 0.51;
+      const eyeCenterY = rect.top + rect.height * 0.36;
 
-      const deltaX = e.clientX - faceCenterX;
-      const deltaY = e.clientY - faceCenterY;
+      const deltaX = e.clientX - eyeCenterX;
+      const deltaY = e.clientY - eyeCenterY;
 
       // Normalized coordinates (-1 to +1) based on screen dimensions
       const screenHalfW = Math.max(window.innerWidth * 0.5, 400);
@@ -121,7 +126,7 @@ export default function InteractiveAnimeCharacter({
       const nx = Math.max(-1, Math.min(1, deltaX / screenHalfW));
       const ny = Math.max(-1, Math.min(1, deltaY / screenHalfH));
 
-      // Ease curve: natural, responsive, and smoothly bounded at edges
+      // Ease curve: responsive, natural tracking
       const dist = Math.hypot(nx, ny);
       const ease = dist > 0 ? Math.pow(Math.min(dist, 1), 0.85) : 0;
       const angle = Math.atan2(ny, nx);
@@ -129,18 +134,25 @@ export default function InteractiveAnimeCharacter({
       const easedX = Math.cos(angle) * ease;
       const easedY = Math.sin(angle) * ease;
 
-      // ── Face 3D Head Turn (Yaw, Pitch, Roll) ─────────────────
-      // Pupils stay naturally part of the face (no detached pupil movement)
+      // ── 1. ACTIVE PUPIL MOVEMENT (Gaze follows mouse pointer) ──
+      // Pupils shift smoothly within the eye sockets: ±5.5px horizontally, ±3.5px vertically
+      targetPupil.current = {
+        x: easedX * 5.5,
+        y: easedY * 3.5,
+      };
+
+      // ── 2. HEAD 3D ROTATION (Head turns naturally with gaze) ──
       targetFace.current = {
-        rotX: -easedY * 14,
-        rotY: easedX * 20,
-        rotZ: easedX * 2.8,
-        x: easedX * 16,
-        y: easedY * 10,
+        rotX: -easedY * 12,
+        rotY: easedX * 16,
+        rotZ: easedX * 2.2,
+        x: easedX * 12,
+        y: easedY * 8,
       };
     };
 
     const handleMouseLeave = () => {
+      targetPupil.current = { x: 0, y: 0 };
       targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
     };
 
@@ -163,40 +175,24 @@ export default function InteractiveAnimeCharacter({
       <div
         className="absolute inset-0 rounded-3xl pointer-events-none -z-10"
         style={{
-          background: 'radial-gradient(ellipse at 50% 50%, rgba(254,128,64,0.18) 0%, rgba(100,50,20,0.06) 55%, transparent 75%)',
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(254,128,64,0.20) 0%, rgba(100,50,20,0.06) 55%, transparent 75%)',
+          filter: 'blur(20px)',
         }}
       />
 
       {/* ══════════════════════════════════════════════════════════
           1. STATIC OUTER CARD FRAME (Does NOT tilt or move)
-          Anchored firmly with clean charcoal border and obsidian shadow
+          Anchored firmly with clean charcoal border and glass blur shadow
           ══════════════════════════════════════════════════════════ */}
       <div
-        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#303030] shadow-2xl bg-[#090204]"
+        className="relative w-full h-full rounded-2xl md:rounded-3xl overflow-hidden border border-[#303030] bg-[#090204]/90 backdrop-blur-xl"
         style={{
-          boxShadow: '0 0 50px rgba(254,128,64,0.08), 0 25px 50px rgba(0,0,0,0.85)',
+          boxShadow: '0 16px 40px -8px rgba(0,0,0,0.85), 0 0 45px rgba(254,128,64,0.12), inset 0 1px 0 rgba(255,255,255,0.08)',
           perspective: '1200px',
         }}
       >
-        {/* Subtle obsidian ambient particles in background */}
-        <div className="absolute inset-0 pointer-events-none opacity-40">
-          <div
-            className="absolute w-2 h-2 rounded-full bg-[#FE8040]/30 blur-xs"
-            style={{ top: '18%', left: '12%' }}
-          />
-          <div
-            className="absolute w-1.5 h-1.5 rounded-full bg-[#FE8040]/35 blur-xs"
-            style={{ top: '68%', right: '15%' }}
-          />
-          <div
-            className="absolute w-1 h-1 rounded-full bg-white/40"
-            style={{ top: '32%', right: '22%' }}
-          />
-        </div>
-
         {/* ══════════════════════════════════════════════════════════
-            2. 3D MOVING CHARACTER RIG (Head moves with mouse)
-            Uses character.png (complete with natural dark pupils)
+            2. 3D MOVING CHARACTER RIG (Head turns, pupils track cursor)
             Scaled (1.14) so 3D rotation never reveals frame edges
             ══════════════════════════════════════════════════════════ */}
         <div
@@ -214,11 +210,11 @@ export default function InteractiveAnimeCharacter({
             transition: 'transform 0.04s linear',
           }}
         >
-          {/* Complete Character Portrait with Natural Dark Pupils */}
+          {/* Layer 1: Base Character Portrait (Face, hair, body, white eye sockets) */}
           <div className="absolute inset-0 pointer-events-none">
             <Image
-              src="/character.png"
-              alt="Aman Patel Character Portrait"
+              src="/character-base.png"
+              alt="Aman Patel Character"
               fill
               priority
               sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
@@ -226,7 +222,38 @@ export default function InteractiveAnimeCharacter({
             />
           </div>
 
-          {/* Natural Anime Eyelid Blink (Only appears during 130ms blink) */}
+          {/* Layer 2: ACTIVE PUPIL MOVEMENT (Pupils shift with cursor within eye sockets!) */}
+          <div
+            className="absolute inset-0 pointer-events-none will-change-transform"
+            style={{
+              transform: `translate3d(${pupilOffset.x}px, ${pupilOffset.y}px, 0)`,
+              transition: 'transform 0.04s linear',
+            }}
+          >
+            <Image
+              src="/pupils.png"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
+              className="object-cover object-center pointer-events-none"
+            />
+          </div>
+
+          {/* Layer 3: Glasses Frames & Eyelash Overlay (Locked at 0 offset so glasses never double!)
+              Placed in FRONT of pupils so pupils realistically move behind glasses and eyelashes */}
+          <div className="absolute inset-0 pointer-events-none">
+            <Image
+              src="/eyelid-overlay.png"
+              alt=""
+              fill
+              priority
+              sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
+              className="object-cover object-center pointer-events-none"
+            />
+          </div>
+
+          {/* Layer 4: Natural Anime Eyelid Blink (Smooth 125ms blink) */}
           <div
             className="absolute inset-0 pointer-events-none transition-opacity"
             style={{
@@ -240,33 +267,6 @@ export default function InteractiveAnimeCharacter({
               fill
               sizes="(max-width: 768px) 320px, (max-width: 1200px) 460px, 520px"
               className="object-cover object-center pointer-events-none"
-            />
-          </div>
-
-          {/* Dynamic 3D Glasses Lens Specular Glint */}
-          <div
-            className="absolute inset-0 pointer-events-none overflow-hidden"
-            style={{ transform: 'translateZ(15px)' }}
-          >
-            <div
-              className="absolute w-20 h-14 rounded-full blur-md transition-all duration-75"
-              style={{
-                top: `${lensGlint.y}%`,
-                left: `${lensGlint.x - 12}%`,
-                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.4) 0%, rgba(254,128,64,0.18) 50%, transparent 80%)',
-                opacity: lensGlint.opacity,
-                transform: `rotate(${faceTransform.rotY * 1.5 - 18}deg)`,
-              }}
-            />
-            <div
-              className="absolute w-18 h-12 rounded-full blur-md transition-all duration-75"
-              style={{
-                top: `${lensGlint.y}%`,
-                left: `${lensGlint.x + 14}%`,
-                background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.35) 0%, rgba(254,128,64,0.15) 50%, transparent 80%)',
-                opacity: lensGlint.opacity,
-                transform: `rotate(${faceTransform.rotY * 1.5 - 18}deg)`,
-              }}
             />
           </div>
         </div>
