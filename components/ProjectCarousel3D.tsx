@@ -165,7 +165,6 @@ const PROJECTS: Project[] = [
 export default function ProjectCarousel3D() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeArchProject, setActiveArchProject] = useState<Project | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
 
   // Interactive Architecture State
   const [archZoom, setArchZoom] = useState(1);
@@ -182,15 +181,15 @@ export default function ProjectCarousel3D() {
     setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
   };
 
-  // Auto-slide every 4 seconds (paused on hover or when modal is open)
+  // Auto-slide every 4 seconds continuously (only paused if architecture modal is open)
   useEffect(() => {
-    if (isPaused || activeArchProject) return;
+    if (activeArchProject) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
     }, 4000);
 
     return () => clearInterval(interval);
-  }, [isPaused, activeArchProject]);
+  }, [activeArchProject]);
 
   // Reset zoom & stage when a new architecture modal opens
   useEffect(() => {
@@ -204,8 +203,6 @@ export default function ProjectCarousel3D() {
   return (
     <section
       id="projects"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       className="relative bg-transparent text-[#CCCCCC] py-16 sm:py-20 px-4 sm:px-6 lg:px-8 max-w-full overflow-hidden"
     >
       <div className="w-full max-w-5xl mx-auto">
@@ -222,10 +219,6 @@ export default function ProjectCarousel3D() {
             >
               Engineering &amp; <span className="text-[#FE8040]">AI Systems</span>
             </h2>
-
-            <p className="text-sm sm:text-base text-[#999999] mt-1.5 max-w-xl font-normal leading-relaxed">
-              Auto-sliding showcase of production systems (every 4s). Hover to pause, click architecture for interactive zoom &amp; pipeline telemetry.
-            </p>
           </div>
 
           {/* Carousel Navigation Controls */}
