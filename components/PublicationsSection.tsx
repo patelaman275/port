@@ -5,7 +5,7 @@ import { ExternalLink, BookMarked } from 'lucide-react';
 
 export default function PublicationsSection() {
   return (
-    <section id="publications" className="relative py-16 sm:py-20 px-6 md:px-12 lg:px-20 overflow-hidden bg-transparent">
+    <section id="publications" className="relative py-14 sm:py-20 px-4 sm:px-8 md:px-12 lg:px-20 overflow-hidden bg-transparent">
       <div className="max-w-4xl mx-auto relative z-10">
         {/* Header */}
         <div className="mb-10">
@@ -26,7 +26,7 @@ export default function PublicationsSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="p-6 sm:p-8 rounded-xl border border-[#303030] bg-[#191919] text-[#CCCCCC] shadow-md group"
+          className="p-5 sm:p-8 rounded-xl border border-[#303030] bg-[#191919] text-[#CCCCCC] shadow-md group"
         >
           {/* Card Top Titlebar */}
           <div className="flex items-center justify-between pb-3 mb-4 border-b border-[#303030]">

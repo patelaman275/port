@@ -129,7 +129,7 @@ export default function Footer() {
       {/* 3D Lucknow Earth Zoom Animation Modal */}
       <LucknowEarthModal isOpen={showEarthModal} onClose={() => setShowEarthModal(false)} />
 
-      <div className="max-w-4xl mx-auto px-6 py-16 sm:py-20">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
         {/* Section Heading */}
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-[#191919] border border-[#303030] text-[#FE8040] text-xs font-bold tracking-wider uppercase shadow-sm mb-3 font-mono">
@@ -167,8 +167,8 @@ export default function Footer() {
             </span>
           </div>
 
-          <form onSubmit={handleSubmit} className="p-6 md:p-8 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="p-4 sm:p-6 md:p-8 space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
               <div>
                 <label className="block text-xs font-semibold text-[#F5F5F5] mb-1.5">
                   Name <span className="text-[#FE8040]">*</span>
@@ -179,7 +179,7 @@ export default function Footer() {
                   placeholder="e.g. Sarah Connor"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] placeholder-[#777777] text-xs focus:outline-none focus:border-[#FE8040] transition-all"
+                  className="w-full px-3.5 sm:px-4 py-2.5 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] placeholder-[#777777] text-base sm:text-xs focus:outline-none focus:border-[#FE8040] transition-all"
                 />
               </div>
 
@@ -193,7 +193,7 @@ export default function Footer() {
                   placeholder="e.g. sarah@company.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] placeholder-[#777777] text-xs focus:outline-none focus:border-[#FE8040] transition-all"
+                  className="w-full px-3.5 sm:px-4 py-2.5 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] placeholder-[#777777] text-base sm:text-xs focus:outline-none focus:border-[#FE8040] transition-all"
                 />
               </div>
             </div>
@@ -205,7 +205,7 @@ export default function Footer() {
               <select
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                className="w-full px-4 py-2.5 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] text-xs focus:outline-none focus:border-[#FE8040] transition-all cursor-pointer"
+                className="w-full px-3.5 sm:px-4 py-2.5 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] text-base sm:text-xs focus:outline-none focus:border-[#FE8040] transition-all cursor-pointer"
               >
                 <option value="Full-Time / Internship Opportunity">Full-Time / Internship Opportunity</option>
                 <option value="Software Engineer Role">Software Engineer Role</option>
@@ -226,7 +226,7 @@ export default function Footer() {
                 placeholder="Tell me about the role, project, or what you'd like to collaborate on..."
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-4 py-3 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] placeholder-[#777777] text-xs focus:outline-none focus:border-[#FE8040] transition-all resize-none"
+                className="w-full px-3.5 sm:px-4 py-3 rounded-lg bg-[#121212] border border-[#303030] text-[#F5F5F5] placeholder-[#777777] text-base sm:text-xs focus:outline-none focus:border-[#FE8040] transition-all resize-none"
               />
             </div>
 

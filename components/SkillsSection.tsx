@@ -80,56 +80,59 @@ const SKILL_GROUPS: SkillGroup[] = [
       { name: 'Java', projects: ['leetcode'], highlightText: 'Primary language for 250+ LeetCode DSA problem solving & OOP certification.' },
       { name: 'Python', projects: ['chicktech'], highlightText: 'Deep learning pipeline training (TensorFlow/Keras) & Flask inference APIs.' },
       { name: 'JavaScript', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'Full-stack development across Node.js event loops, Socket.io & React.' },
-      { name: 'TypeScript', projects: ['chicktech', 'campusconnect'], highlightText: 'Type-safe Next.js architecture, component interfaces & server handlers.' },
-      { name: 'SQL', projects: ['campusconnect'], highlightText: 'Relational schema modeling, indexed foreign key relations & queries.' },
+      { name: 'SQL', projects: ['campusconnect'], highlightText: 'Relational schema modeling, indexed foreign key relations & Coursera certified.' },
       { name: 'C/C++', projects: ['leetcode'], highlightText: 'Low-level memory management, pointers & algorithmic execution.' },
     ],
   },
   {
-    id: 'frontend',
-    label: 'Frontend',
-    icon: <Layers className="w-4 h-4 text-[#FE8040]" />,
-    skills: [
-      { name: 'React.js', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'SPAs, custom reactive hooks, real-time state & Leaflet map rendering.' },
-      { name: 'Next.js', projects: ['chicktech'], highlightText: 'App Router architecture, SSR rendering & edge route processing.' },
-      { name: 'Tailwind CSS', projects: ['chicktech', 'easytrip', 'careerpath'], highlightText: 'Custom utility design systems & fluid responsive layouts.' },
-      { name: 'WebSockets', projects: ['easytrip'], highlightText: 'Sub-500ms bidirectional event streaming for live GPS coordinates.' },
-      { name: 'HTML5/CSS3', projects: ['chicktech', 'easytrip'], highlightText: 'Semantic DOM accessibility, SVG canvas & hardware-accelerated animations.' },
-    ],
-  },
-  {
     id: 'backend',
-    label: 'Backend',
+    label: 'Backend & Web',
     icon: <Terminal className="w-4 h-4 text-[#FE8040]" />,
     skills: [
       { name: 'Node.js', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'Event-driven server runtime handling concurrent connections & REST APIs.' },
       { name: 'Express.js', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'Modular REST API routing, custom auth middleware & pipelines.' },
-      { name: 'Socket.io', projects: ['easytrip'], highlightText: 'Live GPS coordinate streaming & emergency SOS distress alerts.' },
       { name: 'Flask', projects: ['chicktech'], highlightText: 'Python microservice serving TensorFlow model inferences.' },
       { name: 'REST APIs', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'Stateless endpoints, standardized JSON schemas & rate-limiting.' },
-      { name: 'JWT Auth', projects: ['easytrip', 'campusconnect'], highlightText: 'Stateless token authentication with encrypted payload claims.' },
+      { name: 'Socket.io', projects: ['easytrip'], highlightText: 'Live GPS coordinate streaming & emergency SOS distress alerts.' },
+      { name: 'React.js', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'SPAs, custom reactive hooks, real-time state & Leaflet map rendering.' },
+      { name: 'Next.js', projects: ['chicktech'], highlightText: 'App Router architecture, SSR rendering & edge route processing.' },
+    ],
+  },
+  {
+    id: 'aiml',
+    label: 'AI & Machine Learning',
+    icon: <Layers className="w-4 h-4 text-[#FE8040]" />,
+    skills: [
+      { name: 'TensorFlow', projects: ['chicktech'], highlightText: 'Dual-pipeline CNN architecture (VGG16 + MobileNetV2) reaching 98.2% accuracy.' },
+      { name: 'Deep Learning / CNNs', projects: ['chicktech'], highlightText: 'ICCCNet 2026 published research on avian disease image classification.' },
+      { name: 'Gemini API & RAG', projects: ['chicktech'], highlightText: 'Retrieval-augmented generation grounding LLM Q&A on poultry pathology data.' },
+      { name: 'OpenAI API (GPT-4)', projects: ['careerpath'], highlightText: 'Prompt engineering for personalized roadmap synthesis & ATS parsing.' },
+      { name: 'NLP & LLMs', projects: ['careerpath', 'chicktech'], highlightText: 'Context-aware skill parsing, token optimization & multi-turn dialog.' },
+    ],
+  },
+  {
+    id: 'cloud',
+    label: 'Cloud & DevOps (AWS)',
+    icon: <Wrench className="w-4 h-4 text-[#FE8040]" />,
+    skills: [
+      { name: 'AWS (EC2, S3, Lambda)', projects: ['chicktech'], highlightText: 'Certified AI Practitioner & Cloud Practitioner on Credly.' },
+      { name: 'IAM, VPC, CloudWatch', projects: ['chicktech'], highlightText: 'Identity access policies, virtual private clouds, monitoring & metrics.' },
+      { name: 'Docker', projects: ['easytrip'], highlightText: 'Containerizing Node.js and Python microservices for production.' },
+      { name: 'Terraform (basics)', projects: ['chicktech'], highlightText: 'Infrastructure-as-code configuration and automated provisioning.' },
+      { name: 'Git & GitHub', projects: ['chicktech', 'easytrip', 'careerpath', 'campusconnect'], highlightText: 'Version control, feature branching & open-source collaboration.' },
+      { name: 'Postman & Vite', projects: ['easytrip', 'careerpath'], highlightText: 'API test suites, automated mock environments & fast bundling.' },
     ],
   },
   {
     id: 'databases',
-    label: 'Databases',
+    label: 'Databases & Core CS',
     icon: <Database className="w-4 h-4 text-[#FE8040]" />,
     skills: [
-      { name: 'MongoDB Atlas', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'Document schema design, geospatial 2dsphere indexing & aggregation.' },
       { name: 'MySQL', projects: ['campusconnect'], highlightText: 'Relational ACID storage, normalized entities & foreign key constraints.' },
-      { name: 'Firebase', projects: ['chicktech'], highlightText: 'Real-time database synching & cloud image storage.' },
-    ],
-  },
-  {
-    id: 'tools',
-    label: 'Cloud & Tools',
-    icon: <Wrench className="w-4 h-4 text-[#FE8040]" />,
-    skills: [
-      { name: 'AWS (Certified)', projects: ['chicktech'], highlightText: 'AWS Certified AI Practitioner & Cloud Practitioner on Credly.' },
-      { name: 'Docker', projects: ['easytrip'], highlightText: 'Containerizing Node.js and Python microservices for production.' },
-      { name: 'Git / GitHub', projects: ['chicktech', 'easytrip', 'careerpath', 'campusconnect'], highlightText: 'Version control, feature branching & open-source collaboration.' },
-      { name: 'Postman', projects: ['easytrip', 'careerpath'], highlightText: 'API test suites, automated mock environments & contract verification.' },
-      { name: 'Vercel / Vite', projects: ['chicktech', 'easytrip', 'careerpath', 'campusconnect'], highlightText: 'Continuous deployment pipelines & bundle tree-shaking.' },
+      { name: 'MongoDB Atlas', projects: ['easytrip', 'careerpath', 'campusconnect'], highlightText: 'Document schema design, geospatial 2dsphere indexing & aggregation.' },
+      { name: 'DynamoDB & Firebase', projects: ['chicktech'], highlightText: 'NoSQL key-value caching, real-time database synching & cloud storage.' },
+      { name: 'DSA & OOP', projects: ['leetcode'], highlightText: 'Data structures & algorithms: 250+ LeetCode problems, 100 Days Badge.' },
+      { name: 'DBMS & OS & Networks', projects: ['campusconnect'], highlightText: 'Operating systems processes, computer networks TCP/UDP & database transactions.' },
     ],
   },
 ];
@@ -138,7 +141,7 @@ export default function SkillsSection() {
   const [selectedSkill, setSelectedSkill] = useState<SkillItem | null>(null);
 
   return (
-    <section id="skills" className="relative py-16 sm:py-20 px-6 md:px-12 lg:px-20 overflow-hidden bg-transparent">
+    <section id="skills" className="relative py-14 sm:py-20 px-4 sm:px-8 md:px-12 lg:px-20 overflow-hidden bg-transparent">
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Section Header */}
         <div className="mb-10">
@@ -165,7 +168,7 @@ export default function SkillsSection() {
               className="flex flex-col md:flex-row md:items-center gap-3 md:gap-5 p-4 rounded-xl border border-[#303030] bg-[#191919] shadow-sm"
             >
               {/* Group Label */}
-              <div className="w-36 flex-shrink-0 flex items-center gap-2.5">
+              <div className="w-full md:w-44 flex-shrink-0 flex items-center gap-2.5 pb-2 md:pb-0 border-b md:border-b-0 border-[#252525]">
                 <span className="p-1.5 rounded-lg bg-[#121212] border border-[#303030] text-[#FE8040]">
                   {group.icon}
                 </span>

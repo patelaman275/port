@@ -203,6 +203,13 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
       prevMousePos = { x: e.clientX, y: e.clientY };
     };
 
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        isDragging = true;
+        prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      }
+    };
+
     const onMouseMove = (e: MouseEvent) => {
       if (!isDragging) return;
       const dx = e.clientX - prevMousePos.x;
@@ -221,13 +228,38 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
       earthGroup.quaternion.multiplyQuaternions(deltaQuatX, earthGroup.quaternion);
     };
 
+    const onTouchMove = (e: TouchEvent) => {
+      if (!isDragging || e.touches.length === 0) return;
+      const dx = e.touches[0].clientX - prevMousePos.x;
+      const dy = e.touches[0].clientY - prevMousePos.y;
+      prevMousePos = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+
+      const deltaQuatY = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(0, 1, 0),
+        dx * 0.005
+      );
+      const deltaQuatX = new THREE.Quaternion().setFromAxisAngle(
+        new THREE.Vector3(1, 0, 0),
+        dy * 0.005
+      );
+      earthGroup.quaternion.multiplyQuaternions(deltaQuatY, earthGroup.quaternion);
+      earthGroup.quaternion.multiplyQuaternions(deltaQuatX, earthGroup.quaternion);
+    };
+
     const onMouseUp = () => {
       isDragging = false;
     };
 
+    const onTouchEnd = () => {
+      isDragging = false;
+    };
+
     container.addEventListener('mousedown', onMouseDown);
+    container.addEventListener('touchstart', onTouchStart, { passive: true });
     window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('touchmove', onTouchMove, { passive: true });
     window.addEventListener('mouseup', onMouseUp);
+    window.addEventListener('touchend', onTouchEnd, { passive: true });
 
     const render = () => {
       animId = requestAnimationFrame(render);
@@ -269,8 +301,11 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
       cancelAnimationFrame(animId);
       ro.disconnect();
       container.removeEventListener('mousedown', onMouseDown);
+      container.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('mouseup', onMouseUp);
+      window.removeEventListener('touchend', onTouchEnd);
       if (renderer.domElement && container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -297,7 +332,7 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
       <div
         role="dialog"
         aria-modal="true"
-        className="fixed inset-0 z-[99999] flex items-center justify-center p-3 sm:p-6 bg-black/90 backdrop-blur-lg select-none"
+        className="fixed inset-0 z-[99999] flex items-center justify-center p-2.5 sm:p-6 bg-black/90 backdrop-blur-lg select-none"
         onClick={onClose}
       >
         <motion.div
@@ -305,7 +340,7 @@ export default function LucknowEarthModal({ isOpen, onClose }: LucknowEarthModal
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 15 }}
           transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-4xl h-[86vh] max-h-[680px] rounded-2xl border border-[#303030] shadow-2xl bg-[#090b0e] overflow-hidden flex flex-col"
+          className="relative w-full max-w-4xl h-[92vh] sm:h-[86vh] max-h-[680px] rounded-2xl border border-[#303030] shadow-2xl bg-[#090b0e] overflow-hidden flex flex-col"
           onClick={(e) => e.stopPropagation()}
           style={{
             boxShadow: '0 0 70px rgba(254,128,64,0.12), 0 30px 60px rgba(0,0,0,0.9)',

@@ -22,13 +22,13 @@ export default function ResumeSection() {
   return (
     <section
       id="resume"
-      className="relative py-24 px-6 md:px-12 lg:px-20 overflow-hidden bg-transparent"
+      className="relative py-14 sm:py-24 px-4 sm:px-6 md:px-12 lg:px-20 overflow-hidden bg-transparent"
     >
       {/* Earth Modal triggerable from location badge */}
       <LucknowEarthModal isOpen={showEarthModal} onClose={() => setShowEarthModal(false)} />
 
       {/* Header */}
-      <div className="text-center mb-14 relative z-10">
+      <div className="text-center mb-10 sm:mb-14 relative z-10">
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -52,7 +52,7 @@ export default function ResumeSection() {
       </div>
 
       <div className="max-w-5xl mx-auto relative z-10">
-        <div className="p-8 md:p-12 rounded-2xl border border-[#303030] hover:border-[#FE8040]/50 shadow-2xl relative overflow-hidden group bg-[#191919] transition-all duration-300">
+        <div className="p-5 sm:p-8 md:p-12 rounded-2xl border border-[#303030] hover:border-[#FE8040]/50 shadow-2xl relative overflow-hidden group bg-[#191919] transition-all duration-300">
           {/* Top highlight bar */}
           <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-[#FE8040] to-transparent" />
 

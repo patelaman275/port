@@ -37,6 +37,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    -webkit-tap-highlight-color: transparent;
   }
 
   body {
@@ -48,6 +49,7 @@
     color: #CCCCCC;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     letter-spacing: -0.01em;
+    -webkit-tap-highlight-color: transparent;
   }
 
   /* Headings: Space Grotesk */

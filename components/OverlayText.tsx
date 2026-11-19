@@ -53,7 +53,7 @@ function AnimatedHeroName() {
       className="font-bold tracking-[-0.03em] leading-none text-[#F5F5F5] select-none"
       style={{
         fontFamily: "var(--font-space-grotesk), 'Space Grotesk', sans-serif",
-        fontSize: 'clamp(3.5rem, 8vw, 6.5rem)',
+        fontSize: 'clamp(2.4rem, 10vw, 6.5rem)',
         lineHeight: '0.96',
       }}
     >
@@ -82,8 +82,8 @@ export default function OverlayText() {
   };
 
   return (
-    <section className="relative min-h-[88vh] flex items-center justify-center text-left px-6 sm:px-10 md:px-14 lg:px-20 py-12 sm:py-20 overflow-hidden bg-transparent">
-      <div className="w-full max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between gap-10 lg:gap-14 z-10">
+    <section className="relative min-h-[88vh] flex items-center justify-center text-left px-4 sm:px-8 md:px-14 lg:px-20 py-10 sm:py-20 overflow-hidden bg-transparent">
+      <div className="w-full max-w-6xl mx-auto flex flex-col-reverse lg:flex-row items-center justify-between gap-8 sm:gap-10 lg:gap-14 z-10">
 
         {/* ── Left: Typography & Actions ── */}
         <div className="flex-1 flex flex-col items-start gap-4 sm:gap-5 text-left max-w-2xl">
@@ -142,11 +142,11 @@ export default function OverlayText() {
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.52 }}
-            className="flex flex-wrap items-center gap-3 pt-2"
+            className="flex flex-wrap items-center gap-2.5 sm:gap-3 pt-2 w-full sm:w-auto"
           >
             <a
               href="#projects"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-semibold text-xs md:text-sm bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-all cursor-pointer shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold text-xs md:text-sm bg-[#FE8040] hover:bg-[#FF995F] text-[#0F0F0F] transition-all cursor-pointer shadow-lg hover:shadow-orange-500/30 hover:-translate-y-0.5 flex-1 sm:flex-initial"
               style={{
                 boxShadow: '0 4px 20px rgba(254, 128, 64, 0.35)',
               }}
@@ -159,7 +159,7 @@ export default function OverlayText() {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919]/80 backdrop-blur-md text-[#F5F5F5] hover:bg-[#222222] hover:text-[#FE8040] border border-[#303030] hover:border-[#FE8040] transition-all shadow-md hover:-translate-y-0.5 cursor-pointer"
+              className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919]/80 backdrop-blur-md text-[#F5F5F5] hover:bg-[#222222] hover:text-[#FE8040] border border-[#303030] hover:border-[#FE8040] transition-all shadow-md hover:-translate-y-0.5 cursor-pointer flex-1 sm:flex-initial"
             >
               <FileText className="w-4 h-4 text-[#999999]" />
               <span>Resume</span>
@@ -167,7 +167,7 @@ export default function OverlayText() {
 
             <button
               onClick={handleOpenChat}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919]/80 backdrop-blur-md text-[#FE8040] border border-[#303030] hover:border-[#FE8040] hover:bg-[#222222] transition-all cursor-pointer shadow-md hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg font-medium text-xs md:text-sm bg-[#191919]/80 backdrop-blur-md text-[#FE8040] border border-[#303030] hover:border-[#FE8040] hover:bg-[#222222] transition-all cursor-pointer shadow-md hover:-translate-y-0.5 w-full sm:w-auto"
               title="Open AI Assistant"
             >
               <Bot className="w-4 h-4 text-[#FE8040]" />
@@ -181,7 +181,7 @@ export default function OverlayText() {
           initial={{ opacity: 0, scale: 0.9, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.85, ease: [0.16, 1, 0.3, 1] }}
-          className="relative shrink-0 w-full max-w-[300px] sm:max-w-[360px] md:max-w-[400px] lg:max-w-[440px] flex justify-center"
+          className="relative shrink-0 w-full max-w-[260px] xs:max-w-[300px] sm:max-w-[360px] md:max-w-[400px] lg:max-w-[440px] flex justify-center"
         >
           <InteractiveAnimeCharacter className="w-full" />
         </motion.div>

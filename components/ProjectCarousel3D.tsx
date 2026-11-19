@@ -171,6 +171,9 @@ export default function ProjectCarousel3D() {
   const [activeStage, setActiveStage] = useState(0);
   const [activeTab, setActiveTab] = useState<'blueprint' | 'flow'>('blueprint');
 
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
+
   const currentProject = PROJECTS[currentIndex];
 
   const handlePrev = () => {
@@ -179,6 +182,26 @@ export default function ProjectCarousel3D() {
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev === PROJECTS.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    const distance = touchStartX.current - touchEndX.current;
+    if (distance > 45) {
+      handleNext();
+    } else if (distance < -45) {
+      handlePrev();
+    }
+    touchStartX.current = 0;
+    touchEndX.current = 0;
   };
 
   // Auto-slide every 4 seconds continuously (only paused if architecture modal is open)
@@ -257,7 +280,12 @@ export default function ProjectCarousel3D() {
         </div>
 
         {/* ── Sliding Project Card ── */}
-        <div className="relative overflow-hidden rounded-2xl border border-[#303030] shadow-2xl bg-[#191919]">
+        <div
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          className="relative overflow-hidden rounded-2xl border border-[#303030] shadow-2xl bg-[#191919]"
+        >
           <AnimatePresence mode="wait">
             <motion.div
               key={currentProject.id}

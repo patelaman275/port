@@ -49,11 +49,19 @@ const CERTIFICATIONS: Certification[] = [
     icon: <Award className="w-5 h-5 text-[#FE8040]" />,
     skills: ['Supervised Learning', 'Neural Networks', 'Feature Engineering', 'Optimization'],
   },
+  {
+    id: 5,
+    title: 'SQL Foundations',
+    issuer: 'Coursera (Oct 2026)',
+    type: 'Verified Course Credential',
+    icon: <Code className="w-5 h-5 text-[#FE8040]" />,
+    skills: ['Relational Database Queries', 'JOINs & Aggregations', 'Subqueries', 'Database Normalization'],
+  },
 ];
 
 export default function CertificationsSection() {
   return (
-    <section id="certifications" className="relative py-16 sm:py-20 px-6 md:px-12 lg:px-20 overflow-hidden bg-transparent">
+    <section id="certifications" className="relative py-14 sm:py-20 px-4 sm:px-8 md:px-12 lg:px-20 overflow-hidden bg-transparent">
       <div className="max-w-5xl mx-auto relative z-10">
         {/* Header */}
         <div className="mb-10">

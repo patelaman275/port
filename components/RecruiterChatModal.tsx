@@ -23,15 +23,6 @@ interface RecruiterChatModalProps {
 
 /* ─────────────────────────── Constants ─────────────────────── */
 
-const SUGGESTED_PROMPTS = [
-  'What are your top backend skills?',
-  'Tell me about your published CNN research',
-  'How did you architect EasyTrip with WebSockets?',
-  'What is your CGPA & education at SRM IST?',
-  'What are your AWS certifications?',
-  'Why should we hire Aman for a Software Engineer role?',
-];
-
 const PARTICLE_COUNT = 6;
 const TYPEWRITER_INTERVAL_MS = 15;
 
@@ -616,7 +607,7 @@ export default function RecruiterChatModal({
           onClick={() => setIsOpen(true)}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
-          className="fixed bottom-6 right-6 z-[9990] w-12 h-12 rounded-full bg-[#191919] text-[#FE8040] border border-[#303030] hover:border-[#FE8040] shadow-2xl flex items-center justify-center cursor-pointer transition-colors group"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9990] w-12 h-12 rounded-full bg-[#191919] text-[#FE8040] border border-[#303030] hover:border-[#FE8040] shadow-2xl flex items-center justify-center cursor-pointer transition-colors group"
           title="Chat with AI Assistant (Cmd+K)"
           aria-label="Open AI Assistant"
         >
@@ -634,7 +625,7 @@ export default function RecruiterChatModal({
           <div
             role="dialog"
             aria-modal="true"
-            className="fixed inset-0 z-[99999] flex items-center justify-center p-3 md:p-6 bg-black/85 backdrop-blur-md"
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-2.5 sm:p-4 md:p-6 bg-black/85 backdrop-blur-md"
             onClick={() => setIsOpen(false)}
           >
             <motion.div
@@ -642,7 +633,7 @@ export default function RecruiterChatModal({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 32 }}
               transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-              className="relative w-full max-w-2xl h-[86vh] max-h-[760px] flex flex-col overflow-hidden rounded-2xl border border-[#303030] shadow-2xl bg-[#0F0F0F] text-[#CCCCCC]"
+              className="relative w-full max-w-2xl h-[92vh] sm:h-[86vh] max-h-[760px] flex flex-col overflow-hidden rounded-2xl border border-[#303030] shadow-2xl bg-[#0F0F0F] text-[#CCCCCC]"
               onClick={(e) => e.stopPropagation()}
               style={{
                 boxShadow:
@@ -814,37 +805,13 @@ export default function RecruiterChatModal({
                 />
               </div>
 
-              {/* ── Suggested prompts ── */}
-              <div
-                className="px-4 py-2.5 border-t border-[#252525] overflow-x-auto flex items-center gap-2 bg-[#121212]"
-                style={{ scrollbarWidth: 'none' }}
-              >
-                <span className="text-[10px] uppercase font-bold tracking-wider text-[#FE8040] whitespace-nowrap flex items-center gap-1.5 font-mono">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#FE8040] animate-ping" />
-                  Suggestions:
-                </span>
-                {SUGGESTED_PROMPTS.map((prompt) => (
-                  <motion.button
-                    key={prompt}
-                    onClick={() => handleSendMessage(prompt)}
-                    disabled={isLoading}
-                    whileHover={{ scale: 1.04, y: -1 }}
-                    whileTap={{ scale: 0.96 }}
-                    className="text-[11px] px-3 py-1 rounded-full border border-[#303030] bg-[#191919] text-[#CCCCCC] hover:bg-[#222222] hover:text-[#FE8040] hover:border-[#FE8040] whitespace-nowrap transition-colors flex items-center gap-1 cursor-pointer disabled:opacity-50"
-                  >
-                    <span>{prompt}</span>
-                    <ChevronRight className="w-3 h-3 text-[#FE8040]" />
-                  </motion.button>
-                ))}
-              </div>
-
               {/* ── Chat input ── */}
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   handleSendMessage();
                 }}
-                className="p-4 border-t border-[#303030] flex items-center gap-3 bg-[#121212] relative overflow-visible"
+                className="p-3 sm:p-4 border-t border-[#303030] flex items-center gap-2 sm:gap-3 bg-[#121212] relative overflow-visible"
               >
                 <input
                   ref={inputRef}
@@ -853,7 +820,7 @@ export default function RecruiterChatModal({
                   onChange={(e) => setInput(e.target.value)}
                   placeholder="Ask a question about Aman..."
                   disabled={isLoading}
-                  className="flex-1 rounded-xl px-4 py-2.5 text-xs md:text-sm border transition-all focus:outline-none bg-[#0F0F0F] text-[#F5F5F5] placeholder-[#777777]"
+                  className="flex-1 rounded-xl px-3.5 sm:px-4 py-2.5 text-base sm:text-xs md:text-sm border transition-all focus:outline-none bg-[#0F0F0F] text-[#F5F5F5] placeholder-[#777777]"
                   style={{
                     borderColor: inputGlow ? '#FE8040' : '#303030',
                     boxShadow: inputGlow
@@ -871,10 +838,10 @@ export default function RecruiterChatModal({
                     disabled={!input.trim() || isLoading}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.93 }}
-                    className="relative px-5 py-2.5 rounded-xl bg-[#FE8040] text-[#0F0F0F] font-bold text-xs md:text-sm flex items-center gap-1.5 hover:bg-[#FF995F] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md overflow-visible"
+                    className="relative px-4 sm:px-5 py-2.5 rounded-xl bg-[#FE8040] text-[#0F0F0F] font-bold text-xs md:text-sm flex items-center gap-1.5 hover:bg-[#FF995F] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md overflow-visible shrink-0"
                   >
                     <span>Send</span>
-                    <Send className="w-4 h-4" />
+                    <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </motion.button>
                 </div>
               </form>

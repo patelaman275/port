@@ -95,19 +95,19 @@ export default function InteractiveAnimeCharacter({
     };
   }, [animate]);
 
-  // Track mouse coordinates across the entire window
+  // Track mouse coordinates & touch coordinates across the entire window
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-    const isMobileScreen = window.innerWidth < 768;
-
-    if (prefersReducedMotion || (isTouchDevice && isMobileScreen)) {
+    if (prefersReducedMotion) {
       targetPupil.current = { x: 0, y: 0 };
       targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
       return;
     }
 
-    const handleMouseMove = (e: MouseEvent) => {
+    let isTouching = false;
+    let idleInterval: ReturnType<typeof setInterval>;
+
+    const updateCoordinates = (clientX: number, clientY: number) => {
       if (!containerRef.current) return;
 
       const rect = containerRef.current.getBoundingClientRect();
@@ -116,11 +116,11 @@ export default function InteractiveAnimeCharacter({
       const eyeCenterX = rect.left + rect.width * 0.51;
       const eyeCenterY = rect.top + rect.height * 0.36;
 
-      const deltaX = e.clientX - eyeCenterX;
-      const deltaY = e.clientY - eyeCenterY;
+      const deltaX = clientX - eyeCenterX;
+      const deltaY = clientY - eyeCenterY;
 
       // Normalized coordinates (-1 to +1) based on screen dimensions
-      const screenHalfW = Math.max(window.innerWidth * 0.5, 400);
+      const screenHalfW = Math.max(window.innerWidth * 0.5, 300);
       const screenHalfH = Math.max(window.innerHeight * 0.5, 300);
 
       const nx = Math.max(-1, Math.min(1, deltaX / screenHalfW));
@@ -134,8 +134,7 @@ export default function InteractiveAnimeCharacter({
       const easedX = Math.cos(angle) * ease;
       const easedY = Math.sin(angle) * ease;
 
-      // ── 1. ACTIVE PUPIL MOVEMENT (Gaze follows mouse pointer) ──
-      // Pupils shift smoothly within the eye sockets: ±5.5px horizontally, ±3.5px vertically
+      // ── 1. ACTIVE PUPIL MOVEMENT (Gaze follows cursor/finger) ──
       targetPupil.current = {
         x: easedX * 5.5,
         y: easedY * 3.5,
@@ -151,16 +150,65 @@ export default function InteractiveAnimeCharacter({
       };
     };
 
+    const handleMouseMove = (e: MouseEvent) => {
+      isTouching = false;
+      updateCoordinates(e.clientX, e.clientY);
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        isTouching = true;
+        updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) {
+        isTouching = true;
+        updateCoordinates(e.touches[0].clientX, e.touches[0].clientY);
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isTouching = false;
+      // Smooth return to subtle natural idle position
+      targetPupil.current = { x: 0, y: 0 };
+      targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
+    };
+
     const handleMouseLeave = () => {
       targetPupil.current = { x: 0, y: 0 };
       targetFace.current = { rotX: 0, rotY: 0, rotZ: 0, x: 0, y: 0 };
     };
 
+    // Ambient lifelike gaze drifting when idle (especially charming on mobile)
+    idleInterval = setInterval(() => {
+      if (!isTouching && Math.random() < 0.35) {
+        const subtleX = (Math.random() - 0.5) * 2.2;
+        const subtleY = (Math.random() - 0.5) * 1.5;
+        targetPupil.current = { x: subtleX, y: subtleY };
+        targetFace.current = {
+          rotX: -subtleY * 2,
+          rotY: subtleX * 3,
+          rotZ: subtleX * 0.5,
+          x: subtleX * 2,
+          y: subtleY * 1.5,
+        };
+      }
+    }, 2800);
+
     window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('touchend', handleTouchEnd, { passive: true });
     document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
+      clearInterval(idleInterval);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      window.removeEventListener('touchend', handleTouchEnd);
       document.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
