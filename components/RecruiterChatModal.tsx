@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   X, Send, Bot, User, FileText, Mail, ExternalLink,
-  ChevronRight, Zap, Loader2, ChevronDown,
+  ChevronRight, Zap, Loader2, ChevronDown, Mic, MicOff, Volume2, VolumeX, Radio,
 } from 'lucide-react';
 
 /* ─────────────────────────── Types ─────────────────────────── */
@@ -460,6 +460,12 @@ export default function RecruiterChatModal({
   const [inputGlow, setInputGlow] = useState(false);
   const [showScrollBtn, setShowScrollBtn] = useState(false);
 
+  // ── Voice AI States (Web Speech API) ──
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const recognitionRef = useRef<any>(null);
+
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: 'welcome-1',
@@ -473,6 +479,103 @@ export default function RecruiterChatModal({
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
+
+  // Text-to-Speech (Assistant Voice Synthesis)
+  const speakText = useCallback(
+    (text: string) => {
+      if (typeof window === 'undefined' || !window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+
+      // Clean markdown symbols for natural speech
+      const cleanSpeech = text
+        .replace(/###\s+/g, '')
+        .replace(/##\s+/g, '')
+        .replace(/\[(.*?)\]\(.*?\)/g, '$1')
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/`.*?`/g, '')
+        .replace(/[•\-\*]/g, '');
+
+      const utterance = new SpeechSynthesisUtterance(cleanSpeech);
+      utterance.rate = 1.05;
+      utterance.pitch = 1.0;
+
+      utterance.onstart = () => setIsSpeaking(true);
+      utterance.onend = () => setIsSpeaking(false);
+      utterance.onerror = () => setIsSpeaking(false);
+
+      window.speechSynthesis.speak(utterance);
+    },
+    []
+  );
+
+  // Stop Speech
+  const stopSpeech = useCallback(() => {
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+      setIsSpeaking(false);
+    }
+  }, []);
+
+  // Speech-to-Text (Microphone Web Speech API)
+  const toggleVoiceInput = useCallback(() => {
+    if (typeof window === 'undefined') return;
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert('Speech recognition is not supported in this browser. Please try Chrome, Edge, or Safari.');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'en-US';
+      recognition.continuous = false;
+      recognition.interimResults = true;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognition.onresult = (e: any) => {
+        const transcript = Array.from(e.results)
+          .map((res: any) => res[0].transcript)
+          .join('');
+        setInput(transcript);
+      };
+
+      recognition.onerror = () => {
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch {
+      setIsListening(false);
+    }
+  }, [isListening]);
+
+  // Stop voice on modal close
+  useEffect(() => {
+    if (!isOpen) {
+      stopSpeech();
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+        setIsListening(false);
+      }
+    }
+  }, [isOpen, stopSpeech]);
 
   /* Keyboard shortcuts */
   useEffect(() => {
@@ -578,6 +681,10 @@ export default function RecruiterChatModal({
         revealed: false, // typewriter will reveal
       };
       setMessages((prev) => [...prev, assistantMessage]);
+
+      if (voiceEnabled && data.reply) {
+        speakText(data.reply);
+      }
     } catch {
       setMessages((prev) => [
         ...prev,
@@ -680,6 +787,31 @@ export default function RecruiterChatModal({
                 </div>
 
                 <div className="flex items-center gap-2">
+                  {/* Assistant voice toggle */}
+                  <motion.button
+                    onClick={() => {
+                      if (isSpeaking) stopSpeech();
+                      setVoiceEnabled((v) => !v);
+                    }}
+                    whileTap={{ scale: 0.9 }}
+                    className="p-1.5 rounded-lg hover:bg-[#222222] transition-colors cursor-pointer"
+                    title={voiceEnabled ? 'Mute assistant voice' : 'Enable assistant voice'}
+                    style={{ color: voiceEnabled ? '#FE8040' : '#555555' }}
+                  >
+                    {isSpeaking ? (
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ repeat: Infinity, duration: 0.6 }}
+                      >
+                        <Radio className="w-4 h-4" />
+                      </motion.div>
+                    ) : voiceEnabled ? (
+                      <Volume2 className="w-4 h-4" />
+                    ) : (
+                      <VolumeX className="w-4 h-4" />
+                    )}
+                  </motion.button>
+
                   <a
                     href="/resume.pdf"
                     target="_blank"
@@ -773,15 +905,27 @@ export default function RecruiterChatModal({
                             {renderFormattedText(m.content)}
                           </div>
                         )}
-                        <span
-                          className={`block text-[10px] mt-1.5 text-right ${
-                            m.role === 'user'
-                              ? 'text-[#0F0F0F]/65'
-                              : 'text-[#777777]'
-                          }`}
-                        >
-                          {m.timestamp}
-                        </span>
+                        <div className={`flex items-center mt-1.5 ${m.role === 'user' ? 'justify-end' : 'justify-between'}`}>
+                          {m.role === 'assistant' && (
+                            <button
+                              onClick={() => speakText(m.content)}
+                              className="flex items-center gap-1 text-[10px] text-[#555555] hover:text-[#FE8040] transition-colors cursor-pointer"
+                              title="Listen to this message"
+                            >
+                              <Volume2 className="w-3 h-3" />
+                              <span>Listen</span>
+                            </button>
+                          )}
+                          <span
+                            className={`text-[10px] ${
+                              m.role === 'user'
+                                ? 'text-[#0F0F0F]/65'
+                                : 'text-[#777777]'
+                            }`}
+                          >
+                            {m.timestamp}
+                          </span>
+                        </div>
                       </div>
 
                       {m.role === 'user' && (
@@ -806,45 +950,94 @@ export default function RecruiterChatModal({
               </div>
 
               {/* ── Chat input ── */}
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleSendMessage();
-                }}
-                className="p-3 sm:p-4 border-t border-[#303030] flex items-center gap-2 sm:gap-3 bg-[#121212] relative overflow-visible"
-              >
-                <input
-                  ref={inputRef}
-                  type="text"
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask a question about Aman..."
-                  disabled={isLoading}
-                  className="flex-1 rounded-xl px-3.5 sm:px-4 py-2.5 text-base sm:text-xs md:text-sm border transition-all focus:outline-none bg-[#0F0F0F] text-[#F5F5F5] placeholder-[#777777]"
-                  style={{
-                    borderColor: inputGlow ? '#FE8040' : '#303030',
-                    boxShadow: inputGlow
-                      ? '0 0 0 2px rgba(254,128,64,0.35), 0 0 16px rgba(254,128,64,0.2)'
-                      : 'none',
-                    transition: 'border-color 0.15s, box-shadow 0.15s',
-                  }}
-                />
+              <div className="border-t border-[#303030] bg-[#121212]">
+                {/* Listening indicator banner */}
+                <AnimatePresence>
+                  {isListening && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="flex items-center gap-2 px-4 py-2 bg-[#FE8040]/10 border-b border-[#FE8040]/20"
+                    >
+                      <motion.div
+                        animate={{ scale: [1, 1.4, 1] }}
+                        transition={{ repeat: Infinity, duration: 0.8 }}
+                        className="w-2 h-2 rounded-full bg-[#FE8040]"
+                      />
+                      <span className="text-[11px] text-[#FE8040] font-medium">
+                        🎙️ Listening... Speak your question about Aman
+                      </span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
-                {/* Send button with particle burst */}
-                <div style={{ position: 'relative', display: 'inline-flex' }}>
-                  <ParticleBurst active={isSendingAnim} />
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleSendMessage();
+                  }}
+                  className="p-3 sm:p-4 flex items-center gap-2 sm:gap-3 relative overflow-visible"
+                >
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder="Ask a question about Aman..."
+                    disabled={isLoading}
+                    className="flex-1 rounded-xl px-3.5 sm:px-4 py-2.5 text-base sm:text-xs md:text-sm border transition-all focus:outline-none bg-[#0F0F0F] text-[#F5F5F5] placeholder-[#777777]"
+                    style={{
+                      borderColor: inputGlow ? '#FE8040' : '#303030',
+                      boxShadow: inputGlow
+                        ? '0 0 0 2px rgba(254,128,64,0.35), 0 0 16px rgba(254,128,64,0.2)'
+                        : 'none',
+                      transition: 'border-color 0.15s, box-shadow 0.15s',
+                    }}
+                  />
+
+                  {/* Microphone button */}
                   <motion.button
-                    type="submit"
-                    disabled={!input.trim() || isLoading}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.93 }}
-                    className="relative px-4 sm:px-5 py-2.5 rounded-xl bg-[#FE8040] text-[#0F0F0F] font-bold text-xs md:text-sm flex items-center gap-1.5 hover:bg-[#FF995F] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md overflow-visible shrink-0"
+                    type="button"
+                    onClick={toggleVoiceInput}
+                    whileTap={{ scale: 0.9 }}
+                    className="p-2.5 rounded-xl border transition-all cursor-pointer flex items-center justify-center shrink-0"
+                    style={{
+                      background: isListening ? 'rgba(254,128,64,0.15)' : '#191919',
+                      borderColor: isListening ? '#FE8040' : '#303030',
+                      color: isListening ? '#FE8040' : '#777777',
+                      boxShadow: isListening ? '0 0 12px rgba(254,128,64,0.35)' : 'none',
+                    }}
+                    title={isListening ? 'Stop listening' : 'Speak your question'}
                   >
-                    <span>Send</span>
-                    <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    {isListening ? (
+                      <motion.div
+                        animate={{ scale: [1, 1.2, 1] }}
+                        transition={{ repeat: Infinity, duration: 0.5 }}
+                      >
+                        <MicOff className="w-4 h-4" />
+                      </motion.div>
+                    ) : (
+                      <Mic className="w-4 h-4" />
+                    )}
                   </motion.button>
-                </div>
-              </form>
+
+                  {/* Send button with particle burst */}
+                  <div style={{ position: 'relative', display: 'inline-flex' }}>
+                    <ParticleBurst active={isSendingAnim} />
+                    <motion.button
+                      type="submit"
+                      disabled={!input.trim() || isLoading}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.93 }}
+                      className="relative px-4 sm:px-5 py-2.5 rounded-xl bg-[#FE8040] text-[#0F0F0F] font-bold text-xs md:text-sm flex items-center gap-1.5 hover:bg-[#FF995F] transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed shadow-md overflow-visible shrink-0"
+                    >
+                      <span>Send</span>
+                      <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    </motion.button>
+                  </div>
+                </form>
+              </div>
             </motion.div>
           </div>
         )}

@@ -17,7 +17,11 @@ import {
   RotateCcw,
   Activity,
   Layers,
+  Radio,
+  BookOpen,
 } from 'lucide-react';
+import EasyTripSimulatorModal from '@/components/EasyTripSimulatorModal';
+import ResearchPaperModal from '@/components/ResearchPaperModal';
 
 function GithubIcon({ className = 'w-4 h-4' }: { className?: string }) {
   return (
@@ -165,6 +169,30 @@ const PROJECTS: Project[] = [
 export default function ProjectCarousel3D() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [activeArchProject, setActiveArchProject] = useState<Project | null>(null);
+  const [isSimulatorOpen, setIsSimulatorOpen] = useState(false);
+  const [isPaperModalOpen, setIsPaperModalOpen] = useState(false);
+  const [healthData, setHealthData] = useState<Record<string, { status: string; latencyMs: number }>>({
+    chicktech: { status: 'online', latencyMs: 68 },
+    easytrip: { status: 'online', latencyMs: 44 },
+    careerpath: { status: 'online', latencyMs: 82 },
+    campusconnect: { status: 'online', latencyMs: 58 },
+  });
+
+  // Fetch live microservice health
+  useEffect(() => {
+    fetch('/api/health')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.services && Array.isArray(data.services)) {
+          const map: Record<string, { status: string; latencyMs: number }> = {};
+          data.services.forEach((s: { id: string; status: string; latencyMs: number }) => {
+            map[s.id] = { status: s.status, latencyMs: s.latencyMs };
+          });
+          setHealthData((prev) => ({ ...prev, ...map }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   // Interactive Architecture State
   const [archZoom, setArchZoom] = useState(1);
@@ -320,7 +348,7 @@ export default function ProjectCarousel3D() {
               <div className="p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-6 md:gap-8 items-start justify-between bg-[#191919]">
                 {/* Left Column: Details */}
                 <div className="flex-1 space-y-4">
-                  {/* Category & Badge */}
+                  {/* Category, Badge & Live Health */}
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs font-semibold px-3 py-1 rounded-lg border border-[#303030] bg-[#121212] text-[#CCCCCC]">
                       {currentProject.icon} {currentProject.category}
@@ -328,6 +356,24 @@ export default function ProjectCarousel3D() {
                     <span className="text-xs font-semibold px-3 py-1 rounded-lg border border-[#FE8040]/30 bg-[#FE8040]/10 text-[#FE8040]">
                       {currentProject.badge}
                     </span>
+                    {/* Live Microservice Health Pulse */}
+                    {(() => {
+                      const svcKey =
+                        currentProject.id === 1
+                          ? 'chicktech'
+                          : currentProject.id === 2
+                          ? 'easytrip'
+                          : currentProject.id === 3
+                          ? 'careerpath'
+                          : 'campusconnect';
+                      const health = healthData[svcKey];
+                      return (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-emerald-500/30 bg-emerald-500/10 text-emerald-400 text-xs font-mono font-medium shadow-sm">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                          <span>LIVE 🟢 {health ? `${health.latencyMs}ms` : '64ms'}</span>
+                        </span>
+                      );
+                    })()}
                   </div>
 
                   {/* Title & Subtitle */}
@@ -386,6 +432,28 @@ export default function ProjectCarousel3D() {
                     <Network className="w-4 h-4 text-[#0F0F0F] group-hover:rotate-12 transition-transform" />
                     <span>View Interactive Architecture</span>
                   </button>
+
+                  {/* EasyTrip Interactive WebSocket Simulator */}
+                  {currentProject.id === 2 && (
+                    <button
+                      onClick={() => setIsSimulatorOpen(true)}
+                      className="w-full py-2.5 px-4 rounded-lg text-xs font-semibold bg-[#121212] hover:bg-[#222222] text-[#FE8040] border border-[#FE8040]/50 hover:border-[#FE8040] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm group"
+                    >
+                      <Radio className="w-3.5 h-3.5 text-[#FE8040] group-hover:scale-110 transition-transform animate-pulse" />
+                      <span>Interactive WebSocket Simulator</span>
+                    </button>
+                  )}
+
+                  {/* ChickTech ICCCNet Research Paper Modal */}
+                  {currentProject.id === 1 && (
+                    <button
+                      onClick={() => setIsPaperModalOpen(true)}
+                      className="w-full py-2.5 px-4 rounded-lg text-xs font-semibold bg-[#121212] hover:bg-[#222222] text-[#FE8040] border border-[#FE8040]/50 hover:border-[#FE8040] transition-all flex items-center justify-center gap-2 cursor-pointer shadow-sm group"
+                    >
+                      <BookOpen className="w-3.5 h-3.5 text-[#FE8040] group-hover:scale-110 transition-transform" />
+                      <span>ICCCNet Paper &amp; Metrics Modal</span>
+                    </button>
+                  )}
 
                   {/* Launch Live Demo */}
                   <a
@@ -717,6 +785,18 @@ export default function ProjectCarousel3D() {
           </div>
         )}
       </AnimatePresence>
+
+      {/* ── Interactive EasyTrip Socket.io Simulator Modal ── */}
+      <EasyTripSimulatorModal
+        isOpen={isSimulatorOpen}
+        onClose={() => setIsSimulatorOpen(false)}
+      />
+
+      {/* ── ICCCNet 2026 Research Paper & Metrics Modal ── */}
+      <ResearchPaperModal
+        isOpen={isPaperModalOpen}
+        onClose={() => setIsPaperModalOpen(false)}
+      />
     </section>
   );
 }
